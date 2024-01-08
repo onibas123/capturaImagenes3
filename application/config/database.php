@@ -81,6 +81,11 @@ $db['default'] = array(
 	'password' => '',
 	'database' => 'capturaImagenes',
 	*/
+	
+	'username' => 'software_capturador',
+	'password' => 'Leica666_',
+	'database' => 'software_capturador',
+
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
