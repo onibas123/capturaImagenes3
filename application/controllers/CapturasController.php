@@ -233,10 +233,14 @@ class CapturasController extends CI_Controller {
 		$telefono_empresa = '';
 
 		foreach($configuraciones as $c){
-			$nombre_empresa = $c['nombre_empresa'];
-			$direccion_empresa = $c['direccion_empresa'];
-			$email_empresa = $c['email_empresa'];
-			$telefono_empresa = $c['telefono_empresa'];
+			if($c['parametro'] == 'nombre_empresa')
+				$nombre_empresa = $c['valor'];
+			if($c['parametro'] == 'direccion_empresa')
+				$direccion_empresa = $c['valor'];
+			if($c['parametro'] == 'email_empresa')
+				$email_empresa = $c['valor'];
+			if($c['parametro'] == 'telefono_empresa')
+				$telefono_empresa = $c['valor'];
 		}
 
 		$date = date('d-m-Y');
