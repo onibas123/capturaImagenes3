@@ -264,6 +264,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 10, utf8_decode($direccion_empresa), 1, 0, 'C');
 		$pdf->Cell(40, 10, utf8_decode($email_empresa), 1, 0, 'C');
 		$pdf->Cell(40, 10, utf8_decode($nombre_empresa), 1, 0, 'C');
+		$pdf->Ln();
 		//tabla
 		//cabecera
 		$pdf->SetFont('Times', 'B', 10);
