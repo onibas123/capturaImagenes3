@@ -296,17 +296,17 @@ class CapturasController extends CI_Controller {
 	public function Header($pdf){  
 		//Display Company Info
 		$pdf->SetFont('Arial','B',14);
-		$pdf->Cell(50,10,"ABC COMPUTERS",0,1);
+		$pdf->Cell(50,10,"ABC COMPUTERS",30,1);
 		$pdf->SetFont('Arial','',14);
-		$pdf->Cell(50,7,"West Street,",0,1);
-		$pdf->Cell(50,7,"Salem 636002.",0,1);
-		$pdf->Cell(50,7,"PH : 8778731770",0,1);
+		$pdf->Cell(50,7,"West Street,",30,1);
+		$pdf->Cell(50,7,"Salem 636002.",30,1);
+		$pdf->Cell(50,7,"PH : 8778731770",30,1);
 		
 		//Display INVOICE text
 		$pdf->SetY(15);
 		$pdf->SetX(-40);
 		$pdf->SetFont('Arial','B',18);
-		$pdf->Cell(50,10,"INVOICE",0,1);
+		$pdf->Cell(50,10,"INVOICE",30,1);
 		
 		//Display Horizontal line
 		$pdf->Line(0,48,210,48);
