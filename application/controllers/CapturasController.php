@@ -223,6 +223,22 @@ class CapturasController extends CI_Controller {
 		$this->db->order_by('capturas.fecha_hora ASC');
 		$capturas_consolidadas = $this->db->get()->result_array();
 
+		$this->db->select('*');
+		$this->db->from('configuraciones');
+		$configuraciones = $this->db->get()->result_array();
+
+		$nombre_empresa = '';
+		$direccion_empresa = '';
+		$email_empresa = '';
+		$telefono_empresa = '';
+
+		foreach($configuraciones as $c){
+			$nombre_empresa = $c['nombre_empresa'];
+			$direccion_empresa = $c['direccion_empresa'];
+			$email_empresa = $c['email_empresa'];
+			$telefono_empresa = $c['telefono_empresa'];
+		}
+
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
 		$time2 = date('H:i');
@@ -238,7 +254,14 @@ class CapturasController extends CI_Controller {
 		$pdf->SetFont('Times', '', 10);
 		$pdf->Cell(276, 10, 'Informe '.$date, 0, 0, 'C');
 		$pdf->Ln(20);
-
+		//cabecera principal
+		$pdf->Image(base_url().'assets/img/logo.png', 130 ,5, 70 , 25,'');
+		$pdf->Cell(40, 10, utf8_decode($nombre_empresa), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode($direccion_empresa), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode($email_empresa), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode($nombre_empresa), 1, 0, 'C');
+		//tabla
+		//cabecera
 		$pdf->SetFont('Times', 'B', 10);
 		$pdf->Cell(100, 10, 'Imagen', 1, 0, 'C');
 		$pdf->Cell(40, 10, utf8_decode('Ubicación'), 1, 0, 'C');
@@ -246,15 +269,15 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 10, utf8_decode('Observación'), 1, 0, 'C');
 		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
-
+		//cuerpo
 		if(!empty($capturas_consolidadas)){
 			foreach($capturas_consolidadas as $cc){
 				$pdf->SetFont('Times', '', 10);	
 				$pdf->Cell(100, 10, 1, 1, 0, 'C');
 				$pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], 130 ,5, 70 , 25,'');
-				$pdf->Cell(40, 10, $cc['ubicacion'], 1, 0, 'C');
+				$pdf->Cell(40, 10, utf8_decode($cc['ubicacion']), 1, 0, 'C');
 				$pdf->Cell(40, 10, $cc['canal'], 1, 0, 'C');
-				$pdf->Cell(40, 10, $cc['observacion'], 1, 0, 'C');
+				$pdf->Cell(40, 10, utf8_decode($cc['observacion']), 1, 0, 'C');
 				$pdf->Cell(40, 10, $cc['fecha_hora'], 1, 0, 'C');
 				$pdf->Ln();
 			}
