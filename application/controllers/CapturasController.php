@@ -207,18 +207,84 @@ class CapturasController extends CI_Controller {
 		echo json_encode($this->db->get()->result_array());
 	}
 
-	function ejemploPdf(){
-		// Get output html
-			$html = $this->output->get_output();
-			// Load pdf library
-			$this->load->library('Pdf');
-			// Load HTML content
-			$this->pdf->loadHtml($html);
-			// (Optional) Setup the paper size and orientation
-			$this->pdf->setPaper('A4', 'landscape');
-			// Render the HTML as PDF
-			$this->pdf->render();
-			// Output the generated PDF (1 = download and 0 = preview)
-			$this->pdf->stream("welcome.pdf", array("Attachment"=>0));
-	   }
+	public function demoPdf()
+	{
+		$year = 2024;
+
+		$this->load->library('fpdf/fpdf.php');
+
+		$pdf = new Fpdf();
+		$pdf->AddPage('L', 'A4', 0);
+		$pdf->SetAutoPageBreak(true, 20);
+		//$y = $pdf->GetY();
+		
+		$pdf->SetFont('Arial', 'B', 12);
+		$pdf->Cell(276, 5, 'RESUMEN TEMPORADA '.$year, 0, 0, 'C');
+		$pdf->Ln();
+
+		$pdf->SetFont('Times', '', 10);
+		$pdf->Cell(276, 10, 'Listado Resumenes Diarios', 0, 0, 'C');
+		$pdf->Ln(20);
+
+		$pdf->SetFont('Times', 'B', 10);
+		$pdf->Cell(20, 10, 'ID', 1, 0, 'C');
+		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
+		$pdf->Cell(60, 10, 'Variedad', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'KG', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'Cajas', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'KPC', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'Total', 1, 0, 'C');
+		$pdf->Ln();
+
+		//list products 
+		/*
+		$this->db->select('id');
+		$this->db->from('products');
+		$products = $this->db->get()->result_array();
+		*/
+		//end list products
+		/*
+		if(!empty($products))
+		{
+			foreach($products as $p)
+			{
+				$res = $this->modelo->generateReportResumenDiario($year, $p['id']);
+				if(!empty($res))
+				{
+					$sum_total = 0;
+
+					foreach($res as $r)
+					{
+						$sum_total += $r['weight'];
+
+						$pdf->SetFont('Times', '', 10);
+						$pdf->Cell(20, 10, $r['id'], 1, 0, 'C');
+						$pdf->Cell(40, 10, $r['date'], 1, 0, 'C');
+						$pdf->Cell(60, 10, $r['product'].' | '.$r['variety'], 1, 0, 'C');
+						$pdf->Cell(30, 10, $r['weight'], 1, 0, 'C');
+						$pdf->Cell(30, 10, $r['quantity'], 1, 0, 'C');
+						$pdf->Cell(30, 10, $r['w_q'], 1, 0, 'C');
+						$pdf->Cell(30, 10, $sum_total, 1, 0, 'C');
+						$pdf->Ln();
+
+						//------------------------------------
+						
+					}
+				}
+			}
+		}
+		*/
+		$pdf->SetFont('Times', '', 10);
+		$pdf->Cell(20, 10, 1, 1, 0, 'C');
+		$pdf->Cell(40, 10, 'aaa', 1, 0, 'C');
+		$pdf->Cell(60, 10, 'bbb'.' | '.'aaa', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'cc', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'dd', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'eee', 1, 0, 'C');
+		$pdf->Cell(30, 10, 100, 1, 0, 'C');
+		$pdf->Ln();
+
+		
+		$pdf->Output();	
+	}
 }
