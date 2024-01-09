@@ -231,18 +231,18 @@ class CapturasController extends CI_Controller {
 
 		$pdf->SetFont('Times', 'B', 10);
 		$pdf->Cell(100, 10, 'Imagen', 1, 0, 'C');
-		$pdf->Cell(50, 10, utf8_decode('Ubicación'), 1, 0, 'C');
-		$pdf->Cell(50, 10, utf8_decode('Cámara'), 1, 0, 'C');
-		$pdf->Cell(50, 10, utf8_decode('Observación'), 1, 0, 'C');
-		$pdf->Cell(50, 10, 'Fecha', 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode('Ubicación'), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode('Cámara'), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode('Observación'), 1, 0, 'C');
+		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 
 		$pdf->SetFont('Times', '', 10);
 		$pdf->Cell(100, 10, 1, 1, 0, 'C');
-		$pdf->Cell(50, 10, 'aaa', 1, 0, 'C');
-		$pdf->Cell(50, 10, 'bbb'.' | '.'aaa', 1, 0, 'C');
-		$pdf->Cell(50, 10, 'cc', 1, 0, 'C');
-		$pdf->Cell(50, 10, 'dd', 1, 0, 'C');
+		$pdf->Cell(40, 10, 'aaa', 1, 0, 'C');
+		$pdf->Cell(40, 10, 'bbb'.' | '.'aaa', 1, 0, 'C');
+		$pdf->Cell(40, 10, 'cc', 1, 0, 'C');
+		$pdf->Cell(40, 10, 'dd', 1, 0, 'C');
 		$pdf->Ln();
 
 		
