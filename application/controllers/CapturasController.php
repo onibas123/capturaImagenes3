@@ -259,11 +259,20 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(276, 10, 'Informe '.$date, 0, 0, 'C');
 		$pdf->Ln(20);
 		//cabecera principal
-		$pdf->Image(base_url().'assets/img/logo.png', 130 ,5, 70 , 25,'');
-		$pdf->Cell(40, 10, utf8_decode($nombre_empresa), 1, 0, 'C');
+		// Logo
+		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
+		// Arial bold 15
+		$this->SetFont('Arial','B',15);
+		// Move to the right
+		$this->Cell(80);
+		// Title
+		$this->Cell(30,10,utf8_decode($nombre_empresa),1,0,'C');
+		// Line break
+		$this->Ln(20);
+
 		$pdf->Cell(40, 10, utf8_decode($direccion_empresa), 1, 0, 'C');
 		$pdf->Cell(40, 10, utf8_decode($email_empresa), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode($nombre_empresa), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode($telefono_empresa), 1, 0, 'C');
 		$pdf->Ln();
 		//tabla
 		//cabecera
