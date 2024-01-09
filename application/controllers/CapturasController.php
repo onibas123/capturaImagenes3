@@ -230,59 +230,19 @@ class CapturasController extends CI_Controller {
 		$pdf->Ln(20);
 
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(20, 10, 'Imagen', 1, 0, 'C');
-		$pdf->Cell(40, 10, 'Ubicación', 1, 0, 'C');
-		$pdf->Cell(60, 10, 'Cámara', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'Observación', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'Fecha', 1, 0, 'C');
+		$pdf->Cell(100, 10, 'Imagen', 1, 0, 'C');
+		$pdf->Cell(50, 10, utf8_decode('Ubicación'), 1, 0, 'C');
+		$pdf->Cell(50, 10, utf8_decode('Cámara'), 1, 0, 'C');
+		$pdf->Cell(50, 10, utf8_decode('Observación'), 1, 0, 'C');
+		$pdf->Cell(50, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 
-		//list products 
-		/*
-		$this->db->select('id');
-		$this->db->from('products');
-		$products = $this->db->get()->result_array();
-		*/
-		//end list products
-		/*
-		if(!empty($products))
-		{
-			foreach($products as $p)
-			{
-				$res = $this->modelo->generateReportResumenDiario($year, $p['id']);
-				if(!empty($res))
-				{
-					$sum_total = 0;
-
-					foreach($res as $r)
-					{
-						$sum_total += $r['weight'];
-
-						$pdf->SetFont('Times', '', 10);
-						$pdf->Cell(20, 10, $r['id'], 1, 0, 'C');
-						$pdf->Cell(40, 10, $r['date'], 1, 0, 'C');
-						$pdf->Cell(60, 10, $r['product'].' | '.$r['variety'], 1, 0, 'C');
-						$pdf->Cell(30, 10, $r['weight'], 1, 0, 'C');
-						$pdf->Cell(30, 10, $r['quantity'], 1, 0, 'C');
-						$pdf->Cell(30, 10, $r['w_q'], 1, 0, 'C');
-						$pdf->Cell(30, 10, $sum_total, 1, 0, 'C');
-						$pdf->Ln();
-
-						//------------------------------------
-						
-					}
-				}
-			}
-		}
-		*/
 		$pdf->SetFont('Times', '', 10);
-		$pdf->Cell(20, 10, 1, 1, 0, 'C');
-		$pdf->Cell(40, 10, 'aaa', 1, 0, 'C');
-		$pdf->Cell(60, 10, 'bbb'.' | '.'aaa', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'cc', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'dd', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'eee', 1, 0, 'C');
-		$pdf->Cell(30, 10, 100, 1, 0, 'C');
+		$pdf->Cell(100, 10, 1, 1, 0, 'C');
+		$pdf->Cell(50, 10, 'aaa', 1, 0, 'C');
+		$pdf->Cell(50, 10, 'bbb'.' | '.'aaa', 1, 0, 'C');
+		$pdf->Cell(50, 10, 'cc', 1, 0, 'C');
+		$pdf->Cell(50, 10, 'dd', 1, 0, 'C');
 		$pdf->Ln();
 
 		
