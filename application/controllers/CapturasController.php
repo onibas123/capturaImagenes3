@@ -244,7 +244,7 @@ class CapturasController extends CI_Controller {
 
 		//cabecera principal
 		// Logo
-		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
+		//$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf);
 		$pdf->Ln(20);
 		//tabla
