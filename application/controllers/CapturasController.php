@@ -211,7 +211,7 @@ class CapturasController extends CI_Controller {
 		// Get output html
 			$html = $this->output->get_output();
 			// Load pdf library
-			$this->load->library('pdf');
+			$this->load->library('Pdf');
 			// Load HTML content
 			$this->pdf->loadHtml($html);
 			// (Optional) Setup the paper size and orientation
