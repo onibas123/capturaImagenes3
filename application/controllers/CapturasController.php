@@ -244,7 +244,7 @@ class CapturasController extends CI_Controller {
 
 		//cabecera principal
 		// Logo
-		//$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
+		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf);
 		$pdf->Ln(20);
 		//tabla
@@ -286,8 +286,7 @@ class CapturasController extends CI_Controller {
 			if($c['parametro'] == 'telefono_empresa')
 				$telefono_empresa = $c['valor'];
 		}
-
-
+		$pdf->SetX(-10);
 		//Display Company Info
 		$pdf->SetFont('Arial','B',14);
 		$pdf->Cell(50,10, utf8_decode($nombre_empresa),30,1);
@@ -298,9 +297,9 @@ class CapturasController extends CI_Controller {
 		
 		//Display INVOICE text
 		$pdf->SetY(15);
-		$pdf->SetX(-40);
+		$pdf->SetX(-35);
 		$pdf->SetFont('Arial','B',18);
-		$pdf->Cell(50,10,"INFORME",20,1);
+		$pdf->Cell(50,10,"INFORME",30,1);
 		
 		//Display Horizontal line
 		$pdf->Line(0,48,210,48);
