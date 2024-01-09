@@ -123,19 +123,7 @@
                 return false;
             }
 
-            $('#iframe-reporte').attr('src', '<?php echo base_url();?>index.php/CapturasController/demoPdf');
-
-            /*
-            $.ajax({
-                url: '<?php //echo base_url();?>index.php/CapturasController/obtenerCapturasConsolidado',
-                type: 'post',
-                data: {dispositivo: dispositivo, desde: desde, hasta: hasta},
-                dataType: 'json',
-                success: function(response){
-                    console.log(response);
-                }
-            });
-            */
+            $('#iframe-reporte').attr('src', '<?php echo base_url();?>index.php/CapturasController/cargarPDF?org='+organizacion+'&dev='+dispositivo+'&desde='+desde+'&hasta='+hasta);
         }
     </script>
 </body>

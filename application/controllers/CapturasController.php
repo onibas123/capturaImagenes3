@@ -207,9 +207,16 @@ class CapturasController extends CI_Controller {
 		echo json_encode($this->db->get()->result_array());
 	}
 
-	public function demoPdf()
+	public function cargarPDF()
 	{
-		$year = 2024;
+		$org = $this->input->get('org', true);
+		$dev = $this->input->get('dev', true);
+		$desde = $this->input->get('desde', true);
+		$hasta = $this->input->get('hasta', true);
+
+		$date = date('d-m-Y');
+		$time = date('H:i:s');
+		$time2 = date('H:i');
 
 		$this->load->library('fpdf/fpdf.php');
 
@@ -217,23 +224,17 @@ class CapturasController extends CI_Controller {
 		$pdf->AddPage('L', 'A4', 0);
 		$pdf->SetAutoPageBreak(true, 20);
 		//$y = $pdf->GetY();
-		
-		$pdf->SetFont('Arial', 'B', 12);
-		$pdf->Cell(276, 5, 'RESUMEN TEMPORADA '.$year, 0, 0, 'C');
-		$pdf->Ln();
 
 		$pdf->SetFont('Times', '', 10);
-		$pdf->Cell(276, 10, 'Listado Resumenes Diarios', 0, 0, 'C');
+		$pdf->Cell(276, 10, 'Informe '.$date, 0, 0, 'C');
 		$pdf->Ln(20);
 
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(20, 10, 'ID', 1, 0, 'C');
-		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
-		$pdf->Cell(60, 10, 'Variedad', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'KG', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'Cajas', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'KPC', 1, 0, 'C');
-		$pdf->Cell(30, 10, 'Total', 1, 0, 'C');
+		$pdf->Cell(20, 10, 'Imagen', 1, 0, 'C');
+		$pdf->Cell(40, 10, 'Ubicación', 1, 0, 'C');
+		$pdf->Cell(60, 10, 'Cámara', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'Observación', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 
 		//list products 
