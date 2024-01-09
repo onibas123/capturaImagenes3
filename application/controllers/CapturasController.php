@@ -287,7 +287,6 @@ class CapturasController extends CI_Controller {
 		if(!empty($capturas_consolidadas)){
 			foreach($capturas_consolidadas as $cc){
 				$pdf->SetFont('Times', '', 10);	
-				$pdf->Cell(100, 10, 1, 1, 0, 'C');
 				$pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], 130 ,5, 70 , 25,'');
 				$pdf->Cell(40, 10, utf8_decode($cc['ubicacion']), 1, 0, 'C');
 				$pdf->Cell(40, 10, $cc['canal'], 1, 0, 'C');
