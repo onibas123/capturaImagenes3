@@ -223,26 +223,14 @@ class CapturasController extends CI_Controller {
 		$this->db->order_by('capturas.fecha_hora ASC');
 		$capturas_consolidadas = $this->db->get()->result_array();
 
-		$this->db->select('*');
-		$this->db->from('configuraciones');
-		$configuraciones = $this->db->get()->result_array();
+		
 
 		$nombre_empresa = '';
 		$direccion_empresa = '';
 		$email_empresa = '';
 		$telefono_empresa = '';
 
-		foreach($configuraciones as $c){
-			if($c['parametro'] == 'nombre_empresa')
-				$nombre_empresa = $c['valor'];
-			if($c['parametro'] == 'direccion_empresa')
-				$direccion_empresa = $c['valor'];
-			if($c['parametro'] == 'email_empresa')
-				$email_empresa = $c['valor'];
-			if($c['parametro'] == 'telefono_empresa')
-				$telefono_empresa = $c['valor'];
-		}
-
+		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
 		$time2 = date('H:i');
@@ -253,21 +241,11 @@ class CapturasController extends CI_Controller {
 		$pdf = new Fpdf();
 		$pdf->AddPage('L', 'A4', 0);
 		$pdf->SetAutoPageBreak(true, 20);
-		//$y = $pdf->GetY();
-		/*
-		$pdf->SetFont('Times', '', 10);
-		$pdf->Cell(276, 10, 'Informe '.$date, 0, 0, 'C');
-		$pdf->Ln(20);
-		*/
+
 		//cabecera principal
 		// Logo
 		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf);
-		$pdf->Ln(20);
-
-		$pdf->Cell(40, 10, utf8_decode($direccion_empresa), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode($email_empresa), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode($telefono_empresa), 1, 0, 'C');
 		$pdf->Ln(20);
 		//tabla
 		//cabecera
@@ -294,19 +272,35 @@ class CapturasController extends CI_Controller {
 	}
 
 	public function Header($pdf){  
+		$this->db->select('*');
+		$this->db->from('configuraciones');
+		$configuraciones = $this->db->get()->result_array();
+
+		foreach($configuraciones as $c){
+			if($c['parametro'] == 'nombre_empresa')
+				$nombre_empresa = $c['valor'];
+			if($c['parametro'] == 'direccion_empresa')
+				$direccion_empresa = $c['valor'];
+			if($c['parametro'] == 'email_empresa')
+				$email_empresa = $c['valor'];
+			if($c['parametro'] == 'telefono_empresa')
+				$telefono_empresa = $c['valor'];
+		}
+
+
 		//Display Company Info
 		$pdf->SetFont('Arial','B',14);
-		$pdf->Cell(50,10,"ABC COMPUTERS",30,1);
+		$pdf->Cell(50,10, $nombre_empresa,30,1);
 		$pdf->SetFont('Arial','',14);
-		$pdf->Cell(50,7,"West Street,",30,1);
-		$pdf->Cell(50,7,"Salem 636002.",30,1);
-		$pdf->Cell(50,7,"PH : 8778731770",30,1);
+		$pdf->Cell(50,7,$direccion_empresa,30,1);
+		$pdf->Cell(50,7,$email_empresa,30,1);
+		$pdf->Cell(50,7,$telefono_empresa,30,1);
 		
 		//Display INVOICE text
 		$pdf->SetY(15);
 		$pdf->SetX(-40);
 		$pdf->SetFont('Arial','B',18);
-		$pdf->Cell(50,10,"INVOICE",30,1);
+		$pdf->Cell(50,10,"INFORME",30,1);
 		
 		//Display Horizontal line
 		$pdf->Line(0,48,210,48);
