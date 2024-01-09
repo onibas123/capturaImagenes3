@@ -214,11 +214,21 @@ class CapturasController extends CI_Controller {
 		$desde = $this->input->get('desde', true);
 		$hasta = $this->input->get('hasta', true);
 
+		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, captura.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.created, "%d-%m-%Y %H:%i") as fecha_hora ');
+		$this->db->from('capturas');
+		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
+		$this->db->where('DATE(capturas.created) >=', $desde);
+		$this->db->where('DATE(capturas.created) <=', $hasta);
+		$this->db->where('capturas.consolidado', 1);
+		$this->db->order_by('fecha_hora ASC');
+		$capturas_consolidadas = $this->db->get()->result_array();
+
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
 		$time2 = date('H:i');
 
 		$this->load->library('fpdf/fpdf.php');
+		$img = '';
 
 		$pdf = new Fpdf();
 		$pdf->AddPage('L', 'A4', 0);
@@ -237,15 +247,18 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 
-		$pdf->SetFont('Times', '', 10);
-		$pdf->Cell(100, 10, 1, 1, 0, 'C');
-		$pdf->Cell(40, 10, 'aaa', 1, 0, 'C');
-		$pdf->Cell(40, 10, 'bbb'.' | '.'aaa', 1, 0, 'C');
-		$pdf->Cell(40, 10, 'cc', 1, 0, 'C');
-		$pdf->Cell(40, 10, 'dd', 1, 0, 'C');
-		$pdf->Ln();
-
-		
+		if(!empty($capturas_consolidadas)){
+			foreach($capturas_consolidadas as $cc){
+				$pdf->SetFont('Times', '', 10);	
+				$pdf->Cell(100, 10, 1, 1, 0, 'C');
+				$pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], 130 ,5, 70 , 25,'');
+				$pdf->Cell(40, 10, $cc['ubicacion'], 1, 0, 'C');
+				$pdf->Cell(40, 10, $cc['canal'], 1, 0, 'C');
+				$pdf->Cell(40, 10, $cc['observacion'], 1, 0, 'C');
+				$pdf->Cell(40, 10, $cc['fecha_hora'], 1, 0, 'C');
+				$pdf->Ln();
+			}
+		}
 		$pdf->Output();	
 	}
 }
