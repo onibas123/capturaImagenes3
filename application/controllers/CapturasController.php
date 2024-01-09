@@ -286,12 +286,12 @@ class CapturasController extends CI_Controller {
 			if($c['parametro'] == 'telefono_empresa')
 				$telefono_empresa = $c['valor'];
 		}
-		$pdf->SetX(-70);
+		$pdf->SetX(-90);
 		//Display Company Info
 		$pdf->SetFont('Arial','B',14);
 		$pdf->Cell(50,10, utf8_decode($nombre_empresa),30,1);
 		$pdf->SetFont('Arial','',14);
-		$pdf->SetX(-70);
+		$pdf->SetX(-50);
 		$pdf->Cell(50,7,utf8_decode($direccion_empresa),30,1);
 		$pdf->Cell(50,7,utf8_decode($email_empresa),30,1);
 		$pdf->Cell(50,7,utf8_decode($telefono_empresa),30,1);
