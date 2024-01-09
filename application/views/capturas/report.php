@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="row">
+                    <div class="row m-5 p-5">
                         <iframe style="width:100%; height: 400px;" id="iframe-reporte"></iframe>
                     </div>
                 </div>
