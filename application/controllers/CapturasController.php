@@ -217,10 +217,10 @@ class CapturasController extends CI_Controller {
 		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, capturas.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora ');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
-		$this->db->where('DATE(capturas.created) >=', $desde);
-		$this->db->where('DATE(capturas.created) <=', $hasta);
+		$this->db->where('DATE(capturas.fecha_hora) >=', $desde);
+		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
 		$this->db->where('capturas.consolidado', 1);
-		$this->db->order_by('fecha_hora ASC');
+		$this->db->order_by('capturas.fecha_hora ASC');
 		$capturas_consolidadas = $this->db->get()->result_array();
 
 		$date = date('d-m-Y');
