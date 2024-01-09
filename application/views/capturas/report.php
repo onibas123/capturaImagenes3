@@ -64,7 +64,8 @@
                         </div>
                     </div>
                     <br>
-                    <div class="row capturasRegistradas">
+                    <div class="row">
+                        <iframe style="width:100%; height: 400px;" id="iframe-reporte"></iframe>
                     </div>
                 </div>
                 <!-- /.container-fluid -->
