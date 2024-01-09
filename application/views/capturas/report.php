@@ -123,8 +123,11 @@
                 return false;
             }
 
+            $('#iframe-reporte').attr('src', '<?php echo base_url();?>index.php/CapturasController/demoPdf');
+
+            /*
             $.ajax({
-                url: '<?php echo base_url();?>index.php/CapturasController/obtenerCapturasConsolidado',
+                url: '<?php //echo base_url();?>index.php/CapturasController/obtenerCapturasConsolidado',
                 type: 'post',
                 data: {dispositivo: dispositivo, desde: desde, hasta: hasta},
                 dataType: 'json',
@@ -132,6 +135,7 @@
                     console.log(response);
                 }
             });
+            */
         }
     </script>
 </body>
