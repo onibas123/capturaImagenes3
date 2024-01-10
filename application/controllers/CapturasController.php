@@ -209,12 +209,11 @@ class CapturasController extends CI_Controller {
 
 	public function cargarPDF()
 	{
-		ini_set('memory_limit', '-1');
 		$org = $this->input->get('org', true);
 		$dev = $this->input->get('dev', true);
 		$desde = $this->input->get('desde', true);
 		$hasta = $this->input->get('hasta', true);
-		
+
 		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, capturas.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora ');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
@@ -235,7 +234,7 @@ class CapturasController extends CI_Controller {
 		$direccion_empresa = '';
 		$email_empresa = '';
 		$telefono_empresa = '';
-		/*
+
 		$this->db->select('*');
 		$this->db->from('configuraciones');
 		$configuraciones = $this->db->get()->result_array();
@@ -307,8 +306,8 @@ class CapturasController extends CI_Controller {
 		$data = [
 					'title' => 'Informe '.$fecha_desde.' - '.$fecha_hasta, 
 					'datos' => $capturas_consolidadas,
-					'datos_empresa' => [],
-					'datos_organizacion' => []
+					'datos_empresa' => $datos_empresa,
+					'datos_organizacion' => $datos_organizacion
 				];
 		$html = $this->load->view('capturas/consolidado_pdf', $data, true);
 		$this->load->library('M_pdf');

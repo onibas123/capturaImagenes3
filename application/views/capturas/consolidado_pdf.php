@@ -56,6 +56,14 @@
 </head>
 <body>
 <center>
+  <table class="table">
+    <tr>
+      <td><b><?php echo $datos_empresa['nombre_empresa'];?></b> </td>
+  </tr>
+
+</table>
+</center>
+<center>
 	<h3>
 		<?php
 		if(!empty($title))
@@ -68,8 +76,27 @@
   <fieldset>
     <legend>Datos Organización:</legend>
     <table class="table">
-      
-    <table>
+      <tr>
+        <td><b>R.U.T:</b> </td>
+        <td><u><?php echo $datos_organizacion[0]['rut'];?></u></td>
+
+        <td><b>Contacto:</b> </td>
+        <td><u><?php echo $datos_organizacion[0]['contacto'];?></u></td>
+      </tr>
+
+      <tr>
+        <td><b>Razón Social:</b> </td>
+        <td colspan="3"><u><?php echo $datos_organizacion[0]['razon_social'];?></u></td>
+      </tr>
+
+      <tr>
+        <td><b>Dirección:</b> </td>
+        <td><u><?php echo $datos_organizacion[0]['direccion'];?></u></td>
+
+        <td><b>Tel Contacto:</b> </td>
+        <td><u><?php echo $datos_organizacion[0]['telefono'];?></u></td>
+      </tr>
+    </table>
   </fieldset>
 </center>
 <table border="1" class="table">
