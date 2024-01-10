@@ -248,11 +248,11 @@ class CapturasController extends CI_Controller {
 		//tabla
 		//cabecera
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(100, 10, 'Imagen', 1, 0, 'C');
+		$pdf->Cell(80, 10, 'Imagen', 1, 0, 'C');
 		$pdf->Cell(40, 10, utf8_decode('Ubicación'), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode('Cámara'), 1, 0, 'C');
+		$pdf->Cell(20, 10, utf8_decode('Cámara'), 1, 0, 'C');
 		$pdf->Cell(40, 10, utf8_decode('Observación'), 1, 0, 'C');
-		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
+		$pdf->Cell(30, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 		//cuerpo
 		
@@ -260,11 +260,11 @@ class CapturasController extends CI_Controller {
 			foreach($capturas_consolidadas as $cc){
 				$pdf->SetFont('Times', '', 10);	
 				//$pdf->Cell(100, 100, $pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], $pdf->GetX(), $pdf->GetY(),80, 80),1,0,'');
-				$pdf->Cell(100, 100, "aaaa",1,0,'');
-				$pdf->Cell(40, 100, utf8_decode($cc['ubicacion']), 1, 0, '');
-				$pdf->Cell(40, 100, $cc['canal'], 1, 0, '');
-				$pdf->Cell(40, 100, utf8_decode($cc['observacion']), 1, 0, '');
-				$pdf->Cell(40, 100, $cc['fecha_hora'], 1, 0, '');
+				$pdf->Cell(80, 80, "aaaa",1,0,'');
+				$pdf->Cell(40, 80, utf8_decode($cc['ubicacion']), 1, 0, '');
+				$pdf->Cell(20, 80, $cc['canal'], 1, 0, '');
+				$pdf->Cell(40, 80, utf8_decode($cc['observacion']), 1, 0, '');
+				$pdf->Cell(30, 80, $cc['fecha_hora'], 1, 0, '');
 				$pdf->Ln();
 			}
 		}
