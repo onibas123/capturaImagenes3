@@ -356,30 +356,14 @@ class CapturasController extends CI_Controller {
 	}
 
 	public function Rows($pdf, $data){
-		$nb=0;
 		for($i=0;$i<count($data);$i++)
-			$nb=max($nb,$pdf->NbLines($pdf->widths[$i],$data[$i]));
-		$h=5*$nb;
-		$pdf->CheckPageBreak($h);
-		for($i=0;$i<count($data);$i++){
-			$w=$pdf->widths[$i];
-			$a=isset($pdf->aligns[$i]) ? $pdf->aligns[$i] : 'L';
-			$x=$pdf->GetX();
-			$y=$pdf->GetY();
-			$pdf->Rect($x,$y,$w,$h);
-
-			//modify functions for image 
-			if(!empty($pdf->imageKey) && in_array($i,$pdf->imageKey)){
-				$ih = $h - 0.5;
-				$iw = $w - 0.5;
-				$ix = $x + 0.25;
-				$iy = $y + 0.25;
-				$pdf->MultiCell($w,5,$pdf->Image(base_url().'assets/imagenes_capturadas/'.$data[$i]['imagen'],$ix,$iy,$iw,$ih),0,$a);
-			}
-			else
-				$pdf->MultiCell($w,5,$data[$i]['imagen'],0,$a);
-			$pdf->SetXY($x+$w,$y);
+  		{
+			$ih = $h - 0.5;
+			$iw = $w - 0.5;
+			$ix = $x + 0.25;
+			$iy = $y + 0.25;
+			//show image
+			$this->MultiCell($w,5,$this->Image($data[$i]['imagen'],$ix,$iy,$iw),0,$a);
 		}
-		$pdf->Ln($h);
 	}
 }
