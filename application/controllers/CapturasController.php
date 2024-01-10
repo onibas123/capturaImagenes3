@@ -321,32 +321,32 @@ class CapturasController extends CI_Controller {
 
 		$pdf->Line(10,55,200,55);
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(40, 10, 'Rut: ', '', 0, 'L', false);
+		$pdf->Cell(40, 7, 'Rut: ', '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(40, 10, (!empty($organizacion[0]['rut']) ? $organizacion[0]['rut'] : 'N/A'), '', 0, 'L', false);
+		$pdf->Cell(40, 7, (!empty($organizacion[0]['rut']) ? $organizacion[0]['rut'] : 'N/A'), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(40, 10, 'Contacto: ', '', 0, 'L', false);
+		$pdf->Cell(40, 7, 'Contacto: ', '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(40, 10, utf8_decode((!empty($organizacion[0]['contacto']) ? $organizacion[0]['contacto'] : 'N/A')), '', 0, 'L', false);
+		$pdf->Cell(40, 7, utf8_decode((!empty($organizacion[0]['contacto']) ? $organizacion[0]['contacto'] : 'N/A')), '', 0, 'L', false);
 
 		$pdf->Ln();
 
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(40, 10, utf8_decode('Razón Social: '), '', 0, 'L', false);
+		$pdf->Cell(40, 7, utf8_decode('Razón Social: '), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(120, 10, utf8_decode((!empty($organizacion[0]['razon_social']) ? $organizacion[0]['razon_social'] : 'N/A')), '', 0, 'L', false);
+		$pdf->Cell(120, 7, utf8_decode((!empty($organizacion[0]['razon_social']) ? $organizacion[0]['razon_social'] : 'N/A')), '', 0, 'L', false);
 		
 		$pdf->Ln();
 		
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(40, 10, utf8_decode('Dirección: '), '', 0, 'L', false);
+		$pdf->Cell(40, 7, utf8_decode('Dirección: '), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(40, 10, utf8_decode((!empty($organizacion[0]['direccion']) ? $organizacion[0]['direccion'] : 'N/A')), '', 0, 'L', false);
+		$pdf->Cell(40, 7, utf8_decode((!empty($organizacion[0]['direccion']) ? $organizacion[0]['direccion'] : 'N/A')), '', 0, 'L', false);
 		
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(40, 10, utf8_decode('Teléfono Contacto: '), '', 0, 'L', false);
+		$pdf->Cell(40, 7, utf8_decode('Teléfono Contacto: '), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(40, 10, (!empty($organizacion[0]['telefono']) ? $organizacion[0]['telefono'] : 'N/A'), '', 0, 'L', false);
+		$pdf->Cell(40, 7, (!empty($organizacion[0]['telefono']) ? $organizacion[0]['telefono'] : 'N/A'), '', 0, 'L', false);
 		$pdf->Line(10,85,200,85);
 		$pdf->Ln();
 	}
