@@ -240,7 +240,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf);
 		$pdf->Ln(20);
-		$this->SubHeader($pdf, []);
+		$this->SubHeader($pdf, $org);
 		//tabla
 		//cabecera
 		$pdf->SetFont('Times', 'B', 10);
