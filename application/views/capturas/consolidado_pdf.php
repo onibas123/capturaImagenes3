@@ -56,7 +56,12 @@
 </head>
 <body>
 <center>
-<?php print_r($datos_empresa);?>  
+  <table class="table">
+    <tr>
+      <td><b><?php echo $datos_empresa[0]['nombre_empresa'];?></b> </td>
+  </tr>
+
+  <table>
 </center>
 <center>
 	<h3>
@@ -68,7 +73,28 @@
 </center>
 <hr>
 <center>
-<?php print_r($datos_organizacion);?>
+  <table class="table">
+    <tr>
+      <td><b>R.U.T:</b> </td>
+      <td><u><?php echo $datos_organizacion[0]['rut'];?></u></td>
+
+      <td><b>Contacto:</b> </td>
+      <td><u><?php echo $datos_organizacion[0]['contacto'];?></u></td>
+    </tr>
+
+    <tr>
+      <td><b>Razón Social:</b> </td>
+      <td colspan="3"><u><?php echo $datos_organizacion[0]['razon_social'];?></u></td>
+    </tr>
+
+    <tr>
+      <td><b>Dirección:</b> </td>
+      <td><u><?php echo $datos_organizacion[0]['direccion'];?></u></td>
+
+      <td><b>Tel Contacto:</b> </td>
+      <td><u><?php echo $datos_organizacion[0]['telefono'];?></u></td>
+    </tr>
+  <table>
 </center>
 <table border="1" class="table">
   <thead>
@@ -85,7 +111,7 @@
     if(!empty($datos)){
       foreach($datos as $d){
         echo '<tr>';
-        echo '<td><img src="'.base_url().'assets/imagenes_capturadas/'.$d['imagen'].'" class="img-responsive" width="100" height="100"/></td>';
+        echo '<td><center><img src="'.base_url().'assets/imagenes_capturadas/'.$d['imagen'].'" class="img-responsive" width="100" height="100"/></center></td>';
         echo '<td>'.$d['ubicacion'].'</td>';
         echo '<td>'.$d['canal'].'</td>';
         echo '<td>'.$d['observacion'].'</td>';
