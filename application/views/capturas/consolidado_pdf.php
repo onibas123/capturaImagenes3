@@ -58,7 +58,7 @@
 <center>
   <table class="table">
     <tr>
-      <td><b><?php echo $datos_empresa['nombre_empresa'];?></b> </td>
+      <td><b><?php //echo $datos_empresa['nombre_empresa'];?></b> </td>
   </tr>
 
   <table>
@@ -76,23 +76,23 @@
   <table class="table">
     <tr>
       <td><b>R.U.T:</b> </td>
-      <td><u><?php echo $datos_organizacion[0]['rut'];?></u></td>
+      <td><u><?php //echo $datos_organizacion[0]['rut'];?></u></td>
 
       <td><b>Contacto:</b> </td>
-      <td><u><?php echo $datos_organizacion[0]['contacto'];?></u></td>
+      <td><u><?php //echo $datos_organizacion[0]['contacto'];?></u></td>
     </tr>
 
     <tr>
       <td><b>Razón Social:</b> </td>
-      <td colspan="3"><u><?php echo $datos_organizacion[0]['razon_social'];?></u></td>
+      <td colspan="3"><u><?php //echo $datos_organizacion[0]['razon_social'];?></u></td>
     </tr>
 
     <tr>
       <td><b>Dirección:</b> </td>
-      <td><u><?php echo $datos_organizacion[0]['direccion'];?></u></td>
+      <td><u><?php //echo $datos_organizacion[0]['direccion'];?></u></td>
 
       <td><b>Tel Contacto:</b> </td>
-      <td><u><?php echo $datos_organizacion[0]['telefono'];?></u></td>
+      <td><u><?php //echo $datos_organizacion[0]['telefono'];?></u></td>
     </tr>
   <table>
 </center>
