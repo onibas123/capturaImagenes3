@@ -223,6 +223,8 @@ class CapturasController extends CI_Controller {
 		$this->db->order_by('capturas.fecha_hora ASC');
 		$capturas_consolidadas = $this->db->get()->result_array();
 
+		$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
+		$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
 		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
@@ -240,6 +242,8 @@ class CapturasController extends CI_Controller {
 		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf);
 		$pdf->Ln(20);
+		$pdf->Cell(50, 10, 'Período: '.$fecha_desde.' - '.$fecha_hasta, 30, 1);
+		$pdf->Ln();
 		$this->SubHeader($pdf, $org);
 		$pdf->Ln(5);
 		//tabla
