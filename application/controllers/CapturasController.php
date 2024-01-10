@@ -305,7 +305,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(50,10,"INFORME",30,1);
 		
 		//Display Horizontal line
-		$pdf->Line(0,48,210,48);
+		//$pdf->Line(0,48,210,48);
 	}
 
 	public function SubHeader($pdf, $organizacion_id){  
