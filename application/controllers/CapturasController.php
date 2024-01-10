@@ -358,10 +358,10 @@ class CapturasController extends CI_Controller {
 	public function Rows($pdf, $data){
 		for($i=0;$i<count($data);$i++)
   		{
-			$ih = $h - 0.5;
-			$iw = $w - 0.5;
-			$ix = $x + 0.25;
-			$iy = $y + 0.25;
+			$ih =  0.5;
+			$iw =  0.5;
+			$ix =  0.25;
+			$iy =  0.25;
 			//show image
 			$this->MultiCell($w,5,$this->Image($data[$i]['imagen'],$ix,$iy,$iw),0,$a);
 		}
