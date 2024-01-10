@@ -241,7 +241,7 @@ class CapturasController extends CI_Controller {
 		$this->Header($pdf);
 		$pdf->Ln(20);
 		$this->SubHeader($pdf, $org);
-		$pdf->Ln(20);
+		$pdf->Ln(5);
 		//tabla
 		//cabecera
 		$pdf->SetFont('Times', 'B', 10);
