@@ -241,7 +241,7 @@ class CapturasController extends CI_Controller {
 		// Logo
 		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf, 'Período: '.$fecha_desde.' - '.$fecha_hasta);
-		$pdf->Ln(20);
+		$pdf->Ln(5);
 		$this->SubHeader($pdf, $org);
 		$pdf->Ln(5);
 		//tabla
@@ -302,8 +302,8 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(50,7,utf8_decode($telefono_empresa),30,1);
 		
 		//Display INVOICE text
-		$pdf->SetY(40);
-		$pdf->SetX(-190);
+		$pdf->SetY(35);
+		$pdf->SetX(-210);
 		$pdf->SetFont('Arial','B',14);
 		$pdf->Cell(50,10,"INFORME ".utf8_decode($adicional),30,1);
 		
