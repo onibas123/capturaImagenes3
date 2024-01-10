@@ -347,7 +347,8 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 7, utf8_decode('Teléfono Contacto: '), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
 		$pdf->Cell(40, 7, (!empty($organizacion[0]['telefono']) ? $organizacion[0]['telefono'] : 'N/A'), '', 0, 'L', false);
-		$pdf->Line(10,85,200,85);
+		
+		$pdf->Line(10,80,200,80);
 		$pdf->Ln();
 	}
 	  
