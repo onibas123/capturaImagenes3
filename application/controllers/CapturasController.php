@@ -229,6 +229,40 @@ class CapturasController extends CI_Controller {
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
 		$time2 = date('H:i');
+
+		$nombre_empresa = '';
+		$direccion_empresa = '';
+		$email_empresa = '';
+		$telefono_empresa = '';
+
+		$this->db->select('*');
+		$this->db->from('configuraciones');
+		$configuraciones = $this->db->get()->result_array();
+
+		foreach($configuraciones as $c){
+			if($c['parametro'] == 'nombre_empresa')
+				$nombre_empresa = $c['valor'];
+			if($c['parametro'] == 'direccion_empresa')
+				$direccion_empresa = $c['valor'];
+			if($c['parametro'] == 'email_empresa')
+				$email_empresa = $c['valor'];
+			if($c['parametro'] == 'telefono_empresa')
+				$telefono_empresa = $c['valor'];
+		}
+		$datos_empresa = 	[
+									'nombre_empresa' => $nombre_empresa,
+									'direccion_empresa' => $direccion_empresa,
+									'email_empresa' => $email_empresa,
+									'telefono_empresa' => $telefono_empresa
+								];
+
+
+
+		$this->db->select('*');
+		$this->db->from('organizaciones');
+		$this->db->where('id', $organizacion_id);
+		$this->db->limit(1);
+		$datos_organizacion = $this->db->get()->result_array();
 		/*
 		$this->load->library('fpdf/fpdf.php');
 		$img = '';
@@ -269,7 +303,12 @@ class CapturasController extends CI_Controller {
 		}
 		$pdf->Output();	
 		*/
-		$data = array('title' => 'Código de barra', 'datos' => []);
+		$data = [
+					'title' => 'Informe '.$fecha_desde.' - '.$fecha_hasta, 
+					'datos' => $capturas_consolidadas,
+					'datos_empresa' => $datos_empresa,
+					'datos_organizacion' => $datos_organizacion
+				];
 		$html = $this->load->view('capturas/consolidado_pdf', $data, true);
 		$this->load->library('M_pdf');
 		$this->m_pdf->pdf->WriteHTML($html);

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Listado completo de personas</title>
+	<title>Listado de Capturas Consolidadas</title>
 	<meta charset="utf-8">
 
 	<style type="text/css">
@@ -56,6 +56,9 @@
 </head>
 <body>
 <center>
+<?php print_r($datos_empresa);?>  
+</center>
+<center>
 	<h3>
 		<?php
 		if(!empty($title))
@@ -63,8 +66,35 @@
 		?>
 	</h3>
 </center>
-	<table border="1" class="table">
-		
-	</table>
+<hr>
+<center>
+<?php print_r($datos_organizacion);?>
+</center>
+<table border="1" class="table">
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Ubicación</th>
+      <th>Cámara</th>
+      <th>Observación</th>
+      <th>Fecha</th>
+    </tr>
+  </thead>
+  <tbody>
+    <?php
+    if(!empty($datos)){
+      foreach($datos as $d){
+        echo '<tr>';
+        echo '<td><img src="'.base_url().'assets/imagenes_capturadas/'.$d['imagen'].'" class="img-responsive" width="100" height="100"/></td>';
+        echo '<td>'.$d['ubicacion'].'</td>';
+        echo '<td>'.$d['canal'].'</td>';
+        echo '<td>'.$d['observacion'].'</td>';
+        echo '<td>'.$d['fecha_hora'].'</td>';
+        echo '</tr>';
+      }
+    }
+    ?>
+  </tbody>
+</table>
 </body>
 </html>
