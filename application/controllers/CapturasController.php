@@ -234,7 +234,8 @@ class CapturasController extends CI_Controller {
 		$img = '';
 
 		$pdf = new Fpdf();
-		$pdf->AddPage('L', 'A4', 0);
+		//$pdf->AddPage('L', 'A4', 0);
+		$pdf->AddPage('P', 'Legal', 0);
 		$pdf->SetAutoPageBreak(true, 20);
 
 		//cabecera principal
