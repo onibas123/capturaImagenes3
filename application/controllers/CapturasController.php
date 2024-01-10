@@ -214,7 +214,7 @@ class CapturasController extends CI_Controller {
 		$dev = $this->input->get('dev', true);
 		$desde = $this->input->get('desde', true);
 		$hasta = $this->input->get('hasta', true);
-
+		
 		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, capturas.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora ');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
