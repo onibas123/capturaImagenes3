@@ -255,11 +255,12 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 		//cuerpo
-		/*
+		
 		if(!empty($capturas_consolidadas)){
 			foreach($capturas_consolidadas as $cc){
 				$pdf->SetFont('Times', '', 10);	
-				$pdf->Cell(100, 100, $pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], $pdf->GetX(), $pdf->GetY(),80, 80),1,0,'');
+				//$pdf->Cell(100, 100, $pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], $pdf->GetX(), $pdf->GetY(),80, 80),1,0,'');
+				$pdf->Cell(100, 100, "aaaa",1,0,'');
 				$pdf->Cell(40, 100, utf8_decode($cc['ubicacion']), 1, 0, '');
 				$pdf->Cell(40, 100, $cc['canal'], 1, 0, '');
 				$pdf->Cell(40, 100, utf8_decode($cc['observacion']), 1, 0, '');
@@ -267,7 +268,7 @@ class CapturasController extends CI_Controller {
 				$pdf->Ln();
 			}
 		}
-		*/
+		
 		$this->Rows($pdf, $capturas_consolidadas);
 		$pdf->Output();	
 	}
@@ -353,33 +354,5 @@ class CapturasController extends CI_Controller {
 		
 		$pdf->Line(10,76,200,76);
 		$pdf->Ln();
-	}
-
-	public function Rows($pdf, $data){
-		$nb=0;
-		for($i=0;$i<count($data);$i++)
-			$nb=max($nb,$pdf->NbLines($pdf->widths[$i],$data[$i]));
-		$h=5*$nb;
-		$pdf->CheckPageBreak($h);
-		for($i=0;$i<count($data);$i++){
-			$w=$pdf->widths[$i];
-			$a=isset($pdf->aligns[$i]) ? $pdf->aligns[$i] : 'L';
-			$x=$pdf->GetX();
-			$y=$pdf->GetY();
-			$pdf->Rect($x,$y,$w,$h);
-
-			//modify functions for image 
-			if(!empty($pdf->imageKey) && in_array($i,$pdf->imageKey)){
-				$ih = $h - 0.5;
-				$iw = $w - 0.5;
-				$ix = $x + 0.25;
-				$iy = $y + 0.25;
-				$pdf->MultiCell($w,5,$pdf->Image (base_url().'assets/imagenes_capturadas/'.$data[$i]['imagen'],$ix,$iy,$iw,$ih),0,$a);
-			}
-			else
-				$pdf->MultiCell($w,5,'AAA',0,$a);
-			$pdf->SetXY($x+$w,$y);
-		}
-		$pdf->Ln($h);
 	}
 }
