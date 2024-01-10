@@ -309,40 +309,13 @@ class CapturasController extends CI_Controller {
 	}
 
 	public function SubHeader($pdf, $data){  
-		$nombre_empresa = '';
-		$direccion_empresa = '';
-		$email_empresa = '';
-		$telefono_empresa = '';
-		
-		$this->db->select('*');
-		$this->db->from('configuraciones');
-		$configuraciones = $this->db->get()->result_array();
-
-		foreach($configuraciones as $c){
-			if($c['parametro'] == 'nombre_empresa')
-				$nombre_empresa = $c['valor'];
-			if($c['parametro'] == 'direccion_empresa')
-				$direccion_empresa = $c['valor'];
-			if($c['parametro'] == 'email_empresa')
-				$email_empresa = $c['valor'];
-			if($c['parametro'] == 'telefono_empresa')
-				$telefono_empresa = $c['valor'];
-		}
-		$pdf->SetY(40);
-		$pdf->SetX(-255);
-		//Display Company Info
-		$pdf->SetFont('Arial','B',14);
-		$pdf->Cell(50,10, utf8_decode($nombre_empresa),30,1);
-		$pdf->SetFont('Arial','',14);
-		$pdf->SetX(-255);
-		$pdf->Cell(50,7,utf8_decode($direccion_empresa),30,1);
-		$pdf->SetX(-255);
-		$pdf->Cell(50,7,utf8_decode($email_empresa),30,1);
-		$pdf->SetX(-255);
-		$pdf->Cell(50,7,utf8_decode($telefono_empresa),30,1);
-
-		//Display Horizontal line
-		$pdf->Line(0,48,210,48);
+		$pdf->SetFont('Times', 'B', 10);
+		$pdf->Cell(100, 10, 'Imagen', 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode('Ubicación'), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode('Cámara'), 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode('Observación'), 1, 0, 'C');
+		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
+		$pdf->Ln();
 	}
 	  
 	public function body($info,$products_info){
