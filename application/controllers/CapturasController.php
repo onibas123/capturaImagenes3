@@ -224,13 +224,6 @@ class CapturasController extends CI_Controller {
 		$capturas_consolidadas = $this->db->get()->result_array();
 
 		
-
-		$nombre_empresa = '';
-		$direccion_empresa = '';
-		$email_empresa = '';
-		$telefono_empresa = '';
-
-		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
 		$time2 = date('H:i');
@@ -247,6 +240,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
 		$this->Header($pdf);
 		$pdf->Ln(20);
+		$this->SubHeader($pdf, []);
 		//tabla
 		//cabecera
 		$pdf->SetFont('Times', 'B', 10);
@@ -272,6 +266,11 @@ class CapturasController extends CI_Controller {
 	}
 
 	public function Header($pdf){  
+		$nombre_empresa = '';
+		$direccion_empresa = '';
+		$email_empresa = '';
+		$telefono_empresa = '';
+
 		$this->db->select('*');
 		$this->db->from('configuraciones');
 		$configuraciones = $this->db->get()->result_array();
@@ -305,6 +304,43 @@ class CapturasController extends CI_Controller {
 		$pdf->SetFont('Arial','B',18);
 		$pdf->Cell(50,10,"INFORME",30,1);
 		
+		//Display Horizontal line
+		$pdf->Line(0,48,210,48);
+	}
+
+	public function SubHeader($pdf, $data){  
+		$nombre_empresa = '';
+		$direccion_empresa = '';
+		$email_empresa = '';
+		$telefono_empresa = '';
+		
+		$this->db->select('*');
+		$this->db->from('configuraciones');
+		$configuraciones = $this->db->get()->result_array();
+
+		foreach($configuraciones as $c){
+			if($c['parametro'] == 'nombre_empresa')
+				$nombre_empresa = $c['valor'];
+			if($c['parametro'] == 'direccion_empresa')
+				$direccion_empresa = $c['valor'];
+			if($c['parametro'] == 'email_empresa')
+				$email_empresa = $c['valor'];
+			if($c['parametro'] == 'telefono_empresa')
+				$telefono_empresa = $c['valor'];
+		}
+		$pdf->SetY(40);
+		$pdf->SetX(-255);
+		//Display Company Info
+		$pdf->SetFont('Arial','B',14);
+		$pdf->Cell(50,10, utf8_decode($nombre_empresa),30,1);
+		$pdf->SetFont('Arial','',14);
+		$pdf->SetX(-255);
+		$pdf->Cell(50,7,utf8_decode($direccion_empresa),30,1);
+		$pdf->SetX(-255);
+		$pdf->Cell(50,7,utf8_decode($email_empresa),30,1);
+		$pdf->SetX(-255);
+		$pdf->Cell(50,7,utf8_decode($telefono_empresa),30,1);
+
 		//Display Horizontal line
 		$pdf->Line(0,48,210,48);
 	}
