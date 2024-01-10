@@ -268,8 +268,6 @@ class CapturasController extends CI_Controller {
 				$pdf->Ln();
 			}
 		}
-		
-		$this->Rows($pdf, $capturas_consolidadas);
 		$pdf->Output();	
 	}
 
