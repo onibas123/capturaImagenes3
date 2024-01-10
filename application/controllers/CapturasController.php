@@ -229,12 +229,11 @@ class CapturasController extends CI_Controller {
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
 		$time2 = date('H:i');
-
+		/*
 		$this->load->library('fpdf/fpdf.php');
 		$img = '';
 
 		$pdf = new Fpdf();
-		//$pdf->AddPage('L', 'A4', 0);
 		$pdf->AddPage('P', 'Legal', 0);
 		$pdf->SetAutoPageBreak(true, 20);
 
@@ -269,6 +268,13 @@ class CapturasController extends CI_Controller {
 			}
 		}
 		$pdf->Output();	
+		*/
+		$data = array('title' => 'Código de barra', 'datos' => []);
+		$html = $this->load->view('capturas/consolidado_pdf', $data, true);
+		$this->load->library('M_pdf');
+		$this->m_pdf->pdf->WriteHTML($html);
+		$filename = "consolidados.pdf";
+		$this->m_pdf->pdf->Output($filename, "I");
 	}
 
 	public function Header($pdf, $adicional){  
