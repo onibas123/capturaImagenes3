@@ -260,7 +260,7 @@ class CapturasController extends CI_Controller {
 
 		$this->db->select('*');
 		$this->db->from('organizaciones');
-		$this->db->where('id', $organizacion_id);
+		$this->db->where('id', $org);
 		$this->db->limit(1);
 		$datos_organizacion = $this->db->get()->result_array();
 		/*
