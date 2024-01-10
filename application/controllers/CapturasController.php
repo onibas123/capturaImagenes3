@@ -319,7 +319,7 @@ class CapturasController extends CI_Controller {
 		$this->db->limit(1);
 		$organizacion = $this->db->get()->result_array();
 
-		$pdf->Line(10,60,200,60);
+		$pdf->Line(10,55,200,55);
 		$pdf->SetFont('Times', 'B', 10);
 		$pdf->Cell(40, 10, 'Rut: ', '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
