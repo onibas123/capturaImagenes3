@@ -308,13 +308,30 @@ class CapturasController extends CI_Controller {
 		$pdf->Line(0,48,210,48);
 	}
 
-	public function SubHeader($pdf, $data){  
+	public function SubHeader($pdf, $organizacion_id){  
+		$this->db->select('*');
+		$this->db->from('organizaciones');
+		$this->db->where('id', $organizacion_id);
+		$this->db->limit(1);
+		$organizacion = $this->db->get()->result_array();
+
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(100, 10, 'Imagen', 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode('Ubicación'), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode('Cámara'), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode('Observación'), 1, 0, 'C');
-		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
+		$pdf->Cell(100, 10, 'Rut: ', 1, 0, 'C');
+		$pdf->Cell(40, 10, (!empty($organizacion[0]['rut']) ? $organizacion[0]['rut'] : 'N/A'), 1, 0, 'C');
+		$pdf->Cell(40, 10, 'Contacto: ', 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode((!empty($organizacion[0]['contacto']) ? $organizacion[0]['contacto'] : 'N/A')), 1, 0, 'C');
+		$pdf->Ln();
+
+		$pdf->SetFont('Times', 'B', 10);
+		$pdf->Cell(100, 10, utf8_decode('Dirección: '), 1, 0, 'C');
+		$pdf->Cell(40, 10, (!empty($organizacion[0]['direccion']) ? $organizacion[0]['direccion'] : 'N/A'), 1, 0, 'C');
+		$pdf->Cell(40, 10, 'Contacto: ', 1, 0, 'C');
+		$pdf->Cell(40, 10, utf8_decode((!empty($organizacion[0]['contacto']) ? $organizacion[0]['contacto'] : 'N/A')), 1, 0, 'C');
+		$pdf->Ln();
+
+		$pdf->SetFont('Times', 'B', 10);
+		$pdf->Cell(100, 10, utf8_decode('Teléfono Contacto: '), 1, 0, 'C');
+		$pdf->Cell(40, 10, (!empty($organizacion[0]['telefono']) ? $organizacion[0]['telefono'] : 'N/A'), 1, 0, 'C');
 		$pdf->Ln();
 	}
 	  
