@@ -255,6 +255,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 10, 'Fecha', 1, 0, 'C');
 		$pdf->Ln();
 		//cuerpo
+		/*
 		if(!empty($capturas_consolidadas)){
 			foreach($capturas_consolidadas as $cc){
 				$pdf->SetFont('Times', '', 10);	
@@ -266,6 +267,8 @@ class CapturasController extends CI_Controller {
 				$pdf->Ln();
 			}
 		}
+		*/
+		$this->Rows($pdf, $capturas_consolidadas);
 		$pdf->Output();	
 	}
 
@@ -351,82 +354,32 @@ class CapturasController extends CI_Controller {
 		$pdf->Line(10,76,200,76);
 		$pdf->Ln();
 	}
-	  
-	public function body($info,$products_info){
-		
-		//Billing Details
-		$this->SetY(55);
-		$this->SetX(10);
-		$this->SetFont('Arial','B',12);
-		$this->Cell(50,10,"Bill To: ",0,1);
-		$this->SetFont('Arial','',12);
-		$this->Cell(50,7,$info["customer"],0,1);
-		$this->Cell(50,7,$info["address"],0,1);
-		$this->Cell(50,7,$info["city"],0,1);
-		
-		//Display Invoice no
-		$this->SetY(55);
-		$this->SetX(-60);
-		$this->Cell(50,7,"Invoice No : ".$info["invoice_no"]);
-		
-		//Display Invoice date
-		$this->SetY(63);
-		$this->SetX(-60);
-		$this->Cell(50,7,"Invoice Date : ".$info["invoice_date"]);
-		
-		//Display Table headings
-		$this->SetY(95);
-		$this->SetX(10);
-		$this->SetFont('Arial','B',12);
-		$this->Cell(80,9,"DESCRIPTION",1,0);
-		$this->Cell(40,9,"PRICE",1,0,"C");
-		$this->Cell(30,9,"QTY",1,0,"C");
-		$this->Cell(40,9,"TOTAL",1,1,"C");
-		$this->SetFont('Arial','',12);
-		
-		//Display table product rows
-		foreach($products_info as $row){
-		  $this->Cell(80,9,$row["name"],"LR",0);
-		  $this->Cell(40,9,$row["price"],"R",0,"R");
-		  $this->Cell(30,9,$row["qty"],"R",0,"C");
-		  $this->Cell(40,9,$row["total"],"R",1,"R");
-		}
-		//Display table empty rows
-		for($i=0;$i<12-count($products_info);$i++)
-		{
-		  $this->Cell(80,9,"","LR",0);
-		  $this->Cell(40,9,"","R",0,"R");
-		  $this->Cell(30,9,"","R",0,"C");
-		  $this->Cell(40,9,"","R",1,"R");
-		}
-		//Display table total row
-		$this->SetFont('Arial','B',12);
-		$this->Cell(150,9,"TOTAL",1,0,"R");
-		$this->Cell(40,9,$info["total_amt"],1,1,"R");
-		
-		//Display amount in words
-		$this->SetY(225);
-		$this->SetX(10);
-		$this->SetFont('Arial','B',12);
-		$this->Cell(0,9,"Amount in Words ",0,1);
-		$this->SetFont('Arial','',12);
-		$this->Cell(0,9,$info["words"],0,1);
-		
-	}
 
-	public function Footer(){
-		
-		//set footer position
-		$this->SetY(-50);
-		$this->SetFont('Arial','B',12);
-		$this->Cell(0,10,"for ABC COMPUTERS",0,1,"R");
-		$this->Ln(15);
-		$this->SetFont('Arial','',12);
-		$this->Cell(0,10,"Authorized Signature",0,1,"R");
-		$this->SetFont('Arial','',10);
-		
-		//Display Footer Text
-		$this->Cell(0,10,"This is a computer generated invoice",0,1,"C");
-		
+	public function Rows($pdf, $data){
+		$nb=0;
+		for($i=0;$i<count($data);$i++)
+			$nb=max($nb,$pdf->NbLines($pdf->widths[$i],$data[$i]));
+		$h=5*$nb;
+		$pdf->CheckPageBreak($h);
+		for($i=0;$i<count($data);$i++){
+			$w=$pdf->widths[$i];
+			$a=isset($pdf->aligns[$i]) ? $pdf->aligns[$i] : 'L';
+			$x=$pdf->GetX();
+			$y=$pdf->GetY();
+			$pdf->Rect($x,$y,$w,$h);
+
+			//modify functions for image 
+			if(!empty($pdf->imageKey) && in_array($i,$pdf->imageKey)){
+				$ih = $h - 0.5;
+				$iw = $w - 0.5;
+				$ix = $x + 0.25;
+				$iy = $y + 0.25;
+				$pdf->MultiCell($w,5,$pdf->Image(base_url().'assets/imagenes_capturadas/'.$data[$i]['imagen'],$ix,$iy,$iw,$ih),0,$a);
+			}
+			else
+				$pdf->MultiCell($w,5,$data[$i]['imagen'],0,$a);
+			$pdf->SetXY($x+$w,$y);
+		}
+		$pdf->Ln($h);
 	}
 }
