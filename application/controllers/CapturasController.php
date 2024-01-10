@@ -235,7 +235,7 @@ class CapturasController extends CI_Controller {
 		$direccion_empresa = '';
 		$email_empresa = '';
 		$telefono_empresa = '';
-
+		/*
 		$this->db->select('*');
 		$this->db->from('configuraciones');
 		$configuraciones = $this->db->get()->result_array();
@@ -307,8 +307,8 @@ class CapturasController extends CI_Controller {
 		$data = [
 					'title' => 'Informe '.$fecha_desde.' - '.$fecha_hasta, 
 					'datos' => $capturas_consolidadas,
-					'datos_empresa' => $datos_empresa,
-					'datos_organizacion' => $datos_organizacion
+					'datos_empresa' => [],
+					'datos_organizacion' => []
 				];
 		$html = $this->load->view('capturas/consolidado_pdf', $data, true);
 		$this->load->library('M_pdf');
