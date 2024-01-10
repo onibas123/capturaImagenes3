@@ -331,9 +331,9 @@ class CapturasController extends CI_Controller {
 		$pdf->Ln();
 
 		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(80, 10, utf8_decode('Razón Social: '), 1, 0, 'L', false);
+		$pdf->Cell(40, 10, utf8_decode('Razón Social: '), 1, 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(80, 10, utf8_decode((!empty($organizacion[0]['razon_social']) ? $organizacion[0]['razon_social'] : 'N/A')), 1, 0, 'L', false);
+		$pdf->Cell(120, 10, utf8_decode((!empty($organizacion[0]['razon_social']) ? $organizacion[0]['razon_social'] : 'N/A')), 1, 0, 'L', false);
 		
 		$pdf->Ln();
 		
