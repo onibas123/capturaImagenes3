@@ -304,7 +304,7 @@ class CapturasController extends CI_Controller {
 		
 		//Display INVOICE text
 		$pdf->SetY(40);
-		$pdf->SetX(-200);
+		$pdf->SetX(-150);
 		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(50,10,"INFORME ".utf8_decode($adicional),30,1);
 		
