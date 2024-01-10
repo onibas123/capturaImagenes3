@@ -58,7 +58,7 @@
 <center>
   <table class="table">
     <tr>
-      <td><b><?php echo $datos_empresa[0]['nombre_empresa'];?></b> </td>
+      <td><b><?php echo $datos_empresa['nombre_empresa'];?></b> </td>
   </tr>
 
   <table>
