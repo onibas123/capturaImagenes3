@@ -240,10 +240,8 @@ class CapturasController extends CI_Controller {
 		//cabecera principal
 		// Logo
 		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
-		$this->Header($pdf);
+		$this->Header($pdf, 'Período: '.$fecha_desde.' - '.$fecha_hasta);
 		$pdf->Ln(20);
-		$pdf->Cell(50, 10, 'Período: '.$fecha_desde.' - '.$fecha_hasta, 30, 1);
-		$pdf->Ln();
 		$this->SubHeader($pdf, $org);
 		$pdf->Ln(5);
 		//tabla
@@ -270,7 +268,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Output();	
 	}
 
-	public function Header($pdf){  
+	public function Header($pdf, $adicional){  
 		$nombre_empresa = '';
 		$direccion_empresa = '';
 		$email_empresa = '';
@@ -307,7 +305,7 @@ class CapturasController extends CI_Controller {
 		$pdf->SetY(15);
 		$pdf->SetX(-80);
 		$pdf->SetFont('Arial','B',18);
-		$pdf->Cell(50,10,"INFORME",30,1);
+		$pdf->Cell(50,10,"INFORME ".utf8_decode($adicional),30,1);
 		
 		//Display Horizontal line
 		//$pdf->Line(0,48,210,48);
