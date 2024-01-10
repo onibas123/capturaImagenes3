@@ -319,7 +319,7 @@ class CapturasController extends CI_Controller {
 		$this->db->limit(1);
 		$organizacion = $this->db->get()->result_array();
 
-		$pdf->Line(0,60,230,60);
+		$pdf->Line(10,50,200,50);
 		$pdf->SetFont('Times', 'B', 10);
 		$pdf->Cell(40, 10, 'Rut: ', '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
@@ -347,7 +347,7 @@ class CapturasController extends CI_Controller {
 		$pdf->Cell(40, 10, utf8_decode('Teléfono Contacto: '), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
 		$pdf->Cell(40, 10, (!empty($organizacion[0]['telefono']) ? $organizacion[0]['telefono'] : 'N/A'), '', 0, 'L', false);
-		$pdf->Line(0,100,230,100);
+		$pdf->Line(10,70,200,70);
 		$pdf->Ln();
 	}
 	  
