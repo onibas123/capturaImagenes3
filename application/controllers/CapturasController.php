@@ -209,6 +209,7 @@ class CapturasController extends CI_Controller {
 
 	public function cargarPDF()
 	{
+		ini_set('memory_limit', '-1');
 		$org = $this->input->get('org', true);
 		$dev = $this->input->get('dev', true);
 		$desde = $this->input->get('desde', true);
