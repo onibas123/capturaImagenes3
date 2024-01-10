@@ -364,7 +364,7 @@ class CapturasController extends CI_Controller {
 			$iy =  0.25;
 			$w = 20;
 			//show image
-			$pdf->MultiCell($w,5,$pdf->Image(base_url().'assets/imagenes_capturadas/'.$data[$i]['imagen'],$ix,$iy,$iw),0,$a);
+			$pdf->MultiCell($w,5,$pdf->Image(base_url().'assets/imagenes_capturadas/'.$data[$i]['imagen'],$ix,$iy,$iw),0,'L');
 		}
 	}
 }
