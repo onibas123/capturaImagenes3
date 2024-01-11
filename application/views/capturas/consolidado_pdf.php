@@ -41,6 +41,7 @@
       font-size: 11px;
   }
   .table {
+      border: 1px solid black;
       width: 100%;
       max-width: 100%;
       margin-bottom: 20px;
@@ -51,10 +52,6 @@
       border-spacing: 2px;
       border-color: grey;
       font-size: 11px;
-  }
-  table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
   }
 </style>
 </head>
