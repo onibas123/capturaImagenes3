@@ -62,8 +62,8 @@
       <td><center><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></center></td>
     </tr>
     <tr>
-      <td><center><b style="font-size: 12px;"><?php echo $datos_empresa['direccion'];?></b></center></td>
-      <td><center><b style="font-size: 12px;"><?php echo 'Email: '.$datos_empresa['email'].', Teléfono: '.$datos_empresa['telefono'];?></b></center></td>
+      <td><center><b style="font-size: 12px;"><?php echo $datos_empresa['direccion_empresa'];?></b></center></td>
+      <td><center><b style="font-size: 12px;"><?php echo 'Email: '.$datos_empresa['email_empresa'].', Teléfono: '.$datos_empresa['telefono_empresa'];?></b></center></td>
     </tr>
   </table>
 </center>
