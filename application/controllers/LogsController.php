@@ -20,6 +20,9 @@ class LogsController extends CI_Controller {
 		$crud->unset_edit();
 		$crud->unset_delete();
 
+		$crud->set_relation('usuarios_id','usuarios','nombre');
+		$crud->display_as('usuarios_id','Usuario');
+
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Logs';
