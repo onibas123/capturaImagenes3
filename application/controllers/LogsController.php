@@ -22,6 +22,7 @@ class LogsController extends CI_Controller {
 
 		$crud->set_relation('usuarios_id','usuarios','nombre');
 		$crud->display_as('usuarios_id','Usuario');
+		$crud->columns(['usuarios_id','entidad', 'fecha_hora', 'accion']);
 
 		$output = $crud->render();
 		$data = (array)$output;
