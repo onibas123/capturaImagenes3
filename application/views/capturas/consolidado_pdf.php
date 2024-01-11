@@ -58,11 +58,16 @@
 <center>
   <table class="table">
     <tr>
-      <td><b><?php echo $datos_empresa['nombre_empresa'];?></b> </td>
-  </tr>
-
-</table>
+      <td><img src="<?php echo base_url();?>assets/img/logo.png" class="img-responsive" width="50" height="50" /></td>
+      <td><center><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></center></td>
+    </tr>
+    <tr>
+      <td><center><b style="font-size: 12px;"><?php echo $datos_empresa['direccion'];?></b></center></td>
+      <td><center><b style="font-size: 12px;"><?php echo 'Email: '.$datos_empresa['email'].', Teléfono: '.$datos_empresa['telefono'];?></b></center></td>
+    </tr>
+  </table>
 </center>
+<br>
 <center>
 	<h3>
 		<?php
@@ -99,6 +104,7 @@
     </table>
   </fieldset>
 </center>
+<br>
 <table border="1" class="table">
   <thead>
     <tr>
