@@ -20,7 +20,8 @@ class DispositivosController extends CI_Controller {
         $crud->set_relation('organizaciones_id','organizaciones','nombre');
         $crud->set_relation('tipo_dispositivo_id','tipo_dispositivo','nombre');
 		$crud->set_relation('marcas_id','marcas','nombre');
-		$crud->columns(['id','organizaciones_id','tipo_dispositivo_id', 'marcas_id', 'nombre', 'cantidad_canales', 'ip', 'puerto', 'estado', 'codificar_dss']);
+		$crud->display_as('organizaciones_id','Organización')->display_as('tipo_dispositivo_id','Tipo Dispositivo')->display_as('marcas_id','Marca');
+		$crud->columns(['organizaciones_id','tipo_dispositivo_id', 'marcas_id', 'nombre', 'cantidad_canales', 'ip', 'puerto', 'usuario', 'password', 'estado', 'codificar_dss']);
 		/*
         if($this->session->userdata('usuario_escribir') == 0)
 			$crud->unset_add();

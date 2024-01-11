@@ -18,6 +18,10 @@ class MarcasController extends CI_Controller {
 		$crud->unset_export();
 		$crud->unset_clone();
 
+		$crud->unset_add();
+		$crud->unset_edit();
+		$crud->unset_delete();
+
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Marcas';
