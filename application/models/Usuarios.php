@@ -17,7 +17,7 @@ class Usuarios extends CI_Model {
     public function login($usuario, $password){
         $this->db->select('usuarios.id as id, usuarios.email as email, usuarios.password as password, usuarios.nombre as nombre, 
                             usuarios.guarda as guarda, usuarios.edita as edita, usuarios.elimina as elimina, usuarios.roles_id as roles_id, 
-                            roles.nombre as roles_nombre');
+                            roles.nombre as roles_nombre, usuarios.estado as estado');
         $this->db->from('usuarios');
         $this->db->join('roles', 'roles.id = usuarios.roles_id');
         $this->db->where('email', $usuario);

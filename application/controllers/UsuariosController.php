@@ -72,31 +72,36 @@ class UsuariosController extends CI_Controller {
         
 		$usuarioValidado = $this->modelo->login($usuario, md5($password));
 		if(!empty($usuarioValidado)){
+			if(!empty($usuarioValidado[0]['estado']) && $usuarioValidado[0]['estado'] == 1){
+				//get options by rol
+				$this->db->select('opciones.id, opciones.nombre, nivel, orden, padre, controlador, accion, icono');
+				$this->db->from('opciones');
+				$this->db->join('opcion_rol', 'opcion_rol.opciones_id = opciones.id');
+				$this->db->where('opcion_rol.roles_id', $usuarioValidado[0]['roles_id']);
+				$this->db->order_by('padre ASC, orden ASC');
+				$opciones = $this->db->get()->result_array();
 
-			//get options by rol
-			$this->db->select('opciones.id, opciones.nombre, nivel, orden, padre, controlador, accion, icono');
-			$this->db->from('opciones');
-			$this->db->join('opcion_rol', 'opcion_rol.opciones_id = opciones.id');
-			$this->db->where('opcion_rol.roles_id', $usuarioValidado[0]['roles_id']);
-			$this->db->order_by('padre ASC, orden ASC');
-			$opciones = $this->db->get()->result_array();
-
-			$session_array = array(
-				'usuario_id' => $usuarioValidado[0]['id'],
-				'usuario_usuario' => $usuarioValidado[0]['email'],
-				'usuario_password_raw' => $password,
-				'usuario_password' => $usuarioValidado[0]['password'],
-				'usuario_nombre' => $usuarioValidado[0]['nombre'],
-				'usuario_email' => $usuarioValidado[0]['email'],
-				'usuario_guarda' => $usuarioValidado[0]['guarda'],
-				'usuario_edita' => $usuarioValidado[0]['edita'],
-				'usuario_elimina' => $usuarioValidado[0]['elimina'],
-				'roles_id' => $usuarioValidado[0]['roles_id'],
-				'roles_nombre' => $usuarioValidado[0]['roles_nombre'],
-				'opciones' => $opciones
-			);
-			$this->session->set_userdata($session_array);
-			header('Location: '.base_url().'index.php/UsuariosController/mi_cuenta');
+				$session_array = array(
+					'usuario_id' => $usuarioValidado[0]['id'],
+					'usuario_usuario' => $usuarioValidado[0]['email'],
+					'usuario_password_raw' => $password,
+					'usuario_password' => $usuarioValidado[0]['password'],
+					'usuario_nombre' => $usuarioValidado[0]['nombre'],
+					'usuario_email' => $usuarioValidado[0]['email'],
+					'usuario_guarda' => $usuarioValidado[0]['guarda'],
+					'usuario_edita' => $usuarioValidado[0]['edita'],
+					'usuario_elimina' => $usuarioValidado[0]['elimina'],
+					'roles_id' => $usuarioValidado[0]['roles_id'],
+					'roles_nombre' => $usuarioValidado[0]['roles_nombre'],
+					'opciones' => $opciones
+				);
+				$this->session->set_userdata($session_array);
+				header('Location: '.base_url().'index.php/UsuariosController/mi_cuenta');
+			}
+			else{
+				$data = ['mensaje' => '<font color="red">Usuario Deshabilitado, por favor consulta a Administración.</font>'];
+				$this->load->view('login',$data);
+			}
 		}
 		else{
 			$data = ['mensaje' => '<font color="red">Usuario y/o Contraseña incorrecta.</font>'];
