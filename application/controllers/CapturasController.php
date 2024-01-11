@@ -264,46 +264,7 @@ class CapturasController extends CI_Controller {
 		$this->db->where('id', $org);
 		$this->db->limit(1);
 		$datos_organizacion = $this->db->get()->result_array();
-		/*
-		$this->load->library('fpdf/fpdf.php');
-		$img = '';
 
-		$pdf = new Fpdf();
-		$pdf->AddPage('P', 'Legal', 0);
-		$pdf->SetAutoPageBreak(true, 20);
-
-		//cabecera principal
-		// Logo
-		$pdf->Image(base_url().'assets/img/logo.png',10,6,30);
-		$this->Header($pdf, 'Período: '.$fecha_desde.' - '.$fecha_hasta);
-		$pdf->Ln(5);
-		$this->SubHeader($pdf, $org);
-		$pdf->Ln(5);
-		//tabla
-		//cabecera
-		$pdf->SetFont('Times', 'B', 10);
-		$pdf->Cell(65, 10, 'Imagen', 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode('Ubicación'), 1, 0, 'C');
-		$pdf->Cell(20, 10, utf8_decode('Cámara'), 1, 0, 'C');
-		$pdf->Cell(40, 10, utf8_decode('Observación'), 1, 0, 'C');
-		$pdf->Cell(30, 10, 'Fecha', 1, 0, 'C');
-		$pdf->Ln();
-		//cuerpo
-		
-		if(!empty($capturas_consolidadas)){
-			foreach($capturas_consolidadas as $cc){
-				$pdf->SetFont('Times', '', 10);	
-				$pdf->Cell(65, 65, $pdf->Image(base_url().'assets/imagenes_capturadas/'.$cc['imagen'], $pdf->GetX(), $pdf->GetY(), 80, 0),1,0,'C');
-				//$pdf->Cell(65, 65, "aaaa",1,0,'');
-				$pdf->Cell(40, 65, utf8_decode($cc['ubicacion']), 1, 0, '');
-				$pdf->Cell(20, 65, $cc['canal'], 1, 0, '');
-				$pdf->Cell(40, 65, utf8_decode($cc['observacion']), 1, 0, '');
-				$pdf->Cell(30, 65, $cc['fecha_hora'], 1, 0, '');
-				$pdf->Ln();
-			}
-		}
-		$pdf->Output();	
-		*/
 		$data = [
 					'title' => 'Informe '.$fecha_desde.' - '.$fecha_hasta, 
 					'datos' => $capturas_consolidadas,

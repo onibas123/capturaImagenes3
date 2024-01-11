@@ -63,8 +63,8 @@
 <center>
   <table class="">
     <tr>
-      <td><img src="<?php echo base_url();?>assets/img/logo.png" class="img-responsive" width="50" height="50" /><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></td>
-      <td></td>
+      <td style="width: 70px;"><img src="<?php echo base_url();?>assets/img/logo.png" class="img-responsive" width="70" height="70" /></td>
+      <td><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></td>
     </tr>
     <tr>
       <td>
@@ -76,12 +76,12 @@
 </center>
 <br>
 <center>
-	<h3>
+	<h5>
 		<?php
 		if(!empty($title))
 			echo $title;
 		?>
-	</h3>
+	</h5>
 </center>
 <hr>
 <center>
