@@ -59,11 +59,11 @@
   <table class="table">
     <tr>
       <td><img src="<?php echo base_url();?>assets/img/logo.png" class="img-responsive" width="50" height="50" /></td>
-      <td><center><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></center></td>
+      <td><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></td>
     </tr>
     <tr>
-      <td><center><b style="font-size: 12px;"><?php echo $datos_empresa['direccion_empresa'];?></b></center></td>
-      <td><center><b style="font-size: 12px;"><?php echo 'Email: '.$datos_empresa['email_empresa'].', Teléfono: '.$datos_empresa['telefono_empresa'];?></b></center></td>
+      <td><b style="font-size: 12px;"><?php echo $datos_empresa['direccion_empresa'];?></b></td>
+      <td><b style="font-size: 12px;"><?php echo 'Email: '.$datos_empresa['email_empresa'].', Teléfono: '.$datos_empresa['telefono_empresa'];?></b></td>
     </tr>
   </table>
 </center>
