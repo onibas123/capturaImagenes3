@@ -46,6 +46,8 @@
       margin-bottom: 20px;
       border-spacing: 0;
       display: table;
+      border: 1px solid black;
+      border-collapse: collapse;
       /*border-collapse: separate;
       border-spacing: 2px;
       border-color: grey;*/
