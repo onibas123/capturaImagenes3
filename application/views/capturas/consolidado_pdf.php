@@ -40,7 +40,7 @@
       transition: all 300ms linear 0s;
       font-size: 11px;
   }
-  .table, th, td {
+  .table {
       border: 1px solid black;
       width: 100%;
       max-width: 100%;
@@ -52,6 +52,10 @@
       border-spacing: 2px;
       border-color: grey;
       font-size: 11px;
+  }
+
+  .table th, .table td {
+      border: 1px solid black;
   }
 </style>
 </head>
