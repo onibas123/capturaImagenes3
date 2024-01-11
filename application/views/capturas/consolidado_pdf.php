@@ -108,7 +108,7 @@
   </fieldset>
 </center>
 <br>
-<table border="1" class="table">
+<table class="table">
   <thead>
     <tr>
       <th>Imagen</th>
