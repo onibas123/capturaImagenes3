@@ -40,7 +40,7 @@
       transition: all 300ms linear 0s;
       font-size: 11px;
   }
-  .table {
+  .table > th > td {
       border: 1px solid black;
       width: 100%;
       max-width: 100%;
