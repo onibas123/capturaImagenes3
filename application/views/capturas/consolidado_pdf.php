@@ -41,14 +41,12 @@
       font-size: 11px;
   }
   .table {
-      border: 1px solid black;
       width: 100%;
       max-width: 100%;
       margin-bottom: 20px;
       border-spacing: 0;
-      border-collapse: collapse;
       display: table;
-      border-collapse: separate;
+      /*border-collapse: separate;*/
       border-spacing: 2px;
       border-color: grey;
       font-size: 11px;
@@ -56,6 +54,7 @@
 
   .table th, .table td {
       border: 1px solid black;
+      border-collapse: collapse;
   }
 </style>
 </head>
