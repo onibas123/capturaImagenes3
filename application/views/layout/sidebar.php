@@ -1,3 +1,9 @@
+<?php
+$opciones = [];
+if($this->session->userdata('opciones'))
+    //print_r($this->session->userdata('opciones'));
+    $opciones = $this->session->userdata('opciones');
+?>
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -39,15 +45,23 @@
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Configuración</h6>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/ConfiguracionesController/index">Paramétrica</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/UsuariosController/index">Usuarios</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/RolesController/index">Roles</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/OpcionesController/index">Opciones</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/RolesController/permisos">Permisos</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/OrganizacionesController/index">Organizaciones</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/TipoDispositivoController/index">Tipo Dispositivo</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/MarcasController/index">Marcas</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/DispositivosController/index">Dispositivos</a>
+            <?php 
+                foreach($opciones as $o){
+                    if($o['padre'] == 3)
+                        echo '<a class="collapse-item" href="'.base_url().'index.php/'.$o['controlador'].'/'.$o['accion'].'">'.$o['nombre'].'</a>';
+                }
+            ?>
+            <!--
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/ConfiguracionesController/index">Paramétrica</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/UsuariosController/index">Usuarios</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/RolesController/index">Roles</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/OpcionesController/index">Opciones</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/RolesController/permisos">Permisos</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/OrganizacionesController/index">Organizaciones</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/TipoDispositivoController/index">Tipo Dispositivo</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/MarcasController/index">Marcas</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/DispositivosController/index">Dispositivos</a>
+            -->
         </div>
     </div>
 </li>
@@ -62,9 +76,17 @@
         data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Gestión</h6>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/CapturasController/schema">Esquema de Horarios</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/CapturasController/index">Capturas</a>
-            <a class="collapse-item" href="<?php echo base_url();?>index.php/CapturasController/consolidate">Consolidar</a>
+            <?php 
+                foreach($opciones as $o){
+                    if($o['padre'] == 13)
+                        echo '<a class="collapse-item" href="'.base_url().'index.php/'.$o['controlador'].'/'.$o['accion'].'">'.$o['nombre'].'</a>';
+                }
+            ?>
+            <!--
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/CapturasController/schema">Esquema de Horarios</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/CapturasController/index">Capturas</a>
+            <a class="collapse-item" href="<?php //echo base_url();?>index.php/CapturasController/consolidate">Consolidar</a>
+            -->
         </div>
     </div>
 </li>
@@ -83,11 +105,17 @@
     </a>
     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Capturas Consolidadas</h6>
-            <a class="collapse-item"  href="<?php echo base_url();?>index.php/CapturasController/report">Registros</a>
-            <div class="collapse-divider"></div>
-            <h6 class="collapse-header">Información Log</h6>
-            <a class="collapse-item" href= "<?php echo base_url();?>index.php/LogsController/index">Logs</a>
+            <h6 class="collapse-header">Capturas Consolidadas <br>& Logs</h6>
+            <?php 
+                foreach($opciones as $o){
+                    if($o['padre'] == 17)
+                        echo '<a class="collapse-item" href="'.base_url().'index.php/'.$o['controlador'].'/'.$o['accion'].'">'.$o['nombre'].'</a>';
+                }
+            ?>
+            <!--<a class="collapse-item"  href="<?php //echo base_url();?>index.php/CapturasController/report">Registros</a>-->
+            <!--<div class="collapse-divider"></div>
+            <h6 class="collapse-header">Información Log</h6>-->
+            <!--<a class="collapse-item" href= "<?php //echo base_url();?>index.php/LogsController/index">Logs</a>-->
         </div>
     </div>
 </li>

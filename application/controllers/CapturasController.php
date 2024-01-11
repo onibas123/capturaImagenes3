@@ -25,6 +25,16 @@ class CapturasController extends CI_Controller {
 		$crud->unset_edit();
 		$crud->unset_delete();
 		$crud->unset_columns(['observacion', 'ruta_imagen']);
+
+		$crud->set_relation('organizaciones_id','organizaciones','nombre');
+        $crud->set_relation('dispositivos_id','dispositivos','nombre');
+		$crud->set_relation('usuario_id','usuarios','nombre');
+
+		$crud->display_as('organizaciones_id','Organización')->display_as('dispositivos_id','Dispositivo')
+		->display_as('usuario_id','Usuario');
+		$crud->field_type('password', 'password');
+
+
 		/*
         if($this->session->userdata('usuario_escribir') == 0)
 			$crud->unset_add();

@@ -69,55 +69,39 @@ class UsuariosController extends CI_Controller {
     public function login(){
 		$usuario = trim($this->input->post('usuario', TRUE));
 		$password = trim($this->input->post('password', TRUE));
-        if($usuario == 'admin@gmail.com' && $password == 'admin'){
-            header('Location: '.base_url().'index.php/UsuariosController/mi_cuenta');
-        }
-        else{
-            $data = ['mensaje' => '<font color="red">Usuario y/o Contraseña incorrecta.</font>'];
-			$this->load->view('login',$data);
-        }
-        /*
+        
 		$usuarioValidado = $this->modelo->login($usuario, md5($password));
 		if(!empty($usuarioValidado)){
+
+			//get options by rol
+			$this->db->select('opciones.id, opciones.nombre, nivel, orden, padre, controlador, accion, icono');
+			$this->db->from('opciones');
+			$this->db->join('opcion_rol', 'opcion_rol.opciones_id = opciones.id');
+			$this->db->where('opcion_rol.roles_id', $usuarioValidado[0]['roles_id']);
+			$this->db->order_by('padre ASC, orden ASC');
+			$opciones = $this->db->get()->result_array();
+
 			$session_array = array(
 				'usuario_id' => $usuarioValidado[0]['id'],
-				'usuario_usuario' => $usuarioValidado[0]['usuario'],
+				'usuario_usuario' => $usuarioValidado[0]['email'],
 				'usuario_password_raw' => $password,
 				'usuario_password' => $usuarioValidado[0]['password'],
 				'usuario_nombre' => $usuarioValidado[0]['nombre'],
 				'usuario_email' => $usuarioValidado[0]['email'],
-				'usuario_escribir' => $usuarioValidado[0]['escribir'],
-				'usuario_editar' => $usuarioValidado[0]['editar'],
-				'usuario_eliminar' => $usuarioValidado[0]['eliminar'],
+				'usuario_guarda' => $usuarioValidado[0]['guarda'],
+				'usuario_edita' => $usuarioValidado[0]['edita'],
+				'usuario_elimina' => $usuarioValidado[0]['elimina'],
 				'roles_id' => $usuarioValidado[0]['roles_id'],
-				'roles_nombre' => $usuarioValidado[0]['roles_nombre']
+				'roles_nombre' => $usuarioValidado[0]['roles_nombre'],
+				'opciones' => $opciones
 			);
 			$this->session->set_userdata($session_array);
-			$dataLog = 	[
-				'accion' => 'Login Correcto',
-				'entidad' => 'usuarios',
-				'identificador' => $this->session->userdata('usuario_id'),
-				'data' => json_encode($session_array),
-				'usuarios_id' => $this->session->userdata('usuario_id'),
-				'fecha' => date('Y-m-d H:i:s')
-			];
-			$this->modelo->addLog($dataLog);
-			header('Location: '.base_url().'index.php/Welcome/Panel');
+			header('Location: '.base_url().'index.php/UsuariosController/mi_cuenta');
 		}
 		else{
 			$data = ['mensaje' => '<font color="red">Usuario y/o Contraseña incorrecta.</font>'];
-			$dataLog = 	[
-							'accion' => 'Login Incorrecto',
-							'entidad' => 'usuarios',
-							'identificador' => '3',
-							'data' => json_encode(['usuario' => $usuario, 'password' => $password]),
-							'usuarios_id' => '3',
-							'fecha' => date('Y-m-d H:i:s')
-						];
-			$this->modelo->addLog($dataLog);
 			$this->load->view('login',$data);
 		}
-        */
 	}
 
 	public function logout()
