@@ -52,6 +52,10 @@
       border-color: grey;
       font-size: 11px;
   }
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
 </style>
 </head>
 <body>
