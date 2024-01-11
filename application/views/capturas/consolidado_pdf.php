@@ -46,9 +46,9 @@
       margin-bottom: 20px;
       border-spacing: 0;
       display: table;
-      /*border-collapse: separate;*/
+      /*border-collapse: separate;
       border-spacing: 2px;
-      border-color: grey;
+      border-color: grey;*/
       font-size: 11px;
   }
 
