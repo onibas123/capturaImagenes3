@@ -53,15 +53,11 @@
       border-color: grey;
       font-size: 11px;
   }
-  th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
 </style>
 </head>
 <body>
 <center>
-  <table class="table">
+  <table class="">
     <tr>
       <td><img src="<?php echo base_url();?>assets/img/logo.png" class="img-responsive" width="50" height="50" /><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></td>
       <td></td>
@@ -87,7 +83,7 @@
 <center>
   <fieldset>
     <legend>Datos Organización:</legend>
-    <table class="table">
+    <table class="">
       <tr>
         <td><b>R.U.T:</b> </td>
         <td><u><?php echo $datos_organizacion[0]['rut'];?></u></td>
