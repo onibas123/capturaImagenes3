@@ -62,7 +62,7 @@
 </head>
 <body>
 <center>
-  <table class="">
+  <table class="" style="width: 200px;">
     <tr>
       <td style="width: 70px;"><img src="<?php echo base_url();?>assets/img/logo.png" class="img-responsive" width="70" height="70" /></td>
       <td><b style="font-size: 14px;"><?php echo $datos_empresa['nombre_empresa'];?></b></td>
@@ -129,10 +129,10 @@
       foreach($datos as $d){
         echo '<tr>';
         echo '<td><center><img src="'.base_url().'assets/imagenes_capturadas/'.$d['imagen'].'" class="img-responsive" width="100" height="100"/></center></td>';
-        echo '<td>'.$d['ubicacion'].'</td>';
-        echo '<td>'.$d['canal'].'</td>';
-        echo '<td>'.$d['observacion'].'</td>';
-        echo '<td>'.$d['fecha_hora'].'</td>';
+        echo '<td style="vertical-align: top;text-align: left;">'.$d['ubicacion'].'</td>';
+        echo '<td style="vertical-align: top;text-align: left;">'.$d['canal'].'</td>';
+        echo '<td style="vertical-align: top;text-align: left;">'.$d['observacion'].'</td>';
+        echo '<td style="vertical-align: top;text-align: left;">'.$d['fecha_hora'].'</td>';
         echo '</tr>';
       }
     }
