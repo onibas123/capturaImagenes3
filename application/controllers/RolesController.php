@@ -26,18 +26,31 @@ class RolesController extends CI_Controller {
 			$crud->unset_delete();
 		$crud->required_fields('nombre');
 
+		$crud->callback_before_insert(array($this,'add_log_create'));
+		$crud->callback_before_update(array($this,'add_log_edit'));
+		$crud->callback_before_delete(array($this,'add_log_delete'));
+
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Roles';
 		$this->load->view('roles/index', $data);
-		/*
-		$roles = $this->modelo->getRoles();
-		$data = [
-					'titulo' => 'Roles',
-					'roles' => $roles
-				];
-		$this->load->view('roles/index', $data);
-		*/
+	}
+
+	public function add_log_create($post_array){
+		$this->addLog('Roles', 'Crear', json_encode($post_array));
+		return $post_array;
+	}
+
+	public function add_log_edit($post_array){
+		$this->addLog('Roles', 'Editar', json_encode($post_array));
+		return $post_array;
+	}
+
+	public function add_log_delete($primary_key){
+		$this->db->where('id',$primary_key);
+    	$entity_row = $this->db->get('roles')->row();
+		$this->addLog('Roles', 'Eliminar', json_encode($entity_row));
+		return true;
 	}
 
 	public function add(){
@@ -121,5 +134,23 @@ class RolesController extends CI_Controller {
 		$this->db->where('roles_id', $rol);
 		$opciones = $this->db->get('opcion_rol')->result_array();
 		echo json_encode($opciones);
+	}
+
+	public function addLog($entidad, $accion, $data){
+		$usuarios_id = !empty($this->session->userdata('usuario_id')) ? $this->session->userdata('usuario_id') : '';
+		$fecha_hora = date('Y-m-d H:i:s');
+	
+		$data_to_save = 	[
+								'usuarios_id' => $usuarios_id,
+								'entidad' => $entidad,
+								'fecha_hora' => $fecha_hora,
+								'accion' => $accion,
+								'data' => $data
+							];
+							
+		if($this->db->insert('logs', $data_to_save))
+			return true;
+		else
+			return false;
 	}
 }

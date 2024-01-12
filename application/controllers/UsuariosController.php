@@ -34,8 +34,10 @@ class UsuariosController extends CI_Controller {
 			$crud->unset_edit();
 		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
+
 		$crud->callback_before_insert(array($this,'encrypt_password_and_insert_callback'));
 		$crud->callback_before_update(array($this,'encrypt_password_and_update_callback'));
+		$crud->callback_before_delete(array($this,'log_user_before_delete'));
 
 		$crud->required_fields('usuario','password', 'nombre', 'roles_id');
 
@@ -46,11 +48,13 @@ class UsuariosController extends CI_Controller {
 	}
 
 	function encrypt_password_and_insert_callback($post_array) {
+		$this->addLog('Usuarios', 'Crear', json_encode($post_array));
 		$post_array['password'] = md5($post_array['password']);
 		return $post_array;
 	} 
 
 	function encrypt_password_and_update_callback($post_array) {
+		$this->addLog('Usuarios', 'Editar', json_encode($post_array));
 		$email = $post_array['email'];
 		$this->db->select('password');
 		$this->db->from('usuarios');
@@ -63,6 +67,14 @@ class UsuariosController extends CI_Controller {
 			$post_array['password'] = md5($post_array['password']);
 		return $post_array;
 	} 
+
+	public function log_user_before_delete($primary_key)
+	{
+		$this->db->where('id',$primary_key);
+    	$entity_row = $this->db->get('usuarios')->row();
+		$this->addLog('Usuarios', 'Eliminar', json_encode($entity_row));
+		return true;
+	}
 
     public function login(){
 		$usuario = trim($this->input->post('usuario', TRUE));
@@ -94,15 +106,18 @@ class UsuariosController extends CI_Controller {
 					'opciones' => $opciones
 				);
 				$this->session->set_userdata($session_array);
+				$this->addLog('Usuarios', 'Login', json_encode($session_array));
 				header('Location: '.base_url().'index.php/UsuariosController/mi_cuenta');
 			}
 			else{
 				$data = ['mensaje' => '<font color="red">Usuario Deshabilitado, por favor consulta a Administración.</font>'];
+				$this->addLog('Usuarios', 'Intento Login (Usuario Deshabilitado)', json_encode($session_array));
 				$this->load->view('login',$data);
 			}
 		}
 		else{
 			$data = ['mensaje' => '<font color="red">Usuario y/o Contraseña incorrecta.</font>'];
+			$this->addLog('Usuarios', 'Intento Login (Usuario y/o Password incorrecto.)', json_encode(['usuario' => $usuario, 'password' => $password]));
 			$this->load->view('login',$data);
 		}
 	}
@@ -154,5 +169,23 @@ class UsuariosController extends CI_Controller {
 			</div>');
 		}
 		header('Location: ' . base_url().'index.php/UsuariosController/mi_cuenta');
+	}
+
+	public function addLog($entidad, $accion, $data){
+		$usuarios_id = !empty($this->session->userdata('usuario_id')) ? $this->session->userdata('usuario_id') : '';
+		$fecha_hora = date('Y-m-d H:i:s');
+	
+		$data_to_save = 	[
+								'usuarios_id' => $usuarios_id,
+								'entidad' => $entidad,
+								'fecha_hora' => $fecha_hora,
+								'accion' => $accion,
+								'data' => $data
+							];
+							
+		if($this->db->insert('logs', $data_to_save))
+			return true;
+		else
+			return false;
 	}
 }

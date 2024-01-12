@@ -30,6 +30,10 @@ class CapturasController extends CI_Controller {
         $crud->set_relation('dispositivos_id','dispositivos','nombre');
 		$crud->set_relation('usuario_id','usuarios','nombre');
 
+		$crud->callback_before_insert(array($this,'add_log_create'));
+		$crud->callback_before_update(array($this,'add_log_edit'));
+		$crud->callback_before_delete(array($this,'add_log_delete'));
+
 		$crud->display_as('organizaciones_id','Organización')->display_as('dispositivos_id','Dispositivo')
 		->display_as('usuario_id','Usuario');
 		$crud->field_type('password', 'password');
@@ -38,14 +42,23 @@ class CapturasController extends CI_Controller {
 		$data = (array)$output;
 		$data['titulo'] = 'Capturas Histórico';
 		$this->load->view('capturas/index', $data);
-		/*
-		$roles = $this->modelo->getRoles();
-		$data = [
-					'titulo' => 'Roles',
-					'roles' => $roles
-				];
-		$this->load->view('roles/index', $data);
-		*/
+	}
+
+	public function add_log_create($post_array){
+		$this->addLog('Capturas', 'Crear', json_encode($post_array));
+		return $post_array;
+	}
+
+	public function add_log_edit($post_array){
+		$this->addLog('Capturas', 'Editar', json_encode($post_array));
+		return $post_array;
+	}
+
+	public function add_log_delete($primary_key){
+		$this->db->where('id',$primary_key);
+    	$entity_row = $this->db->get('capturas')->row();
+		$this->addLog('Capturas', 'Eliminar', json_encode($entity_row));
+		return true;
 	}
 
     public function add(){
@@ -359,5 +372,23 @@ class CapturasController extends CI_Controller {
 		
 		$pdf->Line(10,76,200,76);
 		$pdf->Ln();
+	}
+
+	public function addLog($entidad, $accion, $data){
+		$usuarios_id = !empty($this->session->userdata('usuario_id')) ? $this->session->userdata('usuario_id') : '';
+		$fecha_hora = date('Y-m-d H:i:s');
+	
+		$data_to_save = 	[
+								'usuarios_id' => $usuarios_id,
+								'entidad' => $entidad,
+								'fecha_hora' => $fecha_hora,
+								'accion' => $accion,
+								'data' => $data
+							];
+							
+		if($this->db->insert('logs', $data_to_save))
+			return true;
+		else
+			return false;
 	}
 }

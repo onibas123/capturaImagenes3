@@ -114,10 +114,14 @@
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Perfil
                                 </a>
-                                <a class="dropdown-item" href="<?php echo base_url();?>index.php/ConfiguracionesController/index">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Configuraciones
-                                </a>
+                                <?php
+                                if($this->session->userdata('roles_id') == 1){
+                                ?>
+                                    <a class="dropdown-item" href="<?php echo base_url();?>index.php/ConfiguracionesController/index">
+                                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Configuraciones
+                                    </a>
+                                <?php } ?>
                                 <div class="dropdown-divider"></div>
                                 <a onclick="logout();" class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
