@@ -140,6 +140,9 @@ class CapturasController extends CI_Controller {
 				$this->db->insert('esquemas', $data_schema);
 			}
 		}
+
+		$data_log = ['dispositivo' => $dispositivo, 'esquema' => $schema];
+		$this->addLog('Capturas', 'Crear Esquema Horarios', json_encode($data_log));
 		echo 1;
 	}
 
@@ -173,8 +176,10 @@ class CapturasController extends CI_Controller {
 								'usuario_id' => $usuario_id,
 								'consolidado' => $consolidado
 							];
-		if($this->db->insert('capturas', $data_captura))
+		if($this->db->insert('capturas', $data_captura)){
+			$this->addLog('Capturas', 'Crear', json_encode($data_captura));
 			echo 1;
+		}
 		else
 			echo 0;
 	}
@@ -202,6 +207,7 @@ class CapturasController extends CI_Controller {
 						];
 			$this->db->where('id', $dc['id']);
 			$this->db->update('capturas', $data);
+			$this->addLog('Capturas', 'Crear Consolidado', json_encode(['capturas_id' => $dc['id'], 'data' => $data]));
 		}
 		echo 1;
 	}
