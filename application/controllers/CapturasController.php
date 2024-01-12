@@ -397,4 +397,26 @@ class CapturasController extends CI_Controller {
 		else
 			return false;
 	}
+
+	public function capturarSnapshots(){
+		//TODO: obtener aquellos dispositivos/canales acorde al seteo del esquema de horarios para capturas pantalla
+		$this->db->select('d.id as dispositivo_id, d.usuario as usuario, d.password as password, d.ip as ip, d.puerto as puerto,
+							d.organizaciones_id as organizacion_id, e.canal as canal');
+		$this->db->from('esquemas as e');
+		$this->db->join('dispositivos as d', 'd.id = e.dispositivos_id');
+		$this->db->where('hora', date('H:i'));
+		$this->db->order_by('e.id ASC');
+		$result = $this->db->get()->result_array();
+		foreach($result as $r){
+			//[dispositivo_id]
+			//[usuario] 
+			//[password] 
+			//[ip] 
+			//[puerto] 
+			//[organizacion_id] 
+			//[canal]
+			//TODO: obtener snapshot acorde al tipo_dispositivo (dvr, nvr, ipc), marca (dahua, hikvision)
+			
+		}
+	}
 }
