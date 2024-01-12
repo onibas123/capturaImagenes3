@@ -24,16 +24,14 @@ class DispositivosController extends CI_Controller {
 		->display_as('marcas_id','Marca')->display_as('cantidad_canales','Canales')->display_as('codificar_dss', 'DSS');
 		$crud->columns(['organizaciones_id','tipo_dispositivo_id', 'marcas_id', 'nombre', 'cantidad_canales', 'ip', 'puerto', 'usuario', 'password', 'estado', 'codificar_dss']);
 		$crud->field_type('password', 'password');
-		/*
-        if($this->session->userdata('usuario_escribir') == 0)
+		
+		if($this->session->userdata('usuario_guarda') == 0)
 			$crud->unset_add();
-		if($this->session->userdata('usuario_editar') == 0)
+		if($this->session->userdata('usuario_edita') == 0)
 			$crud->unset_edit();
-		if($this->session->userdata('usuario_eliminar') == 0)
+		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
-        */
-		//$crud->set_relation('padre','opciones','nombre');
-
+		
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Dispositivos';

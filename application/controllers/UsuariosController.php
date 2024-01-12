@@ -28,14 +28,12 @@ class UsuariosController extends CI_Controller {
 		$crud->unset_print();
 		$crud->unset_export();
 		$crud->unset_clone();
-		/*
-		if($this->session->userdata('usuario_escribir') == 0)
+		if($this->session->userdata('usuario_guarda') == 0)
 			$crud->unset_add();
-		if($this->session->userdata('usuario_editar') == 0)
+		if($this->session->userdata('usuario_edita') == 0)
 			$crud->unset_edit();
-		if($this->session->userdata('usuario_eliminar') == 0)
+		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
-		*/
 		$crud->callback_before_insert(array($this,'encrypt_password_and_insert_callback'));
 		$crud->callback_before_update(array($this,'encrypt_password_and_update_callback'));
 

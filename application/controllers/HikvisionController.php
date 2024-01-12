@@ -6,4 +6,7 @@ class HikvisionController extends CI_Controller {
 		parent::__construct();
 	}
 
+	public function obtenerCapturaCanal(){
+	
+	}
 }
