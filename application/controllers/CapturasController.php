@@ -399,6 +399,7 @@ class CapturasController extends CI_Controller {
 	}
 
 	public function capturarSnapshots(){
+		//esta funcion quedará sujeta a un Cron Job en el servidor
 		//TODO: obtener aquellos dispositivos/canales acorde al seteo del esquema de horarios para capturas pantalla
 		$this->db->select('d.id as dispositivo_id, d.usuario as usuario, d.password as password, d.ip as ip, d.puerto as puerto,
 							d.organizaciones_id as organizacion_id, e.canal as canal');
@@ -416,7 +417,7 @@ class CapturasController extends CI_Controller {
 			//[organizacion_id] 
 			//[canal]
 			//TODO: obtener snapshot acorde al tipo_dispositivo (dvr, nvr, ipc), marca (dahua, hikvision)
-			
+			//generar registro en capturas y log pertinente
 		}
 	}
 }
