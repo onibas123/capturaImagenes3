@@ -145,7 +145,7 @@
                             capturas += '<ul>';
                             capturas += '<li><b>Fecha:</b> '+response[i]['fecha']+'</li>';
                             capturas += '<li><b>Hora:</b> '+response[i]['hora']+'</li>';
-                            capturas += '<li><b>Usuario:</b> '+response[i]['usuario_id']+'</li>';
+                            capturas += '<li><b>Usuario:</b> '+((response[i]['nombre'] != null && response[i]['nombre'] != '') ? response[i]['nombre'] : 'Sistema')+'</li>';
                             capturas += '</ul>';
                             capturas += '</div>';
                             capturas += '<div class="col-md-8">';

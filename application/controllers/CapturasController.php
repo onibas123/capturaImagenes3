@@ -189,8 +189,9 @@ class CapturasController extends CI_Controller {
 		$desde = $this->input->post('desde', true);
 		$hasta = $this->input->post('hasta', true);
 
-		$this->db->select('*, DATE_FORMAT(fecha_hora, "%d-%m-%Y") as fecha, DATE_FORMAT(fecha_hora, "%H:%i") as hora');
+		$this->db->select('*,capturas.id as id, DATE_FORMAT(fecha_hora, "%d-%m-%Y") as fecha, DATE_FORMAT(fecha_hora, "%H:%i") as hora');
 		$this->db->from('capturas');
+		$this->db->join('usuarios', 'usuarios.id = capturas.usuario_id', 'left');
 		$this->db->where('dispositivos_id', $dispositivo);
 		$this->db->where('DATE(fecha_hora) >=', $desde);
 		$this->db->where('DATE(fecha_hora) <=', $hasta);
