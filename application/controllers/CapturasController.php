@@ -161,9 +161,9 @@ class CapturasController extends CI_Controller {
 		$dispositivo = $this->input->post('dispositivo', true);
 		$canal = $this->input->post('canal', true);
 		$date_time = date('Y-m-d H:i:s');
-		$ruta_imagen = '';
+		$ruta_imagen = $this->input->post('ruta_imagen', true);
 		$observacion = $this->input->post('observacion', true);
-		$usuario_id = 1; //cambiar por usuario de sesion o sistema
+		$usuario_id = !empty($this->session->userdata('usuario_id')) ? $this->session->userdata('usuario_id') : ''; //cambiar por usuario de sesion o sistema
 		$consolidado = $this->input->post('consolidado', true);
 
 		$data_captura = 	[
@@ -414,12 +414,20 @@ class CapturasController extends CI_Controller {
 			switch ($data[0]['marcas_id']) {
 				case 1:
 				  	//dahua
+					  $imagen = $this->obtenerCapturaCanalDahua(
+						$data[0]['organizaciones_id'], $data[0]['ip'],
+						$data[0]['puerto'], $data[0]['usuario'], $data[0]['password'], $canal);
+					if($imagen != false){
+						echo $imagen;
+					}
+					else
+						echo 2;
 				  	break;
 				case 2:
 				  	//hikvision
 				  	$imagen = $this->obtenerCapturaCanalHikvision(
 							$data[0]['organizaciones_id'], $data[0]['ip'],
-							$data[0]['puerto'], $data[0]['usuario'], $data[0]['password']);
+							$data[0]['puerto'], $data[0]['usuario'], $data[0]['password'], $canal);
 					if($imagen != false){
 						echo $imagen;
 					}
@@ -428,7 +436,7 @@ class CapturasController extends CI_Controller {
 				  	break;
 				default:
 				  	//code block
-			  }
+			}
 		}
 	}
 
@@ -437,7 +445,7 @@ class CapturasController extends CI_Controller {
 		//esta funcion quedará sujeta a un Cron Job en el servidor
 		//TODO: obtener aquellos dispositivos/canales acorde al seteo del esquema de horarios para capturas pantalla
 		$this->db->select('d.id as dispositivo_id, d.usuario as usuario, d.password as password, d.ip as ip, d.puerto as puerto,
-							d.organizaciones_id as organizacion_id, e.canal as canal');
+							d.organizaciones_id as organizacion_id, e.canal as canal, d.marcas_id as marcas_id');
 		$this->db->from('esquemas as e');
 		$this->db->join('dispositivos as d', 'd.id = e.dispositivos_id');
 		$this->db->where('hora', date('H:i'));
@@ -451,18 +459,71 @@ class CapturasController extends CI_Controller {
 			//[puerto] 
 			//[organizacion_id] 
 			//[canal]
+			//[marcas_id]
 			//TODO: obtener snapshot acorde al tipo_dispositivo (dvr, nvr, ipc), marca (dahua, hikvision)
 			//generar registro en capturas y log pertinente
+			switch ($r['marcas_id']) {
+				case 1:
+				  	//dahua
+					  $imagen = $this->obtenerCapturaCanalDahua(
+						$r['organizacion_id'], $r['ip'],
+						$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
+					if($imagen != false){
+						//imagen capturada sin problemas
+
+						$data_captura = 	[
+												'organizaciones_id' => $r['organizacion_id'],
+												'dispositivos_id' => $r['dispositivo_id'],
+												'canal' => $r['canal'],
+												'fecha_hora' => date('Y-m-d H:i:s'),
+												'ruta_imagen' => $imagen,
+												'usuario_id' => (!empty($this->session->userdata('usuario_id')) ? !empty($this->session->userdata('usuario_id')) : '')
+											];
+						if($this->db->insert('capturas', $data_captura)){
+							$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'Success', 'data' => $data_captura]));
+						}
+					}
+					else{
+						//error en la captura de imagen, generar log
+						$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'No se pudo capturar la imagen', 'data' => $r]));
+					}
+				  	break;
+				case 2:
+				  	//hikvision
+				  	$imagen = $this->obtenerCapturaCanalHikvision(
+							$r['organizacion_id'], $r['ip'],
+							$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
+					if($imagen != false){
+						//imagen capturada sin problemas
+						$data_captura = 	[
+												'organizaciones_id' => $r['organizacion_id'],
+												'dispositivos_id' => $r['dispositivo_id'],
+												'canal' => $r['canal'],
+												'fecha_hora' => date('Y-m-d H:i:s'),
+												'ruta_imagen' => $imagen,
+												'usuario_id' => (!empty($this->session->userdata('usuario_id')) ? !empty($this->session->userdata('usuario_id')) : '')
+											];
+						if($this->db->insert('capturas', $data_captura)){
+							$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'Success', 'data' => $data_captura]));
+						}
+					}
+					else{
+						//error en la captura de imagen, generar log
+						$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'No se pudo capturar la imagen', 'data' => $r]));
+					}
+				  	break;
+				default:
+			}
 		}
 	}
 
 	//----------------------
-	private function obtenerCapturaCanalHikvision($organizacion_id, $ip, $puerto, $usuario, $clave){
+	private function obtenerCapturaCanalHikvision($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
 		// Configuración Hikvision
 		$ip = $ip.':'.$puerto;
 		// ID de la camara en el NVR (puede variar según la configuración del NVR)
-		$idCamara = 1;
-		// URL de la API para obtener una captura de la camara desde el NVR
+		$idCamara = $canal;
+		// URL de la API para obtener una captura
 		$apiUrl = "http://$ip/ISAPI/Streaming/channels/$idCamara/picture";
 		// Construir las credenciales para la solicitud
 		$credenciales = base64_encode("$usuario:$clave");
@@ -475,12 +536,99 @@ class CapturasController extends CI_Controller {
 		// Crear el contexto de la solicitud
 		$contexto = stream_context_create($opciones);
 		// Hacer la solicitud HTTP y obtener la captura de imagen
-		$imagen = file_get_contents($apiUrl, false, $contexto);
+		$imagen = '';
+		try{
+			$imagen = file_get_contents($apiUrl, false, $contexto);
+		}
+		catch(Exception $ex){
+			$this->addLog('Capturas', 'Error', json_encode(['mensaje' => $ex, 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+		}
 		// Verificar si la captura se obtuvo correctamente
 		if ($imagen !== false) {
 			// Guardar la imagen en un archivo
 			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
 			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $imagen);
+			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Hikvision)', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+			return $nombre_imagen;
+		} else {
+			
+			return false;
+		}
+	}
+
+	private function obtenerCapturaCanalDahua($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
+		// Configuración Hikvision
+		$ip = $ip.':'.$puerto;
+		// ID de la camara en el NVR (puede variar según la configuración del NVR)
+		$idCamara = $canal;
+		// URL de la API para obtener una captura
+		$apiUrl = "http://$ip/cgi-bin/snapshot.cgi?channel=$idCamara";
+		// Construir las credenciales para la solicitud
+		$credenciales = base64_encode("$usuario:$clave");
+		// Configurar las opciones de la solicitud HTTP
+		$opciones = [
+			'http' => [
+				'header' => "Authorization: Basic $credenciales"
+			]
+		];
+		// Crear el contexto de la solicitud
+		$contexto = stream_context_create($opciones);
+		// Hacer la solicitud HTTP y obtener la captura de imagen
+		$imagen = '';
+		try{
+			$imagen = file_get_contents($apiUrl, false, $contexto);
+		}
+		catch(Exception $ex){
+			$this->addLog('Capturas', 'Error', json_encode(['mensaje' => $ex, 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+		}
+		// Verificar si la captura se obtuvo correctamente
+		if ($imagen !== false) {
+			// Guardar la imagen en un archivo
+			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
+			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $imagen);
+
+			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Dahua)', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+
 			return $nombre_imagen;
 		} else {
 			return false;

@@ -65,7 +65,7 @@
                             <label for="">Imagen</label>
                             <button onclick="capturar();" class="btn btn-primary btn-sm">Capturar</button>
                             <div class="d-flex justify-content-center">
-                                <img width="300" height="300" src="https://aquiporti.ec/dreamlab/wp-content/uploads/2020/02/default-300x300.jpg" id="img-captura" class="img-responsive pull-center"/>
+                                <img style="cursor: pointer;" onclick="abrirGrande(this.src);" width="300" height="300" src="https://aquiporti.ec/dreamlab/wp-content/uploads/2020/02/default-300x300.jpg" id="img-captura" class="img-responsive pull-center"/>
                             </div>
                         </div>
                     </div>
@@ -221,7 +221,8 @@
                 url: '<?php echo base_url();?>index.php/CapturasController/addCaptura',
                 type: 'post',
                 dataType: 'text',
-                data: {organizacion: organizacion, dispositivo: dispositivo, canal: canal, observacion: observacion, consolidado: consolidado},
+                data: {organizacion: organizacion, dispositivo: dispositivo, canal: canal, observacion: observacion, 
+                        consolidado: consolidado, ruta_imagen: nombre_imagen},
                 success: function(response){
                     if(response == '1'){
                         if(confirm('Se ha guardado de manera correcta la captura. ¿Desea volver a realizar otra Captura?')){
@@ -239,6 +240,11 @@
 
         function borrar(){
             $('#area-observacion').val('');
+        }
+
+        function abrirGrande(src){
+            $('#img-expandir').attr('src', src);
+            $('#modal-captura').modal('show');
         }
     </script>
 </body>

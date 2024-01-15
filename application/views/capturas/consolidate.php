@@ -162,7 +162,7 @@
                             capturas += '</ul>';
                             capturas += '</div>';
                             capturas += '<div class="col-md-8">';
-                            capturas += '<img width="100%" height="300" src="<?php echo base_url();?>assets/imagenes_capturadas/'+response[i]['ruta_imagen']+'" id="img-captura" class="img-responsive pull-right"/>';
+                            capturas += '<img  style="cursor: pointer;" onclick="abrirGrande(this.src);" width="100%" height="300" src="<?php echo base_url();?>assets/imagenes_capturadas/'+response[i]['ruta_imagen']+'" id="img-captura" class="img-responsive pull-right"/>';
                             capturas += '</div>';
                             capturas += '</div>';
                             
@@ -239,6 +239,11 @@
 
         function borrar(x){
             $('#'+x).val('');
+        }
+
+        function abrirGrande(src){
+            $('#img-expandir').attr('src', src);
+            $('#modal-captura').modal('show');
         }
     </script>
 </body>
