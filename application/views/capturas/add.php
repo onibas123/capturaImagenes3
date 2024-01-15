@@ -131,6 +131,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         var img_captura = $('#img-captura');
+        var nombre_imagen = '';
         $(document).ready(function() {
             $("#select-sugerencia").select2({placeholder: "Seleccione..."});
             $('#select-organizacion').change(function(){
@@ -176,13 +177,29 @@
         }
 
         function capturar(){
+            let organizacion = $('#select-organizacion').val();
+            let dispositivo = $('#select-dispositivo').val();
             let canal = $('#select-canal').val();
             if(canal == ''){
                 alert('Debe selecciona un canal');
                 return false;
             }
             img_captura.attr('src', '<?php echo base_url();?>assets/img/loading.gif');
-            //TODO: proceso para traer la imagen del dispositivo en ese canal
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CapturasController/obtenerCapturaDispositivoCanal',
+                type: 'post',
+                data:{organizacion: organizacion, dispositivo: dispositivo, canal: canal},
+                dataType: 'text',
+                success: function(response){
+                    if(response == '2'){
+                        img_captura.attr('src', '<?php echo base_url();?>assets/img/imagen_no_encontrada.jpg');
+                    }
+                    else{
+                        img_captura.attr('src', '<?php echo base_url();?>assets/imagenes_capturadas/'+response);
+                        nombre_imagen = response;
+                    }
+                }
+            });
         }
 
         function actualizar(){

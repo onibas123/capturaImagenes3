@@ -399,6 +399,40 @@ class CapturasController extends CI_Controller {
 			return false;
 	}
 
+	public function obtenerCapturaDispositivoCanal(){
+		$organizacion = $this->input->post('organizacion', true);
+		$dispositivo = $this->input->post('dispositivo', true);
+		$canal = $this->input->post('canal', true);
+
+		$this->db->select('*');
+		$this->db->from('dispositivos');
+		$this->db->where('id', $dispositivo);
+		$this->db->limit(1);
+		$data = $this->db->get()->result_array();
+		if(!empty($data)){
+			$imagen = '';
+			switch ($data[0]['marcas_id']) {
+				case 1:
+				  	//dahua
+				  	break;
+				case 2:
+				  	//hikvision
+				  	$imagen = $this->obtenerCapturaCanalHikvision(
+							$data[0]['organizaciones_id'], $data[0]['ip'],
+							$data[0]['puerto'], $data[0]['usuario'], $data[0]['password']);
+					if($imagen != false){
+						echo $imagen;
+					}
+					else
+						echo 2;
+				  	break;
+				default:
+				  	//code block
+			  }
+		}
+	}
+
+
 	public function capturarSnapshots(){
 		//esta funcion quedará sujeta a un Cron Job en el servidor
 		//TODO: obtener aquellos dispositivos/canales acorde al seteo del esquema de horarios para capturas pantalla
@@ -419,6 +453,37 @@ class CapturasController extends CI_Controller {
 			//[canal]
 			//TODO: obtener snapshot acorde al tipo_dispositivo (dvr, nvr, ipc), marca (dahua, hikvision)
 			//generar registro en capturas y log pertinente
+		}
+	}
+
+	//----------------------
+	private function obtenerCapturaCanalHikvision($organizacion_id, $ip, $puerto, $usuario, $clave){
+		// Configuración Hikvision
+		$ip = $ip.':'.$puerto;
+		// ID de la camara en el NVR (puede variar según la configuración del NVR)
+		$idCamara = 1;
+		// URL de la API para obtener una captura de la camara desde el NVR
+		$apiUrl = "http://$ip/ISAPI/Streaming/channels/$idCamara/picture";
+		// Construir las credenciales para la solicitud
+		$credenciales = base64_encode("$usuario:$clave");
+		// Configurar las opciones de la solicitud HTTP
+		$opciones = [
+			'http' => [
+				'header' => "Authorization: Basic $credenciales"
+			]
+		];
+		// Crear el contexto de la solicitud
+		$contexto = stream_context_create($opciones);
+		// Hacer la solicitud HTTP y obtener la captura de imagen
+		$imagen = file_get_contents($apiUrl, false, $contexto);
+		// Verificar si la captura se obtuvo correctamente
+		if ($imagen !== false) {
+			// Guardar la imagen en un archivo
+			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
+			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $imagen);
+			return $nombre_imagen;
+		} else {
+			return false;
 		}
 	}
 }
