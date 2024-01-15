@@ -70,6 +70,29 @@
                         </div>
                     </div>
                     <div class="row mt-2">
+                        <div class="col-md-8">
+                            <label for="">Sugerencias</label>
+                            <select class="form-control" id="select-sugerencia">
+                                    <?php
+                                        $this->db->select('*');
+                                        $this->db->from('observaciones_sugeridas');
+                                        $obs = $this->db->get()->result_array();
+                                        if(!empty($obs)){
+                                            foreach($obs as $o){
+                                                echo '<option value="'.$o['id'].'">'.$o['observacion'].'</option>';
+                                            }
+                                        }
+                                    ?>
+                            </select>
+                        </div>
+                        <div class="col-md-2 mt-3">
+                            <button onclick="utilizarSugerencia();" class="btn btn-primary w-100">Utilizar</button>
+                        </div>
+                        <div class="col-md-2 mt-3">
+                            <button onclick="borrar();" class="btn btn-danger w-100">Borrar</button>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
                         <div class="col-md-12">
                             <label for="">Observación</label>
                             <textarea id="area-observacion" class="form-control" rows="4" placeholder="Ingrese observación..."></textarea>
@@ -104,10 +127,12 @@
         <i class="fas fa-angle-up"></i>
     </a>
     <?php $this->load->view('layout/scripts');?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         var img_captura = $('#img-captura');
         $(document).ready(function() {
-
+            $("#select-sugerencia").select2({placeholder: "Seleccione..."});
             $('#select-organizacion').change(function(){
                 let options_dispositivos = '<option value="">Seleccione</select>';
                 $.ajax({
@@ -143,20 +168,12 @@
                 });
             });
 
-            $('#select-canal').change(function(){
-                /*
-                $.ajax({
-                    url: '<?php //echo base_url();?>index.php/CapturasController/editCliente',
-                    data: {},
-                    type: 'post',
-                    dataType: 'text',
-                    success: function(response){
-                        
-                    }   
-                });
-                */
-            });
         });
+
+        function utilizarSugerencia(){
+            let sugerencia = $("#select-sugerencia option:selected").text();
+            $('#area-observacion').append(' '+sugerencia);
+        }
 
         function capturar(){
             let canal = $('#select-canal').val();
@@ -201,6 +218,10 @@
                         alert('Ha ocurrido un problema con la Captura. Por favor comunicarse con el Administrador del Sistema.');
                 }
             });
+        }
+
+        function borrar(){
+            $('#area-observacion').val('');
         }
     </script>
 </body>

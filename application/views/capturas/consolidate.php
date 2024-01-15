@@ -1,3 +1,14 @@
+<?php
+    $this->db->select('*');
+    $this->db->from('observaciones_sugeridas');
+    $obs = $this->db->get()->result_array();
+    $options_string = '';
+    if(!empty($obs)){
+        foreach($obs as $o){
+            $options_string .= '<option value="'.$o['id'].'">'.$o['observacion'].'</option>';
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -95,6 +106,8 @@
         <i class="fas fa-angle-up"></i>
     </a>
     <?php $this->load->view('layout/scripts');?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#select-organizacion').change(function(){
@@ -152,16 +165,39 @@
                             capturas += '<img width="100%" height="300" src="<?php echo base_url();?>assets/imagenes_capturadas/'+response[i]['ruta_imagen']+'" id="img-captura" class="img-responsive pull-right"/>';
                             capturas += '</div>';
                             capturas += '</div>';
+                            
+                            capturas += '<div class="row">';
+                            
+                            capturas += '<div class="col-md-8">';
+                            capturas += '<label for="">Sugerencias</label>';
+                            capturas += '<select class="form-control sugerencias" id="select-sugerencia-'+response[i]['id']+'">';
+                            capturas += '<?php echo $options_string;?>';
+                            capturas += '</select>';
+                            capturas += '</div>';
+
+                            capturas += '<div class="col-md-2 mt-3">';
+                            capturas += '<button onclick="utilizarSugerencia('+response[i]['id']+');" class="btn btn-primary w-100">Utilizar</button>';
+                            capturas += '</div>';
+                            capturas += '<div class="col-md-2 mt-3">';
+                            capturas += '<button onclick="borrar('+response[i]['id']+');" class="btn btn-danger w-100">Borrar</button>';
+                            capturas += '</div>';
+
+                            capturas += '';
+
+                            capturas += '</div>';
+                            
                             capturas += '<div class="row">';
                             capturas += '<div class="col-md-12">';
                             capturas += '<textarea id="'+response[i]['id']+'" class="form-control mt-1 observaciones" rows="4" placeholder="Ingrese observación...">'+((response[i]['observacion'] != "null") ? response[i]['observacion'] : "")+'</textarea>';
                             capturas += '</div>';
                             capturas += '</div>';
+
                             capturas += '</div>';
 
                         }
                     }
                     $('.capturasRegistradas').html(capturas);
+                    $(".sugerencias").select2({placeholder: "Seleccione..."});
                 }
             });
         }
@@ -194,6 +230,15 @@
                     alert('No existen capturas a consolidar.');
                 }
             }
+        }
+
+        function utilizarSugerencia(x){
+            let sugerencia = $("#select-sugerencia-"+x+" option:selected").text();
+            $('#'+x).append(' '+sugerencia);
+        }
+
+        function borrar(x){
+            $('#'+x).val('');
         }
     </script>
 </body>
