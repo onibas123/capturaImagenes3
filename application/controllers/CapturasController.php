@@ -577,12 +577,13 @@ class CapturasController extends CI_Controller {
 	}
 
 	private function obtenerCapturaCanalDahua($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
-		// Configuración Hikvision
+		// Configuración Dahua
 		$ip = $ip.':'.$puerto;
-		// ID de la camara en el NVR (puede variar según la configuración del NVR)
+		//canal
 		$idCamara = $canal;
 		// URL de la API para obtener una captura
 		$apiUrl = "http://$ip/cgi-bin/snapshot.cgi?channel=$idCamara";
+		/*
 		// Construir las credenciales para la solicitud
 		$credenciales = base64_encode("$usuario:$clave");
 		// Configurar las opciones de la solicitud HTTP
@@ -611,11 +612,19 @@ class CapturasController extends CI_Controller {
 																]
 			]));
 		}
+		*/
+		// cURL request to capture the snapshot
+		$ch = curl_init($apiUrl);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+		curl_setopt($ch, CURLOPT_USERPWD, "{$usuario}:{$clave}");
+
+		$response = curl_exec($ch);
 		// Verificar si la captura se obtuvo correctamente
-		if ($imagen !== false) {
+		if ($response !== false) {
 			// Guardar la imagen en un archivo
 			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
-			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $imagen);
+			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $response);
 
 			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Dahua)', 
 																'data' => 
@@ -628,10 +637,23 @@ class CapturasController extends CI_Controller {
 																	'canal' => $canal 
 																]
 			]));
-
+			curl_close($ch);
 			return $nombre_imagen;
 		} else {
+			$this->addLog('Capturas', 'Error', json_encode(['mensaje' => 'Error de conexion', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+			curl_close($ch);
 			return false;
 		}
+		
 	}
 }
