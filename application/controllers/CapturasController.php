@@ -526,6 +526,8 @@ class CapturasController extends CI_Controller {
 		// URL de la API para obtener una captura
 		$apiUrl = "http://$ip/ISAPI/Streaming/channels/$idCamara/picture";
 		// Construir las credenciales para la solicitud
+		
+		/*
 		$credenciales = base64_encode("$usuario:$clave");
 		// Configurar las opciones de la solicitud HTTP
 		$opciones = [
@@ -572,6 +574,47 @@ class CapturasController extends CI_Controller {
 			return $nombre_imagen;
 		} else {
 			
+			return false;
+		}
+		*/
+		$ch = curl_init($apiUrl);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+		curl_setopt($ch, CURLOPT_USERPWD, "{$usuario}:{$clave}");
+
+		$response = curl_exec($ch);
+		// Verificar si la captura se obtuvo correctamente
+		if ($response !== false) {
+			// Guardar la imagen en un archivo
+			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
+			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $response);
+
+			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Hikvision)', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+			curl_close($ch);
+			return $nombre_imagen;
+		} else {
+			$this->addLog('Capturas', 'Error', json_encode(['mensaje' => 'Error de conexion', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+			curl_close($ch);
 			return false;
 		}
 	}
