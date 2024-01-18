@@ -656,40 +656,4 @@ class CapturasController extends CI_Controller {
 		}
 		
 	}
-
-	public function testCaptura(){
-		// Replace these variables with your actual DVR information
-		$dvrIp = '190.95.106.50:880';
-		$username = 'admin';
-		$password = 'Jc15811305';
-
-		// Set the camera channel you want to capture the snapshot from
-		$channel = 1;
-
-		// Set the snapshot image file path
-		$snapshotFilePath = './assets/imagenes_capturadas/snapshot.jpg';
-
-		// Hikvision DVR HTTP API URL for capturing a snapshot
-		$apiUrl = "http://{$dvrIp}/ISAPI/Streaming/channels/{$channel}/picture";
-
-		// cURL request to capture the snapshot
-		$ch = curl_init($apiUrl);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-		curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
-
-		$response = curl_exec($ch);
-
-		// Check if the request was successful
-		if ($response === false) {
-			echo 'Error capturing snapshot: ' . curl_error($ch);
-		} else {
-			// Save the snapshot to the specified file path
-			file_put_contents($snapshotFilePath, $response);
-			echo 'Snapshot captured successfully and saved to ' . $snapshotFilePath;
-		}
-
-		// Close cURL session
-		curl_close($ch);
-	}
 }
