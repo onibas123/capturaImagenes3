@@ -524,7 +524,7 @@ class CapturasController extends CI_Controller {
 		// ID de la camara en el NVR (puede variar según la configuración del NVR)
 		$idCamara = $canal;
 		// URL de la API para obtener una captura
-		$apiUrl = "http://$ip/ISAPI/Streaming/channels/$idCamara/picture";
+		$apiUrl = "http://$usuario:$clave@$ip/ISAPI/Streaming/channels/$idCamara/picture";
 		// Construir las credenciales para la solicitud
 		
 		/*
@@ -580,7 +580,7 @@ class CapturasController extends CI_Controller {
 		$ch = curl_init($apiUrl);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-		curl_setopt($ch, CURLOPT_USERPWD, "{$usuario}:{$clave}");
+		//curl_setopt($ch, CURLOPT_USERPWD, "{$usuario}:{$clave}");
 
 		$response = curl_exec($ch);
 		// Verificar si la captura se obtuvo correctamente
