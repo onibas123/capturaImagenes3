@@ -617,8 +617,6 @@ class CapturasController extends CI_Controller {
 			curl_close($ch);
 			return false;
 		}
-		
-	}
 	}
 
 	private function obtenerCapturaCanalDahua($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
