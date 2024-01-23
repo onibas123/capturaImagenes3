@@ -530,7 +530,10 @@ class CapturasController extends CI_Controller {
 		// Configurar las opciones de la solicitud HTTP
 		$opciones = [
 			'http' => [
-				'header' => "Authorization: Basic $credenciales"
+				'header' => [
+								"Authorization: Basic $credenciales",
+								'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
+							]
 			]
 		];
 		// Crear el contexto de la solicitud
