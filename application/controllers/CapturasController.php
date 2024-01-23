@@ -620,6 +620,7 @@ class CapturasController extends CI_Controller {
 	}
 
 	private function obtenerCapturaCanalDahua($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
+		ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)');
 		// Configuración Dahua
 		$ip = $ip.':'.$puerto;
 		//canal
