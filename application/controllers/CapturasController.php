@@ -519,6 +519,7 @@ class CapturasController extends CI_Controller {
 
 	//----------------------
 	private function obtenerCapturaCanalHikvision($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
+		ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)');
 		// Configuración Hikvision
 		$ip = $ip.':'.$puerto;
 		// ID de la camara en el NVR (puede variar según la configuración del NVR)
@@ -526,14 +527,12 @@ class CapturasController extends CI_Controller {
 		// URL de la API para obtener una captura
 		$apiUrl = "http://$ip/ISAPI/Streaming/channels/$idCamara/picture";
 		// Construir las credenciales para la solicitud
+		/*
 		$credenciales = base64_encode("$usuario:$clave");
 		// Configurar las opciones de la solicitud HTTP
 		$opciones = [
 			'http' => [
-				'header' => [
-								"Authorization: Basic $credenciales",
-								'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'
-							]
+				'header' => "Authorization: Basic $credenciales"
 			]
 		];
 		// Crear el contexto de la solicitud
@@ -577,6 +576,49 @@ class CapturasController extends CI_Controller {
 			
 			return false;
 		}
+		*/
+		$ch = curl_init($apiUrl);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+		curl_setopt($ch, CURLOPT_USERPWD, "{$usuario}:{$clave}");
+
+		$response = curl_exec($ch);
+		// Verificar si la captura se obtuvo correctamente
+		if ($response !== false) {
+			// Guardar la imagen en un archivo
+			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
+			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $response);
+
+			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Hikvision)', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+			curl_close($ch);
+			return $nombre_imagen;
+		} else {
+			$this->addLog('Capturas', 'Error', json_encode(['mensaje' => 'Error de conexion', 
+																'data' => 
+																[
+																	'organizacion_id' => $organizacion_id,
+																	'ip' => $ip,
+																	'puerto' => $puerto,
+																	'usuario' => $usuario,
+																	'clave' => $clave,
+																	'canal' => $canal 
+																]
+			]));
+			curl_close($ch);
+			return false;
+		}
+		
+	}
 	}
 
 	private function obtenerCapturaCanalDahua($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
