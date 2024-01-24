@@ -791,7 +791,7 @@ class CapturasController extends CI_Controller {
 
 	}
 
-	public function obtenerNombreCanalHikvision2($ip, $usuario, $clave, $canal){
+	public function obtenerNombreCanalHikvision2(){
 		// Configuración
 		$ip = '179.56.164.241:880';
 		$usuario = 'admin';
