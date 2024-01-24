@@ -796,7 +796,7 @@ class CapturasController extends CI_Controller {
 		$ip = '179.56.164.241:880';
 		$usuario = 'admin';
 		$contrasena = 'Jc15811305';
-		$canal = 101; // Número del canal que deseas consultar
+		$canal = 1; // Número del canal que deseas consultar
 
 		// URL de la API ISAPI de Hikvision para obtener información sobre el canal
 		$url = "http://$ip/ISAPI/Streaming/channels/$canal";
