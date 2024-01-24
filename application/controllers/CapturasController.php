@@ -790,4 +790,40 @@ class CapturasController extends CI_Controller {
 		curl_close($ch);
 
 	}
+
+	public function obtenerNombreCanalHikvision2($ip, $usuario, $clave, $canal){
+		// Configuración
+		$ip = '179.56.164.241:880';
+		$usuario = 'admin';
+		$contrasena = 'Jc15811305';
+		$canal = 101; // Número del canal que deseas consultar
+
+		// URL de la API ISAPI de Hikvision para obtener información sobre el canal
+		$url = "http://$ip/ISAPI/Streaming/channels/$canal";
+
+		// Configuración de la solicitud
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
+
+		// Realizar la solicitud
+		$response = curl_exec($ch);
+
+		// Verificar si hubo errores
+		if (curl_errno($ch)) {
+			echo 'Error: '.curl_errno($ch);
+		} else {
+			// Procesar la respuesta JSON
+			$data = json_decode($response, true);
+
+			// Obtener el nombre del canal desde la respuesta
+			$channelName = $data['StreamingChannel']['channelName'];
+			echo 'Camara Nombre: '.$channelName;
+		}
+
+		// Cerrar la conexión cURL
+		curl_close($ch);
+	}
 }
