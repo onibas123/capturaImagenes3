@@ -817,7 +817,7 @@ class CapturasController extends CI_Controller {
 		} else {
 			// Procesar la respuesta JSON
 			$data = json_decode($response, true);
-
+			print_r($data);
 			// Obtener el nombre del canal desde la respuesta
 			$channelName = $data['StreamingChannel']['channelName'];
 			echo 'Camara Nombre: '.$channelName;
