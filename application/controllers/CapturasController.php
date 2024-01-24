@@ -235,17 +235,34 @@ class CapturasController extends CI_Controller {
 		$desde = $this->input->get('desde', true);
 		$hasta = $this->input->get('hasta', true);
 
-		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, capturas.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora ');
+		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, capturas.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora,
+							dispositivos.ip as ip, dispositivos.usuario as usuario, dispositivos. password as password, dispositivos.marcas_id as marcas_id');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
 		$this->db->where('DATE(capturas.fecha_hora) >=', $desde);
 		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
+		$this->db->where('dispositivos.id', $dev);
 		$this->db->where('capturas.consolidado', 1);
 		$this->db->order_by('capturas.fecha_hora ASC');
 		$capturas_consolidadas = $this->db->get()->result_array();
 
 		$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
 		$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
+
+		for($i=0;$i<count($capturas_consolidadas); $i++){
+			if($capturas_consolidadas[$i]['marcas_id'] == 1){
+				//dahua
+				$nombre_canal = $this->obtenerNombreCanalDahua($capturas_consolidadas[$i]['ip'], $capturas_consolidadas[$i]['usuario'], $capturas_consolidadas[$i]['password'], $capturas_consolidadas[$i]['canal']);
+				if($nombre_canal != false)
+					$capturas_consolidadas[$i]['canal'] = '('.$capturas_consolidadas[$i]['canal'].') '.$nombre_canal; 
+			}
+			else if($capturas_consolidadas[$i]['marcas_id'] == 2){
+				//hikvision
+				$nombre_canal = $this->obtenerNombreCanalHikvision($capturas_consolidadas[$i]['ip'], $capturas_consolidadas[$i]['usuario'], $capturas_consolidadas[$i]['password'], $capturas_consolidadas[$i]['canal']);
+				if($nombre_canal != false)
+					$capturas_consolidadas[$i]['canal'] = '('.$capturas_consolidadas[$i]['canal'].') '.$nombre_canal; 
+			}
+		}
 		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
@@ -415,7 +432,7 @@ class CapturasController extends CI_Controller {
 				case 1:
 				  	//dahua
 					  $imagen = $this->obtenerCapturaCanalDahua(
-						$data[0]['organizaciones_id'], $data[0]['ip'],
+						$data[0]['organizaciones_id'], $dispositivo, $data[0]['ip'],
 						$data[0]['puerto'], $data[0]['usuario'], $data[0]['password'], $canal);
 					if($imagen != false){
 						echo $imagen;
@@ -426,7 +443,7 @@ class CapturasController extends CI_Controller {
 				case 2:
 				  	//hikvision
 				  	$imagen = $this->obtenerCapturaCanalHikvision(
-							$data[0]['organizaciones_id'], $data[0]['ip'],
+							$data[0]['organizaciones_id'], $dispositivo, $data[0]['ip'],
 							$data[0]['puerto'], $data[0]['usuario'], $data[0]['password'], $canal);
 					if($imagen != false){
 						echo $imagen;
@@ -466,7 +483,7 @@ class CapturasController extends CI_Controller {
 				case 1:
 				  	//dahua
 					  $imagen = $this->obtenerCapturaCanalDahua(
-						$r['organizacion_id'], $r['ip'],
+						$r['organizacion_id'], $r['dispositivo_id'], $r['ip'],
 						$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
 					if($imagen != false){
 						//imagen capturada sin problemas
@@ -491,7 +508,7 @@ class CapturasController extends CI_Controller {
 				case 2:
 				  	//hikvision
 				  	$imagen = $this->obtenerCapturaCanalHikvision(
-							$r['organizacion_id'], $r['ip'],
+							$r['organizacion_id'], $r['dispositivo_id'], $r['ip'],
 							$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
 					if($imagen != false){
 						//imagen capturada sin problemas
@@ -518,7 +535,7 @@ class CapturasController extends CI_Controller {
 	}
 
 	//----------------------
-	private function obtenerCapturaCanalHikvision($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
+	private function obtenerCapturaCanalHikvision($organizacion_id, $dispositivo_id, $ip, $puerto, $usuario, $clave, $canal){
 		ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)');
 		// Configuración Hikvision
 		$ip = $ip.':'.$puerto;
@@ -586,7 +603,7 @@ class CapturasController extends CI_Controller {
 		// Verificar si la captura se obtuvo correctamente
 		if ($response !== false) {
 			// Guardar la imagen en un archivo
-			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
+			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$dispositivo_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
 			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $response);
 
 			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Hikvision)', 
@@ -619,7 +636,7 @@ class CapturasController extends CI_Controller {
 		}
 	}
 
-	private function obtenerCapturaCanalDahua($organizacion_id, $ip, $puerto, $usuario, $clave, $canal){
+	private function obtenerCapturaCanalDahua($organizacion_id, $dispositivo_id, $ip, $puerto, $usuario, $clave, $canal){
 		ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)');
 		// Configuración Dahua
 		$ip = $ip.':'.$puerto;
@@ -667,7 +684,7 @@ class CapturasController extends CI_Controller {
 		// Verificar si la captura se obtuvo correctamente
 		if ($response !== false) {
 			// Guardar la imagen en un archivo
-			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
+			$nombre_imagen = 'captura_'.$organizacion_id.'_'.$dispositivo_id.'_'.$idCamara.'_'.date('YmdHis').'.jpg';
 			file_put_contents('./assets/imagenes_capturadas/'.$nombre_imagen, $response);
 
 			$this->addLog('Capturas', 'Success', json_encode(['mensaje' => 'Se ha captura de manera correcta. (Dahua)', 
@@ -699,5 +716,78 @@ class CapturasController extends CI_Controller {
 			return false;
 		}
 		
+	}
+
+	private function obtenerNombreCanalHikvision($ip, $usuario, $clave, $canal){
+		// Configuración
+		$ip = $ip;
+		$usuario = $usuario;
+		$contrasena = $clave;
+		$canal = $canal; // Número del canal que deseas consultar
+
+		// URL de la API ISAPI de Hikvision para obtener información sobre el canal
+		$url = "http://$ip/ISAPI/Streaming/channels/$canal";
+
+		// Configuración de la solicitud
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
+
+		// Realizar la solicitud
+		$response = curl_exec($ch);
+
+		// Verificar si hubo errores
+		if (curl_errno($ch)) {
+			return false;
+		} else {
+			// Procesar la respuesta JSON
+			$data = json_decode($response, true);
+
+			// Obtener el nombre del canal desde la respuesta
+			$channelName = $data['StreamingChannel']['channelName'];
+			return $channelName;
+		}
+
+		// Cerrar la conexión cURL
+		curl_close($ch);
+	}
+
+	private function obtenerNombreCanalDahua($ip, $usuario, $clave, $canal){
+		// Configuración
+		$ip = $ip;
+		$usuario = $usuario;
+		$contrasena = $clave;
+		$canal = $canal; // Número del canal que deseas consultar
+
+		// URL de la API de Dahua para obtener información sobre el canal
+		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle&channel=$canal";
+
+		// Configuración de la solicitud
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
+
+		// Realizar la solicitud
+		$response = curl_exec($ch);
+
+		// Verificar si hubo errores
+		if (curl_errno($ch)) {
+			return false;
+		} else {
+			// Procesar la respuesta XML
+			$xml = simplexml_load_string($response);
+
+			// Obtener el nombre del canal desde la respuesta
+			$channelName = (string)$xml->ChannelTitle->name;
+			return $channelName;
+		}
+
+		// Cerrar la conexión cURL
+		curl_close($ch);
+
 	}
 }
