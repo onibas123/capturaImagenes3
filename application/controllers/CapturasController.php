@@ -480,7 +480,7 @@ class CapturasController extends CI_Controller {
 			$this->db->from('capturas');
 			$this->db->where('dispositivos_id', $r['dispositivo_id']);
 			$this->db->where('canal', $r['canal']);
-			$this->db->where('DATE_FORMAT(fecha_hora, "%Y-%m-%d %H:%i")', date('Y-m-d H:i'));
+			$this->db->where('DATE_FORMAT(fecha_hora, "%Y-%m-%d %H:%i") = ', date('Y-m-d H:i'));
 			if(empty($this->db->get()->result_array())){
 				//[dispositivo_id]
 				//[usuario] 
