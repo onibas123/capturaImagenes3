@@ -826,4 +826,41 @@ class CapturasController extends CI_Controller {
 		// Cerrar la conexión cURL
 		curl_close($ch);
 	}
+
+	public function obtenerNombreCanalDahua2(){
+		// Configuración
+		$ip = '201.236.179.91:81';
+		$usuario = 'sgmas';
+		$contrasena = 'sgmas123';
+		$canal = 1; // Número del canal que deseas consultar
+
+		// URL de la API de Dahua para obtener información sobre el canal
+		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle&channel=$canal";
+
+		// Configuración de la solicitud
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
+
+		// Realizar la solicitud
+		$response = curl_exec($ch);
+
+		// Verificar si hubo errores
+		if (curl_errno($ch)) {
+			echo 'Error: '.curl_errno($ch);
+		} else {
+			// Procesar la respuesta XML
+			$xml = simplexml_load_string($response);
+
+			// Obtener el nombre del canal desde la respuesta
+			$channelName = (string)$xml->ChannelTitle->name;
+			echo 'Nombre: '.$channelName;
+		}
+
+		// Cerrar la conexión cURL
+		curl_close($ch);
+
+	}
 }
