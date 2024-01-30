@@ -852,7 +852,7 @@ class CapturasController extends CI_Controller {
 
 		// Realizar la solicitud
 		$response = curl_exec($ch);
-
+		print_r($response);
 		// Verificar si hubo errores
 		if (curl_errno($ch)) {
 			echo 'Error: '.curl_errno($ch);
