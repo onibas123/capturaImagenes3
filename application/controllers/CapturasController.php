@@ -848,7 +848,7 @@ class CapturasController extends CI_Controller {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
 		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
 
 		// Realizar la solicitud
