@@ -853,18 +853,25 @@ class CapturasController extends CI_Controller {
 
 		// Realizar la solicitud
 		$response = curl_exec($ch);
-		var_dump($response);
+		//var_dump($response);
 		// Verificar si hubo errores
 		
 		if (curl_errno($ch)) {
 			echo 'Error: '.curl_errno($ch);
 		} else {
 			// Procesar la respuesta XML
-			$xml = simplexml_load_string($response);
+			//$xml = simplexml_load_string($response);
 
 			// Obtener el nombre del canal desde la respuesta
-			$channelName = (string)$xml->ChannelTitle->name;
-			echo 'Nombre: '.$channelName;
+			//$channelName = (string)$xml->ChannelTitle->name;
+			$string = str_replace(' ', '&', $response);
+
+			// Aplica parse_str para convertir el string en un array asociativo
+			parse_str($string, $array);
+
+			// Imprime el array resultante
+			print_r($array);
+			echo 'Nombre: '.$array[$canal];
 		}
 		
 		// Cerrar la conexión cURL
