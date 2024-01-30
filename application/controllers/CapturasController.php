@@ -852,14 +852,13 @@ class CapturasController extends CI_Controller {
 
 		// Realizar la solicitud
 		$response = curl_exec($ch);
-		print_r($response);
+		var_dump($response);
 		// Verificar si hubo errores
 		if (curl_errno($ch)) {
 			echo 'Error: '.curl_errno($ch);
 		} else {
 			// Procesar la respuesta XML
 			$xml = simplexml_load_string($response);
-
 			// Obtener el nombre del canal desde la respuesta
 			$channelName = (string)$xml->ChannelTitle->name;
 			echo 'Nombre: '.$channelName;
