@@ -855,7 +855,9 @@ class CapturasController extends CI_Controller {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$response = curl_exec($ch);
 		curl_close($ch);
-
+		echo '1<br>';
+		var_dump($response);
+		echo '<hr>';
 		$login_data = json_decode($response, true);
 		$token = isset($login_data['token']) ? $login_data['token'] : null;
 
