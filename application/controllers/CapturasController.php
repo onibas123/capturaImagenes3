@@ -840,51 +840,33 @@ class CapturasController extends CI_Controller {
 		$contrasena = 'sgmas123';
 		$canal = 1; // Número del canal que deseas consultar
 
-		
-		// URL de inicio de sesión
-		$login_url = "http://$ip/cgi-bin/authLogin.cgi";
-		$login_payload = [
-			'username' => $usuario,
-			'password' => $contrasena,
-		];
+		// URL de la API de Dahua para obtener información sobre el canal
+		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle";
 
-		// Iniciar sesión y obtener el token
-		$ch = curl_init($login_url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($login_payload));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// Configuración de la solicitud
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
+
+		// Realizar la solicitud
 		$response = curl_exec($ch);
-		curl_close($ch);
-		echo '1<br>';
 		var_dump($response);
-		echo '<hr>';
-		$login_data = json_decode($response, true);
-		$token = isset($login_data['token']) ? $login_data['token'] : null;
-
-		// Verificar si se obtuvo el token
-		if ($token) {
-			// URL para obtener la lista de canales
-			$channels_url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=channels&token=$token";
-
-			// Obtener la lista de canales
-			$ch = curl_init($channels_url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$channels_response = curl_exec($ch);
-			curl_close($ch);
-
-			$channels_data = json_decode($channels_response, true);
-
-			// Analizar la respuesta para obtener información sobre los canales
-			$channels = isset($channels_data['VideoIn']) ? $channels_data['VideoIn'] : [];
-
-			// Imprimir el nombre de cada canal
-			foreach ($channels as $channel) {
-				$channel_name = isset($channel['name']) ? $channel['name'] : 'Nombre no disponible';
-				echo "Canal: $channel_name\n";
-			}
+		// Verificar si hubo errores
+		if (curl_errno($ch)) {
+			echo 'Error: '.curl_errno($ch);
 		} else {
-			echo "No se pudo obtener el token de acceso.\n";
+			// Procesar la respuesta XML
+			$xml = simplexml_load_string($response);
+
+			// Obtener el nombre del canal desde la respuesta
+			$channelName = (string)$xml->ChannelTitle->name;
+			echo 'Nombre: '.$channelName;
 		}
+
+		// Cerrar la conexión cURL
+		curl_close($ch);
 
 	}
 }
