@@ -835,7 +835,7 @@ class CapturasController extends CI_Controller {
 
 	public function obtenerNombreCanalDahua2(){
 		// Configuración
-		//http://sgmas:sgmas123@201.236.179.91:81/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle
+		//http://sgmas:sgmas123@201.236.179.91:81/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle&channel=$canal
 		$ip = '201.236.179.91:81';
 		$usuario = 'sgmas';
 		$contrasena = 'sgmas123';
@@ -855,7 +855,7 @@ class CapturasController extends CI_Controller {
 		$response = curl_exec($ch);
 		var_dump($response);
 		// Verificar si hubo errores
-		/*
+		
 		if (curl_errno($ch)) {
 			echo 'Error: '.curl_errno($ch);
 		} else {
@@ -866,7 +866,7 @@ class CapturasController extends CI_Controller {
 			$channelName = (string)$xml->ChannelTitle->name;
 			echo 'Nombre: '.$channelName;
 		}
-		*/
+		
 		// Cerrar la conexión cURL
 		curl_close($ch);
 
