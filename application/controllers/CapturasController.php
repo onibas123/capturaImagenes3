@@ -842,7 +842,7 @@ class CapturasController extends CI_Controller {
 		$canal = 1; // Número del canal que deseas consultar
 
 		// URL de la API de Dahua para obtener información sobre el canal
-		$url = "http://$usuario:$contrasena@$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle";
+		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle";
 
 		// Configuración de la solicitud
 		$ch = curl_init();
@@ -866,7 +866,7 @@ class CapturasController extends CI_Controller {
 			$channelName = (string)$xml->ChannelTitle->name;
 			echo 'Nombre: '.$channelName;
 		}
-*/
+		*/
 		// Cerrar la conexión cURL
 		curl_close($ch);
 
