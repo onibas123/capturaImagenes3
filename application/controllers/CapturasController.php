@@ -844,8 +844,8 @@ class CapturasController extends CI_Controller {
 		// URL de inicio de sesión
 		$login_url = "http://$ip/cgi-bin/authLogin.cgi";
 		$login_payload = [
-			'username' => $username,
-			'password' => $password,
+			'username' => $usuario,
+			'password' => $contrasena,
 		];
 
 		// Iniciar sesión y obtener el token
