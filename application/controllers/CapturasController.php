@@ -253,8 +253,8 @@ class CapturasController extends CI_Controller {
 			$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
 			$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
 		}
-		
-
+		//TODO: Pendiente
+		/*
 		for($i=0;$i<count($capturas_consolidadas); $i++){
 			if($capturas_consolidadas[$i]['marcas_id'] == 1){
 				//dahua
@@ -269,6 +269,7 @@ class CapturasController extends CI_Controller {
 					$capturas_consolidadas[$i]['canal'] = '('.$capturas_consolidadas[$i]['canal'].') '.$nombre_canal; 
 			}
 		}
+		*/
 		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
@@ -465,8 +466,7 @@ class CapturasController extends CI_Controller {
 
 
 	public function capturarSnapshots(){
-		//esta funcion quedará sujeta a un Cron Job en el servidor
-		//TODO: obtener aquellos dispositivos/canales acorde al seteo del esquema de horarios para capturas pantalla
+		//esta funcion queda sujeta a un Cron Job en el servidor
 		$this->db->select('d.id as dispositivo_id, d.usuario as usuario, d.password as password, d.ip as ip, d.puerto as puerto,
 							d.organizaciones_id as organizacion_id, e.canal as canal, d.marcas_id as marcas_id');
 		$this->db->from('esquemas as e');
@@ -475,67 +475,74 @@ class CapturasController extends CI_Controller {
 		$this->db->order_by('e.id ASC');
 		$result = $this->db->get()->result_array();
 		foreach($result as $r){
-			//[dispositivo_id]
-			//[usuario] 
-			//[password] 
-			//[ip] 
-			//[puerto] 
-			//[organizacion_id] 
-			//[canal]
-			//[marcas_id]
-			//TODO: obtener snapshot acorde al tipo_dispositivo (dvr, nvr, ipc), marca (dahua, hikvision)
-			//generar registro en capturas y log pertinente
-			switch ($r['marcas_id']) {
-				case 1:
-				  	//dahua
-					  $imagen = $this->obtenerCapturaCanalDahua(
-						$r['organizacion_id'], $r['dispositivo_id'], $r['ip'],
-						$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
-					if($imagen != false){
-						//imagen capturada sin problemas
-
-						$data_captura = 	[
-												'organizaciones_id' => $r['organizacion_id'],
-												'dispositivos_id' => $r['dispositivo_id'],
-												'canal' => $r['canal'],
-												'fecha_hora' => date('Y-m-d H:i:s'),
-												'ruta_imagen' => $imagen,
-												'usuario_id' => (!empty($this->session->userdata('usuario_id')) ? !empty($this->session->userdata('usuario_id')) : '')
-											];
-						if($this->db->insert('capturas', $data_captura)){
-							$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'Success', 'data' => $data_captura]));
-						}
-					}
-					else{
-						//error en la captura de imagen, generar log
-						$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'No se pudo capturar la imagen', 'data' => $r]));
-					}
-				  	break;
-				case 2:
-				  	//hikvision
-				  	$imagen = $this->obtenerCapturaCanalHikvision(
+			//validar que no exista el mismo dispositivo, en una fecha_hora (YYYY-MM-DD HH:II) determinada 
+			$this->db->select('id');
+			$this->db->from('capturas');
+			$this->db->where('dispositivos_id', $r['dispositivo_id']);
+			$this->db->where('canal', $r['canal']);
+			$this->db->where('DATE_FORMAT(fecha_hora, "%Y-%m-%d %H:%i")', date('Y-m-d H:i'));
+			if(empty($this->db->get()->result_array())){
+				//[dispositivo_id]
+				//[usuario] 
+				//[password] 
+				//[ip] 
+				//[puerto] 
+				//[organizacion_id] 
+				//[canal]
+				//[marcas_id]
+				//generar registro en capturas y log pertinente
+				switch ($r['marcas_id']) {
+					case 1:
+						//dahua
+						$imagen = $this->obtenerCapturaCanalDahua(
 							$r['organizacion_id'], $r['dispositivo_id'], $r['ip'],
 							$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
-					if($imagen != false){
-						//imagen capturada sin problemas
-						$data_captura = 	[
-												'organizaciones_id' => $r['organizacion_id'],
-												'dispositivos_id' => $r['dispositivo_id'],
-												'canal' => $r['canal'],
-												'fecha_hora' => date('Y-m-d H:i:s'),
-												'ruta_imagen' => $imagen,
-												'usuario_id' => (!empty($this->session->userdata('usuario_id')) ? !empty($this->session->userdata('usuario_id')) : '')
-											];
-						if($this->db->insert('capturas', $data_captura)){
-							$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'Success', 'data' => $data_captura]));
+						if($imagen != false){
+							//imagen capturada sin problemas
+
+							$data_captura = 	[
+													'organizaciones_id' => $r['organizacion_id'],
+													'dispositivos_id' => $r['dispositivo_id'],
+													'canal' => $r['canal'],
+													'fecha_hora' => date('Y-m-d H:i:s'),
+													'ruta_imagen' => $imagen,
+													'usuario_id' => (!empty($this->session->userdata('usuario_id')) ? !empty($this->session->userdata('usuario_id')) : '')
+												];
+							if($this->db->insert('capturas', $data_captura)){
+								$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'Success', 'data' => $data_captura]));
+							}
 						}
-					}
-					else{
-						//error en la captura de imagen, generar log
-						$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'No se pudo capturar la imagen', 'data' => $r]));
-					}
-				  	break;
-				default:
+						else{
+							//error en la captura de imagen, generar log
+							$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'No se pudo capturar la imagen', 'data' => $r]));
+						}
+						break;
+					case 2:
+						//hikvision
+						$imagen = $this->obtenerCapturaCanalHikvision(
+								$r['organizacion_id'], $r['dispositivo_id'], $r['ip'],
+								$r['puerto'], $r['usuario'], $r['password'], $r['canal']);
+						if($imagen != false){
+							//imagen capturada sin problemas
+							$data_captura = 	[
+													'organizaciones_id' => $r['organizacion_id'],
+													'dispositivos_id' => $r['dispositivo_id'],
+													'canal' => $r['canal'],
+													'fecha_hora' => date('Y-m-d H:i:s'),
+													'ruta_imagen' => $imagen,
+													'usuario_id' => (!empty($this->session->userdata('usuario_id')) ? !empty($this->session->userdata('usuario_id')) : '')
+												];
+							if($this->db->insert('capturas', $data_captura)){
+								$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'Success', 'data' => $data_captura]));
+							}
+						}
+						else{
+							//error en la captura de imagen, generar log
+							$this->addLog('Capturas', 'Programada', json_encode(['mensaje' => 'No se pudo capturar la imagen', 'data' => $r]));
+						}
+						break;
+					default:
+				}
 			}
 		}
 	}
