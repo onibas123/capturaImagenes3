@@ -246,8 +246,14 @@ class CapturasController extends CI_Controller {
 		$this->db->order_by('capturas.fecha_hora ASC');
 		$capturas_consolidadas = $this->db->get()->result_array();
 
-		$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
-		$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
+		$fecha_desde = '-';
+		$fecha_hasta = '-';
+
+		if(count($capturas_consolidadas) > 0){
+			$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
+			$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
+		}
+		
 
 		for($i=0;$i<count($capturas_consolidadas); $i++){
 			if($capturas_consolidadas[$i]['marcas_id'] == 1){
