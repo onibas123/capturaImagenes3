@@ -272,7 +272,7 @@ class CapturasController extends CI_Controller {
 							dispositivos.ip as ip, dispositivos.usuario as usuario, dispositivos.password as password, dispositivos.marcas_id as marcas_id');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
-		$this->db->join('canales', 'capturas.dispositivos_id = canales.devices_id', 'left');
+		$this->db->join('canales', 'capturas.canal = canales.canal', 'left');
 		$this->db->where('DATE(capturas.fecha_hora) >=', $desde);
 		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
 		$this->db->where('dispositivos.id', $dev);
