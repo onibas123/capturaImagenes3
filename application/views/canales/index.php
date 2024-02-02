@@ -49,7 +49,7 @@
                     </div>
                     <br>
                     <div class="row">
-                        <button class="btn btn-warning"><i class="fas fa-cloud-download-alt"></i>Traer datos</button>
+                        <button class="btn btn-warning" onclick="traerData();"><i class="fas fa-cloud-download-alt"></i>Traer datos</button>
                     </div>
                     <br>
                     <div class="row">
@@ -164,7 +164,34 @@
                     actualizar();
                 }
             });
-            
+        }
+
+        function traerData(){
+            let device_id = $('#select-dispositivo').val();
+
+            if(device_id == ''){
+                alert('Debe seleccionar un Dispositivo.');
+                return false;
+            }
+
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CanalesController/traerNombreCanales',
+                type: 'post',
+                data: {dispositivo: device_id},
+                dataType: 'json',
+                success: function(response){
+                    if(response['codigo'] == 1){
+                        if(confirm('Existe nombre para los canales. ¿Desea usarlos?')){
+                            for(let j=0; j<response['data'].length; j++){
+                                $('#input-canal-'+(j+1)).val(response['data'][j]);
+                            }
+                        }
+                    }
+                    else{
+                        alert(response['mensaje']);
+                    }
+                }
+            });
         }
     </script>
 </body>

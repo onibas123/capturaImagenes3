@@ -89,4 +89,83 @@ class CanalesController extends CI_Controller {
         }
     }
 
+    public function traerNombreCanales(){
+        $dispositivo = $this->input->post('dispositivo');
+        $this->db->select('marcas_id, ip, puerto, usuario, password');
+        $this->db->from('dispositivos');
+        $this->db->where('id', $dispositivo);
+        $this->db->limit(1);
+        $dev = $this->db->get()->result_array();
+
+        $data = [];
+        if(!empty($dev)){
+            if($dev[0]['marcas_id'] == 1){
+                //dahua
+                $nombre_canales = $this->obtenerNombreCanalDahua($dev[0]['ip'].':'.$dev[0]['puerto'], $dev[0]['usuario'], $dev[0]['password']);
+                $arr_nombres = preg_split("/\r\n|\r|\n/", $nombre_canales);
+                $ch = [];
+                for($i=0; $i<count($arr_nombres); $i++){
+                    $ch[] = trim( (!empty(explode('.Name=',$arr_nombres[$i])[1]) ? explode('.Name=',$arr_nombres[$i])[1] : 'Camara '.($i)) );
+                }
+                $data = [
+                    'codigo' => 1,
+                    'mensaje' => 'Existen nombres de canales para este dispositivo.',
+                    'data' => $ch
+                ];
+            }
+            else if($dev[0]['marcas_id'] == 2){
+                //hikvision
+                $data = [
+                    'codigo' => 0,
+                    'mensaje' => 'No esta habilitada esta operación.',
+                    'data' => ''
+                ];
+            }
+            
+        }
+        else{
+            $data = [
+                        'codigo' => 0,
+                        'mensaje' => 'Dispositivo no registrado.',
+                        'data' => ''
+                    ];
+        }
+
+        echo json_encode($data);
+    }
+
+    private function obtenerNombreCanalDahua($ip, $usuario, $contrasena){
+		// Configuración
+		//http://sgmas:sgmas123@201.236.179.91:81/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle&channel=$canal
+        /*
+		$ip = '201.236.179.91:81';
+		$usuario = 'sgmas';
+		$contrasena = 'sgmas123';
+		$canal = 1; // Número del canal que deseas consultar
+        */
+		// URL de la API de Dahua para obtener información sobre el canal
+		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle";
+
+		// Configuración de la solicitud
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
+		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
+
+		// Realizar la solicitud
+		$response = curl_exec($ch);
+		//var_dump($response);
+		// Verificar si hubo errores
+		$return = '';
+		if (curl_errno($ch)) {
+			$return = 'Error: '.curl_errno($ch);
+		} else {
+			$return = $response;
+		}
+		// Cerrar la conexión cURL
+		curl_close($ch);
+        return $return;
+	}
+
 }
