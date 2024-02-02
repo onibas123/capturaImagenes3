@@ -223,7 +223,7 @@ class CapturasController extends CI_Controller {
 		$this->db->select('*,capturas.canal as numero_canal, usuarios.nombre as usuario, canales.nombre as nombre_canal,capturas.id as id, DATE_FORMAT(fecha_hora, "%d-%m-%Y") as fecha, DATE_FORMAT(fecha_hora, "%H:%i") as hora');
 		$this->db->from('capturas');
 		$this->db->join('usuarios', 'usuarios.id = capturas.usuario_id', 'left');
-		$this->db->join('canales', 'capturas.dispositivos_id = canales.devices_id', 'left');
+		$this->db->join('canales', 'capturas.canal = canales.canal', 'left');
 		$this->db->where('dispositivos_id', $dispositivo);
 		$this->db->where('DATE(fecha_hora) >=', $desde);
 		$this->db->where('DATE(fecha_hora) <=', $hasta);
