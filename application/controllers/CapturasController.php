@@ -277,7 +277,9 @@ class CapturasController extends CI_Controller {
 		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
 		$this->db->where('dispositivos.id', $dev);
 		$this->db->where('capturas.consolidado', 1);
+		$this->db->group_by('capturas.id');
 		$this->db->order_by('capturas.fecha_hora ASC');
+		
 		$capturas_consolidadas = $this->db->get()->result_array();
 
 		$fecha_desde = '-';
