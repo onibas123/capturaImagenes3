@@ -158,7 +158,8 @@
                             capturas += '<ul>';
                             capturas += '<li><b>Fecha:</b> '+response[i]['fecha']+'</li>';
                             capturas += '<li><b>Hora:</b> '+response[i]['hora']+'</li>';
-                            capturas += '<li><b>Usuario:</b> '+((response[i]['nombre'] != null && response[i]['nombre'] != '') ? response[i]['nombre'] : 'Sistema')+'</li>';
+                            capturas += '<li><b>Usuario:</b> '+((response[i]['usuario'] != null && response[i]['usuario'] != '') ? response[i]['usuario'] : 'Sistema')+'</li>';
+                            capturas += '<li><b>Canal:</b> '+response[i]['numero_canal']+' '+response[i]['nombre_canal']+'</li>';
                             capturas += '</ul>';
                             capturas += '</div>';
                             capturas += '<div class="col-md-8">';

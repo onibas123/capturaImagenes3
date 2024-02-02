@@ -160,11 +160,13 @@
                     data: {dispositivo: $(this).val()},
                     dataType: 'text',
                     success: function(response){
+                        /*
                         let canales = parseInt(response);
                         for(let i=1; i<=canales; i++){
                             option += '<option value="'+i+'">'+i+'</option>';
                         }
-                        $('#select-canal').html(option);
+                        */
+                        $('#select-canal').html(response);
                     }
                 });
             });

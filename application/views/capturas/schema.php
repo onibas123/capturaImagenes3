@@ -122,35 +122,36 @@
             $('#select-dispositivo').change(function(){
                 let tbody = '';
                 $.ajax({
-                    url: '<?php echo base_url();?>index.php/CapturasController/obtenerCantidadCanalesDispotivo',
+                    url: '<?php echo base_url();?>index.php/CapturasController/obtenerCantidadCanalesDispotivo2',
                     type: 'post',
                     data: {dispositivo: $(this).val()},
-                    dataType: 'text',
+                    dataType: 'json',
                     success: function(response){
-                        if(response != '0'){
-                            for(let i=1; i<= parseInt(response); i++){
-                                tbody  += '<tr canal="'+i+'" id="tr-'+i+'" class="tr-canales">';
+
+                        if(response.length > 0){
+                            for(let i=0; i< response.length; i++){
+                                tbody  += '<tr canal="'+response[i]['canal']+'" id="tr-'+response[i]['canal']+'" class="tr-canales">';
                                 
-                                tbody  += '<td>'+i+'</td>';
+                                tbody  += '<td>'+response[i]['canal']+' '+response[i]['nombre']+'</td>';
                                 
-                                tbody  += '<td class="text-center" ><input name="input-check-lun_'+i+'" id="input-check-lun_'+i+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-mar_'+i+'" id="input-check-mar_'+i+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-mie_'+i+'" id="input-check-mie_'+i+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-jue_'+i+'" id="input-check-jue_'+i+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-vie_'+i+'" id="input-check-vie_'+i+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-sab_'+i+'" id="input-check-sab_'+i+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-dom_'+i+'" id="input-check-dom_'+i+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-lun_'+response[i]['canal']+'" id="input-check-lun_'+response[i]['canal']+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-mar_'+response[i]['canal']+'" id="input-check-mar_'+response[i]['canal']+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-mie_'+response[i]['canal']+'" id="input-check-mie_'+response[i]['canal']+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-jue_'+response[i]['canal']+'" id="input-check-jue_'+response[i]['canal']+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-vie_'+response[i]['canal']+'" id="input-check-vie_'+response[i]['canal']+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-sab_'+response[i]['canal']+'" id="input-check-sab_'+response[i]['canal']+'" type="checkbox"></td>';
+                                tbody  += '<td class="text-center" ><input name="input-check-dom_'+response[i]['canal']+'" id="input-check-dom_'+response[i]['canal']+'" type="checkbox"></td>';
                                 
-                                tbody  += '<td class="td-horas" id="td-horas-'+i+'">';
+                                tbody  += '<td class="td-horas" id="td-horas-'+response[i]['canal']+'">';
                                 
                                 tbody  += '<div class="row">';
 
                                 tbody  += '<div class="col-md-8">';
-                                tbody  += '<input canal="'+i+'" hora="1" class="horas" ocupado="0" id="div-hora-'+i+'_1" class="form-contron" type="time" value="06:00"><br>';
+                                tbody  += '<input canal="'+response[i]['canal']+'" hora="1" class="horas" ocupado="0" id="div-hora-'+response[i]['canal']+'_1" class="form-contron" type="time" value="06:00"><br>';
                                 tbody  += '</div>';
 
                                 tbody  += '<div class="col-md-4">';
-                                tbody  += '<button onclick="agregarHora('+i+');" class="btn btn-primary btn-sm round">+</button>';
+                                tbody  += '<button onclick="agregarHora('+response[i]['canal']+');" class="btn btn-primary btn-sm round">+</button>';
                                 tbody  += '</div>';
 
                                 tbody  += '</div>';
@@ -158,6 +159,7 @@
                                 tbody  += '</td>';
                             }
                         }
+
                         $('#tbody-schema').html(tbody);
                         
                         $.ajax({

@@ -38,6 +38,8 @@ class CapturasController extends CI_Controller {
 		->display_as('usuario_id','Usuario');
 		$crud->field_type('password', 'password');
 
+		$crud->order_by('fecha_hora','desc');
+
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Capturas Histórico';
@@ -111,7 +113,36 @@ class CapturasController extends CI_Controller {
 		$this->db->where('id', $dispositivo);
 		$this->db->limit(1);
 		$canales = $this->db->get()->result_array();
-		echo !empty($canales[0]['cantidad_canales']) ? $canales[0]['cantidad_canales'] : 0;
+		//echo !empty($canales[0]['cantidad_canales']) ? $canales[0]['cantidad_canales'] : 0;
+		$this->db->select('*');
+        $this->db->from('canales');
+        $this->db->where('devices_id', $dispositivo);
+        $this->db->order_by('canal ASC');
+        $canales = $this->db->get()->result_array();
+        $option = '<option value="" selected>Seleccione</option>';
+        if(!empty($canales)){
+            for($i=0; $i< count($canales); $i++){
+				$option .= '<option value="'.$canales[$i]['canal'].'">'.$canales[$i]['nombre'].'</option>';
+            }
+        }
+		echo $option;
+	}
+
+	public function obtenerCantidadCanalesDispotivo2(){
+		$dispositivo = $this->input->post('dispositivo');
+		$this->db->select('cantidad_canales');
+		$this->db->from('dispositivos');
+		$this->db->where('id', $dispositivo);
+		$this->db->limit(1);
+		$canales = $this->db->get()->result_array();
+		//echo !empty($canales[0]['cantidad_canales']) ? $canales[0]['cantidad_canales'] : 0;
+		$this->db->select('*');
+        $this->db->from('canales');
+        $this->db->where('devices_id', $dispositivo);
+        $this->db->order_by('canal ASC');
+        $canales = $this->db->get()->result_array();
+        
+		echo json_encode($canales);
 	}
 
 	public function guardarSchema(){
@@ -189,13 +220,15 @@ class CapturasController extends CI_Controller {
 		$desde = $this->input->post('desde', true);
 		$hasta = $this->input->post('hasta', true);
 
-		$this->db->select('*,capturas.id as id, DATE_FORMAT(fecha_hora, "%d-%m-%Y") as fecha, DATE_FORMAT(fecha_hora, "%H:%i") as hora');
+		$this->db->select('*,capturas.canal as numero_canal, usuarios.nombre as usuario, canales.nombre as nombre_canal,capturas.id as id, DATE_FORMAT(fecha_hora, "%d-%m-%Y") as fecha, DATE_FORMAT(fecha_hora, "%H:%i") as hora');
 		$this->db->from('capturas');
 		$this->db->join('usuarios', 'usuarios.id = capturas.usuario_id', 'left');
+		$this->db->join('canales', 'capturas.dispositivos_id = canales.devices_id', 'left');
 		$this->db->where('dispositivos_id', $dispositivo);
 		$this->db->where('DATE(fecha_hora) >=', $desde);
 		$this->db->where('DATE(fecha_hora) <=', $hasta);
 		$this->db->where('consolidado', 0);
+		$this->db->group_by('capturas.id');
 		echo json_encode($this->db->get()->result_array());
 	}
 
@@ -235,10 +268,11 @@ class CapturasController extends CI_Controller {
 		$desde = $this->input->get('desde', true);
 		$hasta = $this->input->get('hasta', true);
 
-		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, capturas.canal as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora,
+		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, CONCAT(capturas.canal," ",canales.nombre) as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora,
 							dispositivos.ip as ip, dispositivos.usuario as usuario, dispositivos.password as password, dispositivos.marcas_id as marcas_id');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
+		$this->db->join('canales', 'capturas.dispositivos_id = canales.devices_id', 'left');
 		$this->db->where('DATE(capturas.fecha_hora) >=', $desde);
 		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
 		$this->db->where('dispositivos.id', $dev);
