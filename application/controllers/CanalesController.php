@@ -87,6 +87,11 @@ class CanalesController extends CI_Controller {
                             ];
             $this->db->insert('canales', $data_canales);
         }
+
+        $this->db->where('id', $dispositivo);
+        $this->db->update('dispositivos',['cantidad_canales' => count($canales)]);
+
+        $this->addLog('Canales', 'Crear', json_encode(['dispositivo_id' => $dispositivo, 'canales' => $canales]));
     }
 
     public function traerNombreCanales(){
@@ -105,7 +110,9 @@ class CanalesController extends CI_Controller {
                 $arr_nombres = preg_split("/\r\n|\r|\n/", $nombre_canales);
                 $ch = [];
                 for($i=0; $i<count($arr_nombres); $i++){
-                    $ch[] = trim( (!empty(explode('.Name=',$arr_nombres[$i])[1]) ? explode('.Name=',$arr_nombres[$i])[1] : 'Camara '.($i)) );
+                    if(!empty(explode('.Name=',$arr_nombres[$i])[1])){
+                        $ch[] = trim(explode('.Name=',$arr_nombres[$i])[1]);
+                    }
                 }
                 $data = [
                     'codigo' => 1,
@@ -117,7 +124,7 @@ class CanalesController extends CI_Controller {
                 //hikvision
                 $data = [
                     'codigo' => 0,
-                    'mensaje' => 'No esta habilitada esta operación.',
+                    'mensaje' => 'No esta habilitada esta operación para Hikvision.',
                     'data' => ''
                 ];
             }

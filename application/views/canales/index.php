@@ -183,7 +183,17 @@
                     if(response['codigo'] == 1){
                         if(confirm('Existe nombre para los canales. ¿Desea usarlos?')){
                             for(let j=0; j<response['data'].length; j++){
-                                $('#input-canal-'+(j+1)).val(response['data'][j]);
+                                if($('#input-canal-'+(j+1)).length > 0)
+                                    $('#input-canal-'+(j+1)).val(response['data'][j]);
+                                else{
+                                    //crear tr y input
+                                    let tr = '<tr>'
+                                    tr += '<td>'+(j+1)+'</td>';
+                                    tr += '<td><input class="form-control" name="canales" id="input-canal-'+(j+1)+'" value="'+response['data'][j]+'"></td>';
+                                    tr += '</tr>';
+                                    console.log(tr);
+                                    $('#tbody-canales').html($('#tbody-canales').html()+tr);
+                                }
                             }
                         }
                     }
