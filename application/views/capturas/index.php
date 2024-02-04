@@ -22,3 +22,9 @@ foreach($css_files as $file): ?>
     <script src="<?php echo $file; ?>"></script>
 <?php endforeach; ?>
 <?php $this->load->view('layout/main_bot_gc');?>  
+<script>
+     if($('#field-ruta_imagen').length > 0){
+        let imagen = '<?php echo base_url();?>assets/imagenes_capturadas/'+$('#field-ruta_imagen').html();
+        $('#field-ruta_imagen').html('<img class="img-responsive" width="400" height="400" src="'+imagen+'" />');
+    }
+</script>
