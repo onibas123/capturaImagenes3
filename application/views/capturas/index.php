@@ -31,9 +31,4 @@ foreach($css_files as $file): ?>
     if($('#ruta_imagen_display_as_box').length > 0){
         $('#ruta_imagen_display_as_box').html('Imagen');
     }
-
-    if($('#field-usuario_id').length > 0){
-        if($('#field-usuario_id').html().trim() == '')
-            $('#field-usuario_id').html('Sistema');
-    }
 </script>
