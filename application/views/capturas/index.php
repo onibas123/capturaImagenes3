@@ -28,7 +28,7 @@ foreach($css_files as $file): ?>
         $('#field-ruta_imagen').html('<img class="img-responsive" width="400" height="400" src="'+imagen+'" />');
     }
 
-    if($('#form-display-as-box').length > 0){
-        $('#form-display-as-box').html('Imagen');
+    if($('#ruta_imagen_display_as_box').length > 0){
+        $('#ruta_imagen_display_as_box').html('Imagen');
     }
 </script>
