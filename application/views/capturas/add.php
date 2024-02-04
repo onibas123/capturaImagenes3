@@ -63,7 +63,7 @@
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <label for="">Imagen</label>
-                            <button onclick="capturar();" class="btn btn-primary btn-sm">Capturar</button>
+                            <button id="btnCapturar" onclick="capturar();" class="btn btn-primary btn-sm">Capturar</button>
                             <div class="d-flex justify-content-center">
                                 <img style="cursor: pointer;" onclick="abrirGrande(this.src);" width="300" height="300" src="https://aquiporti.ec/dreamlab/wp-content/uploads/2020/02/default-300x300.jpg" id="img-captura" class="img-responsive pull-center"/>
                             </div>
@@ -187,6 +187,7 @@
                 return false;
             }
             img_captura.attr('src', '<?php echo base_url();?>assets/img/loading.gif');
+            $('#btnCapturar').prop('disabled', true);
             $.ajax({
                 url: '<?php echo base_url();?>index.php/CapturasController/obtenerCapturaDispositivoCanal',
                 type: 'post',
@@ -200,6 +201,7 @@
                         img_captura.attr('src', '<?php echo base_url();?>assets/imagenes_capturadas/'+response);
                         nombre_imagen = response;
                     }
+                    $('#btnCapturar').prop('disabled', false);
                 }
             });
         }
