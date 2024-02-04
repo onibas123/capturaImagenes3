@@ -33,7 +33,7 @@ foreach($css_files as $file): ?>
     }
 
     if($('#field-usuario_id').length > 0){
-        if($('#field-usuario_id').html() == '')
+        if($('#field-usuario_id').html().trim() == '')
             $('#field-usuario_id').html('Sistema');
     }
 </script>
