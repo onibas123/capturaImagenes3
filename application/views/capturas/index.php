@@ -27,4 +27,8 @@ foreach($css_files as $file): ?>
         let imagen = '<?php echo base_url();?>assets/imagenes_capturadas/'+$('#field-ruta_imagen').html();
         $('#field-ruta_imagen').html('<img class="img-responsive" width="400" height="400" src="'+imagen+'" />');
     }
+
+    if($('#form-display-as-box').length > 0){
+        $('#form-display-as-box').html('Imagen');
+    }
 </script>
