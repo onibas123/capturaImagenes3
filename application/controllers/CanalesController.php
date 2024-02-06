@@ -175,4 +175,10 @@ class CanalesController extends CI_Controller {
         return $return;
 	}
 
+    public function eliminarCanales(){
+        $dispositivo = $this->input->post('dispositivo');
+        $this->db->where('devices_id', $dispositivo);
+        $this->db->delete('canales');
+    }
+
 }

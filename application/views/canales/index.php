@@ -49,7 +49,10 @@
                     </div>
                     <br>
                     <div class="row">
-                        <button class="btn btn-warning" onclick="traerData();"><i class="fas fa-cloud-download-alt"></i>Traer datos</button>
+                        <div class="col-md-12">
+                            <button class="btn btn-warning" onclick="traerData();"><i class="fas fa-cloud-download-alt"></i>Traer datos</button>
+                            <button class="btn btn-danger ml-1" onclick="eliminarCanales();"><i class="fas fa-trash"></i>Eliminar</button>
+                        </div>
                     </div>
                     <br>
                     <div class="row">
@@ -202,6 +205,26 @@
                     }
                 }
             });
+        }
+
+        function eliminarCanales(){
+            let device_id = $('#select-dispositivo').val();
+
+            if(device_id == ''){
+                alert('Debe seleccionar un Dispositivo.');
+                return false;
+            }
+
+            if(confirm('Confirme la eliminación de los canales')){
+                $.ajax({
+                    url: '<?php echo base_url();?>index.php/CanalesController/eliminarCanales',
+                    type: 'post',
+                    data: {dispositivo: device_id},
+                    success: function(response){
+                        location.reload();
+                    }
+                });
+            }
         }
     </script>
 </body>
