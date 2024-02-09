@@ -11,7 +11,7 @@ foreach($css_files as $file): ?>
 <?php endforeach; ?>
 <div class="row">
     <div class="col-md-12">
-        <a class="btn btn-info" href="<?php echo base_url();?>index.php/CapturasController/add">Captura Simple</a>
+        <a class="btn btn-info" href="<?php echo base_url();?>index.php/CapturasController/add">Imágen x clasificar individual</a>
     </div>
 </div>
 <br>

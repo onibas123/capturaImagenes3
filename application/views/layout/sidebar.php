@@ -30,38 +30,21 @@ if($this->session->userdata('opciones'))
 <!-- Divider -->
 <hr class="sidebar-divider">
 
-<!-- Heading -->
-<div class="sidebar-heading">
-    Interface
-</div>
-
 <!-- Nav Item - Pages Collapse Menu -->
 <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
         aria-expanded="true" aria-controls="collapseTwo">
         <i class="fas fa-fw fa-cog"></i>
-        <span>Configuración</span>
+        <span>Imágenes</span>
     </a>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Configuración</h6>
             <?php 
                 foreach($opciones as $o){
-                    if($o['padre'] == 3)
+                    if($o['padre'] == 21)
                         echo '<a class="collapse-item" href="'.base_url().'index.php/'.$o['controlador'].'/'.$o['accion'].'">'.$o['nombre'].'</a>';
                 }
             ?>
-            <!--
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/ConfiguracionesController/index">Paramétrica</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/UsuariosController/index">Usuarios</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/RolesController/index">Roles</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/OpcionesController/index">Opciones</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/RolesController/permisos">Permisos</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/OrganizacionesController/index">Organizaciones</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/TipoDispositivoController/index">Tipo Dispositivo</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/MarcasController/index">Marcas</a>
-            <a class="collapse-item" href="<?php //echo base_url();?>index.php/DispositivosController/index">Dispositivos</a>
-            -->
         </div>
     </div>
 </li>
@@ -70,12 +53,11 @@ if($this->session->userdata('opciones'))
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
         aria-expanded="true" aria-controls="collapseUtilities">
         <i class="fas fa-fw fa-wrench"></i>
-        <span>Gestión</span>
+        <span>Informes</span>
     </a>
     <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
         data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Gestión</h6>
             <?php 
                 foreach($opciones as $o){
                     if($o['padre'] == 13)
@@ -90,22 +72,18 @@ if($this->session->userdata('opciones'))
         </div>
     </div>
 </li>
-<!-- Divider -->
+<!-- Divider 
 <hr class="sidebar-divider">
-<!-- Heading -->
-<div class="sidebar-heading">
-    Reportes
-</div>
+-->
 <!-- Nav Item - Pages Collapse Menu -->
 <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
         aria-expanded="true" aria-controls="collapsePages">
         <i class="fas fa-fw fa-folder"></i>
-        <span>Entidad</span>
+        <span>Clientes</span>
     </a>
     <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Capturas Consolidadas <br>& Logs</h6>
             <?php 
                 foreach($opciones as $o){
                     if($o['padre'] == 17)
@@ -119,23 +97,27 @@ if($this->session->userdata('opciones'))
         </div>
     </div>
 </li>
-<!-- Nav Item - Charts -->
-<!--
+<!-- Nav Item - Pages Collapse Menu -->
 <li class="nav-item">
-    <a class="nav-link" href="charts.html">
-        <i class="fas fa-fw fa-chart-area"></i>
-        <span>Charts</span></a>
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePageMantenedor"
+        aria-expanded="true" aria-controls="collapsePageMantenedor">
+        <i class="fas fa-fw fa-folder"></i>
+        <span>Mantenedores</span>
+    </a>
+    <div id="collapsePageMantenedor" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <?php 
+                foreach($opciones as $o){
+                    if($o['padre'] == 3)
+                        echo '<a class="collapse-item" href="'.base_url().'index.php/'.$o['controlador'].'/'.$o['accion'].'">'.$o['nombre'].'</a>';
+                }
+            ?>
+            <!--<a class="collapse-item"  href="<?php //echo base_url();?>index.php/CapturasController/report">Registros</a>-->
+            <!--<div class="collapse-divider"></div>
+            <h6 class="collapse-header">Información Log</h6>-->
+            <!--<a class="collapse-item" href= "<?php //echo base_url();?>index.php/LogsController/index">Logs</a>-->
+        </div>
+    </div>
 </li>
--->
-<!-- Nav Item - Tables -->
-<!--
-<li class="nav-item">
-    <a class="nav-link" href="tables.html">
-        <i class="fas fa-fw fa-table"></i>
-        <span>Tables</span></a>
-</li>
--->
-<!-- Divider -->
-<hr class="sidebar-divider d-none d-md-block">
 </ul>
 <!-- End of Sidebar -->
