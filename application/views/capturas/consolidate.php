@@ -35,7 +35,7 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid m-2" style="background-color: #fff; min-height: 500px;">
                     <!-- main content -->
-                    <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Consolidar';?></h4>
+                    <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Imágenes x Clasificar';?></h4>
                     <hr>
                     <div class="row">
                         <div class="col-md-6">

@@ -17,10 +17,11 @@ class OrganizacionesController extends CI_Controller {
 		$crud->unset_print();
 		$crud->unset_export();
 		$crud->unset_clone();
-		if($this->session->userdata('usuario_guarda') == 0)
-			$crud->unset_add();
-		if($this->session->userdata('usuario_edita') == 0)
-			$crud->unset_edit();
+		$crud->unset_add();
+		$crud->unset_edit();
+		if($this->session->userdata('usuario_elimina') == 1)
+			$crud->add_action('action1', base_url().'assets/grocery_crud/themes/flexigrid/css/images/edit.png', 'OrganizacionesController/edit', '','', array($this,'get_row_id' ));
+			
 		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
 
@@ -28,10 +29,18 @@ class OrganizacionesController extends CI_Controller {
 		$crud->callback_before_update(array($this,'add_log_edit'));
 		$crud->callback_before_delete(array($this,'add_log_delete'));
 
+		$crud->set_relation('tipo_organizacion_id','tipo_organizacion','tipo');
+		$crud->display_as('tipo_organizacion_id','Tipo');
+
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Organizaciones';
 		$this->load->view('organizaciones/index', $data);
+	}
+
+	function edit($id)
+	{
+		echo $id;
 	}
 
 	public function add_log_create($post_array){

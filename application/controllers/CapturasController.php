@@ -66,7 +66,7 @@ class CapturasController extends CI_Controller {
     public function add(){
 		$organizaciones = $this->db->get('organizaciones')->result_array();
 		$data = [
-			'titulo' => 'Captura Simple',
+			'titulo' => 'Imágenes x Clasificar (individual)',
 			'organizaciones' => $organizaciones
 		];
 		$this->load->view('capturas/add', $data);
@@ -84,7 +84,7 @@ class CapturasController extends CI_Controller {
 	public function consolidate(){
 		$organizaciones = $this->db->get('organizaciones')->result_array();
 		$data = [
-			'titulo' => 'Consolidar',
+			'titulo' => 'Imágenes x Clasificar',
 			'organizaciones' => $organizaciones
 		];
 		$this->load->view('capturas/consolidate', $data);
@@ -289,23 +289,6 @@ class CapturasController extends CI_Controller {
 			$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
 			$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
 		}
-		//TODO: Pendiente
-		/*
-		for($i=0;$i<count($capturas_consolidadas); $i++){
-			if($capturas_consolidadas[$i]['marcas_id'] == 1){
-				//dahua
-				$nombre_canal = $this->obtenerNombreCanalDahua($capturas_consolidadas[$i]['ip'], $capturas_consolidadas[$i]['usuario'], $capturas_consolidadas[$i]['password'], $capturas_consolidadas[$i]['canal']);
-				if($nombre_canal != false)
-					$capturas_consolidadas[$i]['canal'] = '('.$capturas_consolidadas[$i]['canal'].') '.$nombre_canal; 
-			}
-			else if($capturas_consolidadas[$i]['marcas_id'] == 2){
-				//hikvision
-				$nombre_canal = $this->obtenerNombreCanalHikvision($capturas_consolidadas[$i]['ip'], $capturas_consolidadas[$i]['usuario'], $capturas_consolidadas[$i]['password'], $capturas_consolidadas[$i]['canal']);
-				if($nombre_canal != false)
-					$capturas_consolidadas[$i]['canal'] = '('.$capturas_consolidadas[$i]['canal'].') '.$nombre_canal; 
-			}
-		}
-		*/
 		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
@@ -423,7 +406,7 @@ class CapturasController extends CI_Controller {
 		$pdf->SetFont('Times', 'B', 10);
 		$pdf->Cell(40, 7, utf8_decode('Razón Social: '), '', 0, 'L', false);
 		$pdf->SetFont('Times', 'U', 9);
-		$pdf->Cell(120, 7, utf8_decode((!empty($organizacion[0]['razon_social']) ? $organizacion[0]['razon_social'] : 'N/A')), '', 0, 'L', false);
+		$pdf->Cell(120, 7, utf8_decode((!empty($organizacion[0]['nombre']) ? $organizacion[0]['nombre'] : 'N/A')), '', 0, 'L', false);
 		
 		$pdf->Ln();
 		
@@ -582,7 +565,6 @@ class CapturasController extends CI_Controller {
 			}
 		}
 	}
-
 	//----------------------
 	private function obtenerCapturaCanalHikvision($organizacion_id, $dispositivo_id, $ip, $puerto, $usuario, $clave, $canal){
 		ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)');
@@ -803,122 +785,38 @@ class CapturasController extends CI_Controller {
 		curl_close($ch);
 	}
 
-	private function obtenerNombreCanalDahua($ip, $usuario, $clave, $canal){
-		// Configuración
-		$ip = $ip;
-		$usuario = $usuario;
-		$contrasena = $clave;
-		$canal = $canal; // Número del canal que deseas consultar
-
-		// URL de la API de Dahua para obtener información sobre el canal
-		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle&channel=$canal";
-
-		// Configuración de la solicitud
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
-
-		// Realizar la solicitud
-		$response = curl_exec($ch);
-
-		// Verificar si hubo errores
-		if (curl_errno($ch)) {
-			return false;
-		} else {
-			// Procesar la respuesta XML
-			$xml = simplexml_load_string($response);
-
-			// Obtener el nombre del canal desde la respuesta
-			$channelName = (string)$xml->ChannelTitle->name;
-			return $channelName;
-		}
-
-		// Cerrar la conexión cURL
-		curl_close($ch);
-
+	public function uploadImage(){
+		$organizaciones = $this->db->get('organizaciones')->result_array();
+		$data = [
+			'titulo' => 'Subir imágenes',
+			'organizaciones' => $organizaciones
+		];
+		$this->load->view('capturas/upload_image', $data);
 	}
 
-	public function obtenerNombreCanalHikvision2(){
-		// Configuración
-		$ip = '179.56.164.241:880';
-		$usuario = 'admin';
-		$contrasena = 'Jc15811305';
-		$canal = 1; // Número del canal que deseas consultar
+	public function subirImagen(){
+		$org = $this->input->post('org', true);
+		$dev = $this->input->post('dev', true);
+		$canal = $this->input->post('canal', true);
 
-		// URL de la API ISAPI de Hikvision para obtener información sobre el canal
-		$url = "http://$ip/ISAPI/Streaming/channels/$canal";
+		if ($_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
+			$nombreArchivo = $_FILES['imagen']['name'];
+			$rutaTemporal = $_FILES['imagen']['tmp_name'];
 
-		// Configuración de la solicitud
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
-
-		// Realizar la solicitud
-		$response = curl_exec($ch);
-		print_r($response);
-		// Verificar si hubo errores
-		if (curl_errno($ch)) {
-			echo 'Error: '.curl_errno($ch);
-		} else {
-			// Procesar la respuesta JSON
-			$data = json_decode($response, true);
-			print_r($data);
-			// Obtener el nombre del canal desde la respuesta
-			$channelName = $data['StreamingChannel']['channelName'];
-			echo 'Camara Nombre: '.$channelName;
-		}
-
-		// Cerrar la conexión cURL
-		curl_close($ch);
-	}
-
-	public function obtenerNombreCanalDahua2(){
-		// Configuración
-		//http://sgmas:sgmas123@201.236.179.91:81/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle&channel=$canal
-		$ip = '201.236.179.91:81';
-		$usuario = 'sgmas';
-		$contrasena = 'sgmas123';
-		$canal = 1; // Número del canal que deseas consultar
-
-		// URL de la API de Dahua para obtener información sobre el canal
-		$url = "http://$ip/cgi-bin/configManager.cgi?action=getConfig&name=ChannelTitle";
-
-		// Configuración de la solicitud
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
-		curl_setopt($ch, CURLOPT_USERPWD, "$usuario:$contrasena");
-
-		// Realizar la solicitud
-		$response = curl_exec($ch);
-		//var_dump($response);
-		// Verificar si hubo errores
+			// Obtener información sobre el archivo
+			$infoArchivo = pathinfo($_FILES["imagen"]["name"]);
+			// Obtener la extensión del archivo
+			$extension = strtolower($infoArchivo['extension']);
+			$nombreImagen = $org.'_'.$dev.'_'.$canal.'_'.date('YmdHis').'.'.$extension;
+			$rutaDestino = './assets/imagenes_capturadas/' . $nombreImagen; // Ajusta la ruta según tus necesidades
 		
-		if (curl_errno($ch)) {
-			echo 'Error: '.curl_errno($ch);
+			if (move_uploaded_file($rutaTemporal, $rutaDestino)) {
+				echo json_encode(['codigo' => 1, 'imagen' => $nombreImagen]);
+			} else {
+				echo json_encode(['codigo' => 0, 'imagen' => 'Error al subir']);
+			}
 		} else {
-			// Procesar la respuesta XML
-			//$xml = simplexml_load_string($response);
-
-			// Obtener el nombre del canal desde la respuesta
-			//$channelName = (string)$xml->ChannelTitle->name;
-			$string = str_replace(' ', '&', $response);
-
-			// Aplica parse_str para convertir el string en un array asociativo
-			parse_str($string, $array);
-
-			// Imprime el array resultante
-			print_r($array);
-			echo 'Nombre: '.$array[$canal];
+			echo json_encode(['codigo' => 0, 'imagen' => $_FILES['imagen']['error']]);
 		}
-		
-		// Cerrar la conexión cURL
-		curl_close($ch);
-
 	}
 }

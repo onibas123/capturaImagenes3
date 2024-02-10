@@ -98,8 +98,8 @@
       </tr>
 
       <tr>
-        <td><b>Razón Social:</b> </td>
-        <td colspan="3"><u><?php echo $datos_organizacion[0]['razon_social'];?></u></td>
+        <td><b>Nombre:</b> </td>
+        <td colspan="3"><u><?php echo $datos_organizacion[0]['nombre'];?></u></td>
       </tr>
 
       <tr>

@@ -24,7 +24,7 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid m-2" style="background-color: #fff; min-height: 500px;">
                     <!-- main content -->
-                    <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Imágenes x Clasificar (individual)';?></h4>
+                    <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Subir imágenes';?></h4>
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
@@ -63,7 +63,11 @@
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <label for="">Imagen</label>
-                            <button id="btnCapturar" onclick="capturar();" class="btn btn-primary btn-sm">Capturar</button>
+                            <form id="formularioImagen" enctype="multipart/form-data">
+                                <input type="file" name="imagen" id="imagen">
+                                <button class="btn btn-primary" type="button" onclick="subirImagen()">Subir Imagen</button>
+                            </form>
+                            <br>
                             <div class="d-flex justify-content-center">
                                 <img style="cursor: pointer;" onclick="abrirGrande(this.src);" width="300" height="300" src="https://aquiporti.ec/dreamlab/wp-content/uploads/2020/02/default-300x300.jpg" id="img-captura" class="img-responsive pull-center"/>
                             </div>
@@ -249,6 +253,48 @@
         function abrirGrande(src){
             $('#img-expandir').attr('src', src);
             $('#modal-captura').modal('show');
+        }
+
+        function subirImagen() {
+            let organizacion = $('#select-organizacion').val();
+            let dispositivo = $('#select-dispositivo').val();
+            let canal = $('#select-canal').val();
+            if(canal == ''){
+                alert('Debe selecciona un canal');
+                return false;
+            }
+
+            if(document.getElementById('imagen').files.length === 0){
+                alert('Debe seleccionar una imagen');
+                return false;
+            }
+
+            var formData = new FormData($("#formularioImagen")[0]);
+
+            formData.append('org', organizacion);
+            formData.append('dev', dispositivo);
+            formData.append('canal', canal);
+
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CapturasController/subirImagen',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    if(response['codigo'] == '1'){
+                        img_captura.attr('src', '<?php echo base_url();?>assets/imagenes_capturadas/'+response['imagen']);
+                        nombre_imagen = response['imagen'];
+                    }
+                    else{
+                        alert('Error: '+response['imagen']);
+                    }
+                },
+                error: function(error) {
+                    alert('Error: '+error);
+                }
+            });
         }
     </script>
 </body>
