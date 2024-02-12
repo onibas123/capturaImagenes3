@@ -77,4 +77,52 @@ class OrganizacionesController extends CI_Controller {
 		else
 			return false;
 	}
+
+	public function add(){
+		$tipo_organizacion = $this->db->get('tipo_organizacion')->result_array();
+		$data = [
+			'titulo' => 'Agregar Cliente',
+			'tipo_organizacion' => $tipo_organizacion
+		];
+		$this->load->view('organizaciones/add', $data);
+	}
+
+	public function addOrganizacion(){
+		$rut = $this->input->post('rut', true);
+		$tipo_organizacion = $this->input->post('tipo_organizacion', true);
+		$nombre = $this->input->post('nombre', true);
+		$direccion = $this->input->post('direccion', true);
+		$telefono = $this->input->post('telefono', true);
+		$email = $this->input->post('email', true);
+		$contacto = $this->input->post('contacto', true);
+		$cantidad_dispositivos = $this->input->post('cantidad_dispositivos', true);
+
+		$data_organizacion = 	[
+									'nombre' => $nombre,
+									'cantidad_dispositivos' => $cantidad_dispositivos,
+									'rut' => $rut,
+									'creado' => date('Y-m-d H:i:s'),
+									'direccion' => $direccion,
+									'contacto' => $contacto,
+									'telefono' => $telefono,
+									'email' => $email,
+									'tipo_organizacion_id' => $tipo_organizacion
+								];
+
+		$this->db->insert('organizaciones', $data_organizacion);
+		$last_id = $this->db->insert_id();
+		if($last_id > 0){
+			$emails_contactos = $this->input->post('emails_contactos');
+			if(count($emails_contactos) > 0){
+				$this->db->where('organizaciones_id', $last_id);
+				$this->db->delete('organizaciones_contactos');
+				foreach($emails_contactos as $ec){
+					$arr_temp = ['organizaciones_id' => $last_id, 'contacto' => $ec];
+					$this->db->insert('organizaciones_contactos', $arr_temp);
+				}
+			}
+		}
+
+		echo 'Se ha agregado de manera correcta.';
+	}
 }

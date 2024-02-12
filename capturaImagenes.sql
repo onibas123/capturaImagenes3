@@ -94,17 +94,6 @@ CREATE TABLE `dispositivos` (
 
 insert  into `dispositivos`(`id`,`organizaciones_id`,`tipo_dispositivo_id`,`marcas_id`,`nombre`,`cantidad_canales`,`ip`,`puerto`,`estado`,`ubicacion`,`datos_extras`,`codificar_dss`,`cantidad_capturas`,`usuario`,`password`) values (1,1,1,1,'DVR Colegio',32,'201.236.179.91',81,1,'curico','<p>\r\n	<strong>dsadas</strong></p>\r\n','1100',10,'sgmas','sgmas123');
 
-/*Table structure for table `dispositivos_contactos` */
-
-DROP TABLE IF EXISTS `dispositivos_contactos`;
-
-CREATE TABLE `dispositivos_contactos` (
-  `dispositivos_id` int(11) DEFAULT NULL,
-  `contacto` varchar(255) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*Data for the table `dispositivos_contactos` */
-
 /*Table structure for table `esquemas` */
 
 DROP TABLE IF EXISTS `esquemas`;
@@ -235,12 +224,24 @@ CREATE TABLE `organizaciones` (
   `contacto` varchar(255) DEFAULT NULL,
   `telefono` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
+  `tipo_organizacion_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `organizaciones` */
 
-insert  into `organizaciones`(`id`,`nombre`,`cantidad_dispositivos`,`creado`,`rut`,`direccion`,`contacto`,`telefono`,`email`) values (1,'AAAA',1,'2023-11-25 18:38:52','11.111.111-1','DIR DIR','CONTACTO','123456','HOLA@GMAIL.COM');
+insert  into `organizaciones`(`id`,`nombre`,`cantidad_dispositivos`,`creado`,`rut`,`direccion`,`contacto`,`telefono`,`email`,`tipo_organizacion_id`) values (1,'AAAA',1,'2023-11-25 18:38:52','11.111.111-1','DIR DIR','CONTACTO','123456','HOLA@GMAIL.COM',NULL);
+
+/*Table structure for table `organizaciones_contactos` */
+
+DROP TABLE IF EXISTS `organizaciones_contactos`;
+
+CREATE TABLE `organizaciones_contactos` (
+  `organizaciones_id` int(11) DEFAULT NULL,
+  `contacto` varchar(255) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `organizaciones_contactos` */
 
 /*Table structure for table `roles` */
 
@@ -269,6 +270,20 @@ CREATE TABLE `tipo_dispositivo` (
 /*Data for the table `tipo_dispositivo` */
 
 insert  into `tipo_dispositivo`(`id`,`nombre`) values (1,'DVR'),(2,'NVR'),(3,'Camara IP');
+
+/*Table structure for table `tipo_organizacion` */
+
+DROP TABLE IF EXISTS `tipo_organizacion`;
+
+CREATE TABLE `tipo_organizacion` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `tipo_organizacion` */
+
+insert  into `tipo_organizacion`(`id`,`tipo`) values (1,'Persona Natural'),(2,'Empresa');
 
 /*Table structure for table `usuarios` */
 

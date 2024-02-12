@@ -36,4 +36,18 @@ class Welcome extends CI_Controller {
 			return false;
 	}
 
+	public function enviar_correo() {
+        $this->load->library('phpmailer_lib');
+
+        $para = 'el_mts@hotmail.com';
+        $asunto = 'Asunto del correo';
+        $mensaje = 'Contenido del mensaje';
+
+        if ($this->phpmailer_lib->enviar_correo($para, $asunto, $mensaje)) {
+            echo 'El correo se envió correctamente.';
+        } else {
+            echo 'Error al enviar el correo.';
+        }
+    }
+
 }
