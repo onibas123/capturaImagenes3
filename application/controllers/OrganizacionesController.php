@@ -38,11 +38,6 @@ class OrganizacionesController extends CI_Controller {
 		$this->load->view('organizaciones/index', $data);
 	}
 
-	function edit($id)
-	{
-		echo $id;
-	}
-
 	public function add_log_create($post_array){
 		$this->addLog('Organizaciones', 'Crear', json_encode($post_array));
 		return $post_array;
@@ -120,6 +115,66 @@ class OrganizacionesController extends CI_Controller {
 					$arr_temp = ['organizaciones_id' => $last_id, 'contacto' => $ec];
 					$this->db->insert('organizaciones_contactos', $arr_temp);
 				}
+			}
+		}
+
+		echo 'Se ha agregado de manera correcta.';
+	}
+
+	public function edit($id){
+		$this->db->select('*');
+		$this->db->from('organizaciones');
+		$this->db->where('id', $id);
+		$this->db->limit(1);
+		$organizacion = $this->db->get()->result_array();
+		
+		$this->db->select('contacto');
+		$this->db->from('organizaciones_contactos');
+		$this->db->where('organizaciones_id', $id);
+		$contactos = $this->db->get()->result_array();
+		
+		$tipo_organizacion = $this->db->get('tipo_organizacion')->result_array();
+		$data = [
+			'id' => $id,
+			'titulo' => 'Editar Cliente #'.$id,
+			'tipo_organizacion' => $tipo_organizacion,
+			'organizacion' => $organizacion,
+			'contactos' => $contactos
+		];
+		$this->load->view('organizaciones/edit', $data);
+	}
+
+	public function editOrganizacion(){
+		$id = $this->input->post('id', true);
+		$rut = $this->input->post('rut', true);
+		$tipo_organizacion = $this->input->post('tipo_organizacion', true);
+		$nombre = $this->input->post('nombre', true);
+		$direccion = $this->input->post('direccion', true);
+		$telefono = $this->input->post('telefono', true);
+		$email = $this->input->post('email', true);
+		$contacto = $this->input->post('contacto', true);
+		$cantidad_dispositivos = $this->input->post('cantidad_dispositivos', true);
+
+		$data_organizacion = 	[
+									'nombre' => $nombre,
+									'cantidad_dispositivos' => $cantidad_dispositivos,
+									'rut' => $rut,
+									'direccion' => $direccion,
+									'contacto' => $contacto,
+									'telefono' => $telefono,
+									'email' => $email,
+									'tipo_organizacion_id' => $tipo_organizacion
+								];
+		
+		$this->db->where('id', $id);
+		$this->db->update('organizaciones', $data_organizacion);
+		$emails_contactos = $this->input->post('emails_contactos');
+		if(!empty($emails_contactos) && count($emails_contactos) > 0){
+			$this->db->where('organizaciones_id', $id);
+			$this->db->delete('organizaciones_contactos');
+			foreach($emails_contactos as $ec){
+				$arr_temp = ['organizaciones_id' => $id, 'contacto' => $ec];
+				$this->db->insert('organizaciones_contactos', $arr_temp);
 			}
 		}
 

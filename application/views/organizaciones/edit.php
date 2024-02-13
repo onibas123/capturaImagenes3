@@ -23,14 +23,14 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid m-2" style="background-color: #fff; min-height: 500px;">
-                    <form id="formAddCliente">
+                    <form id="formEditCliente">
                         <!-- main content -->
-                        <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Agregar Cliente';?></h4>
+                        <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Editar Cliente #'.$id;?></h4>
                         <hr>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="">Rut</label>
-                                <input class="form-control" id="input-rut" name="rut" value="" placeholder="Eje: 11222333-4" required/>
+                                <input class="form-control" id="input-rut" name="rut" value="<?php echo $organizacion[0]['rut'];?>" placeholder="Eje: 11222333-4" required/>
                             </div>
                             <div class="col-md-6">
                                 <label for="">Tipo</label>
@@ -39,7 +39,10 @@
                                     <?php 
                                     if(!empty($tipo_organizacion)){
                                         foreach($tipo_organizacion as $to){
-                                            echo '<option value="'.$to['id'].'">'.$to['tipo'].'</option>';
+                                            if($organizacion[0]['tipo_organizacion_id'] == $to['id'])
+                                                echo '<option selected value="'.$to['id'].'">'.$to['tipo'].'</option>';
+                                            else
+                                                echo '<option value="'.$to['id'].'">'.$to['tipo'].'</option>';
                                         }
                                     }
                                     ?>
@@ -50,31 +53,31 @@
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <label for="">Nombre</label>
-                                <input class="form-control" id="input-nombre" name="nombre" value="" required/>
+                                <input class="form-control" id="input-nombre" name="nombre" value="<?php echo $organizacion[0]['nombre'];?>" required/>
                             </div>
                             <div class="col-md-6">
                                 <label for="">Dirección</label>
-                                <input class="form-control" id="input-direccion" name="direccion" value=""/>
+                                <input class="form-control" id="input-direccion" name="direccion" value="<?php echo $organizacion[0]['direccion'];?>"/>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <label for="">Teléfono</label>
-                                <input class="form-control" id="input-telefono" name="telefono" value=""/>
+                                <input class="form-control" id="input-telefono" name="telefono" value="<?php echo $organizacion[0]['telefono'];?>"/>
                             </div>
                             <div class="col-md-6">
                                 <label for="">Email</label>
-                                <input type="email" class="form-control" id="input-email" name="email" value=""/>
+                                <input type="email" class="form-control" id="input-email" name="email" value="<?php echo $organizacion[0]['email'];?>"/>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <label for="">Nombre Contacto</label>
-                                <input class="form-control" id="input-contacto" name="contacto" value=""/>
+                                <input class="form-control" id="input-contacto" name="contacto" value="<?php echo $organizacion[0]['contacto'];?>"/>
                             </div>
                             <div class="col-md-6">
                                 <label for="">Cantidad Dispositivos</label>
-                                <input type="number" class="form-control" id="input-cantidad_dispositivos" name="cantidad_dispositivos" value=""/>
+                                <input type="number" class="form-control" id="input-cantidad_dispositivos" name="cantidad_dispositivos" value="<?php echo $organizacion[0]['cantidad_dispositivos'];?>"/>
                             </div>
                         </div>
                         <hr>
@@ -89,6 +92,17 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-contactos">
+                                        <?php
+                                        
+                                        if(!empty($contactos)){
+                                            foreach($contactos as $c){
+                                                echo '<tr>';
+                                                echo '<td><input required type="email" class="form-control emailsContacto" value="'.$c['contacto'].'" placeholder="Ingrese email"></td>';
+                                                echo '<td><button type="button" class="btn btn-danger btn-sm" onclick="removerEmailContacto(this);">eliminar</button></td>';
+                                                echo '</tr>';
+                                            }
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -127,7 +141,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#formAddCliente').submit(function(event) {
+            $('#formEditCliente').submit(function(event) {
                 // Evitar la acción predeterminada de envío del formulario
                 event.preventDefault();
                 
@@ -148,22 +162,26 @@
                     }
                 }
                 
-                $.ajax({
-                    url: '<?php echo base_url();?>index.php/OrganizacionesController/addOrganizacion',
-                    type: 'post',
-                    data: {
-                            rut: rut, tipo_organizacion: tipo_organizacion,
-                            nombre: nombre, direccion: direccion,
-                            telefono: telefono, email: email,
-                            contacto: contacto, cantidad_dispositivos: cantidad_dispositivos,
-                            emails_contactos: emails_contactos
-                    },
-                    dataType: 'text',
-                    success: function(response){
-                        alert(response);
-                        actualizar();
-                    }
-                });
+                if(confirm('Confirme esta operación')){
+                    $.ajax({
+                        url: '<?php echo base_url();?>index.php/OrganizacionesController/editOrganizacion',
+                        type: 'post',
+                        data: {
+                                id: '<?php echo $id; ?>',
+                                rut: rut, tipo_organizacion: tipo_organizacion,
+                                nombre: nombre, direccion: direccion,
+                                telefono: telefono, email: email,
+                                contacto: contacto, cantidad_dispositivos: cantidad_dispositivos,
+                                emails_contactos: emails_contactos
+                        },
+                        dataType: 'text',
+                        success: function(response){
+                            alert(response);
+                            window.location.href = '<?php echo base_url();?>index.php/OrganizacionesController/index';
+                        }
+                    });
+                }
+               
             });
         });
 
