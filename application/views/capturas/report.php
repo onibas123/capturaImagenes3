@@ -60,7 +60,7 @@
                     <br>
                     <div class="row mt-2">
                         <div class="col-md-12">
-                            <button onclick="cargarPDF();" class="btn btn-danger">PDF</button>
+                            <button id="btnCargarPDF" onclick="cargarPDF();" class="btn btn-danger">PDF</button>
                             <button id="btnGenerarRegistro" disabled onclick="generarRegistro();" class="btn btn-success">Generar</button>
                         </div>
                     </div>
@@ -123,14 +123,23 @@
                 alert('Debe seleccionar un Dispositivo.');
                 return false;
             }
-
-            $('#iframe-reporte').attr('src', '<?php echo base_url();?>index.php/CapturasController/cargarPDF?org='+organizacion+'&dev='+dispositivo+'&desde='+desde+'&hasta='+hasta);
-            $('#btnGenerarRegistro').prop('disabled', false);
+            $('#btnCargarPDF').prop('disabled', true);
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CapturasController/cargarPDF',
+                type: 'get',
+                data: {org: organizacion, dev: dispositivo, desde: desde, hasta: hasta},
+                dataType: 'text',
+                success: function(response){
+                    $('#iframe-reporte').attr('src', '<?php echo base_url();?>assets/reportes/'+response);
+                    $('#btnGenerarRegistro').prop('disabled', false);
+                    $('#btnCargarPDF').prop('disabled', false);
+                }
+            }); 
         }
 
         function generarRegistro(){
             if(confirm('Confirme generar registro de este informe')){
-                
+                $('#iframe-reporte').attr('src');
             }
         }
     </script>
