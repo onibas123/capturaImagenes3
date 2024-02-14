@@ -90,6 +90,7 @@
     </a>
     <?php $this->load->view('layout/scripts');?>
     <script>
+        var nombre_archivo = '';
         $(document).ready(function() {
             $('#select-organizacion').change(function(){
                 let options_dispositivos = '<option value="">Seleccione</select>';
@@ -130,6 +131,7 @@
                 data: {org: organizacion, dev: dispositivo, desde: desde, hasta: hasta},
                 dataType: 'text',
                 success: function(response){
+                    nombre_archivo = response;
                     $('#iframe-reporte').attr('src', '<?php echo base_url();?>assets/reportes/'+response);
                     $('#btnGenerarRegistro').prop('disabled', false);
                     $('#btnCargarPDF').prop('disabled', false);
@@ -139,7 +141,20 @@
 
         function generarRegistro(){
             if(confirm('Confirme generar registro de este informe')){
-                $('#iframe-reporte').attr('src');
+                let url = $('#iframe-reporte').attr('src');
+                let dispositivo = $('#select-dispositivo').val();
+                let organizacion = $('#select-organizacion').val();
+
+                $.ajax({
+                    url: '<?php echo base_url();?>index.php/CapturasController/guardarInforme',
+                    type: 'post',
+                    data: {organizacion: organizacion, url: url, archivo: nombre_archivo},
+                    datatype: 'text',
+                    success: function(response){
+                        alert(response);
+                        actualizar();
+                    }
+                });
             }
         }
     </script>

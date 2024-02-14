@@ -820,4 +820,27 @@ class CapturasController extends CI_Controller {
 			echo json_encode(['codigo' => 0, 'imagen' => $_FILES['imagen']['error']]);
 		}
 	}
+
+	public function guardarInforme(){
+		$organizacion = $this->input->post('organizacion', true);
+		$fecha = date('Y-m-d H:i:s');
+		$url = $this->input->post('url', true);
+		$archivo = $this->input->post('archivo', true);
+
+		$nombreArchivo = './assets/reportes/'.$archivo;
+		$size = 0;
+		$sizeKB = 0;
+		if (file_exists($nombreArchivo)) {
+			$size = filesize($nombreArchivo);
+			$sizeKB = round($size / 1024, 2);
+		} 
+
+		$data_informe = [
+							'organizaciones_id' => $organizacion,
+							'fecha' => $fecha,
+							'ruta' => $url,
+							'size' => $size.' MB'
+						];
+		$this->db->insert('informes', $data_informe);
+	}
 }
