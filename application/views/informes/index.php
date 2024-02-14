@@ -18,6 +18,6 @@ foreach($css_files as $file): ?>
 <?php $this->load->view('layout/main_bot_gc');?>  
 <script>
      if($('#field-ruta').length > 0){
-        $('#field-ruta').html('<iframe src="'+ $('#field-ruta').html()+'" style="width: 100%; height: 500px;"></iframe>');
+        $('#field-ruta').html('<iframe src="'+ $('#field-ruta').html()+'" style="width: 800px; height: 600px;"></iframe>');
     }
 </script>
