@@ -25,7 +25,7 @@
                 <div class="container-fluid m-2" style="background-color: #fff; min-height: 500px;">
                     <form id="formAddDispositivo">
                         <!-- main content -->
-                        <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Agregar Ubicación';?></h4>
+                        <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Agregar Dispositivo';?></h4>
                         <hr>
                         <div class="row">
                             <div class="col-md-6">

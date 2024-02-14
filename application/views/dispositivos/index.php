@@ -9,7 +9,7 @@
 foreach($css_files as $file): ?>
 	<link type="text/css" rel="stylesheet" href="<?php echo $file; ?>" />
 <?php endforeach; ?>
-<a href="<?php echo base_url();?>index.php/DispositivosController/add" class="btn btn-primary">Agregar Ubicación</a>
+<a href="<?php echo base_url();?>index.php/DispositivosController/add" class="btn btn-primary">Agregar Dispositivo</a>
 <br><br>
 <div class="table-responsive">
     <?php echo $output; ?>

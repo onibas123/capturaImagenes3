@@ -39,7 +39,7 @@ class DispositivosController extends CI_Controller {
 		
 		$output = $crud->render();
 		$data = (array)$output;
-		$data['titulo'] = 'Ubicaciones';
+		$data['titulo'] = 'Dispositivos';
 		$this->load->view('dispositivos/index', $data);
 	}
 
@@ -83,7 +83,7 @@ class DispositivosController extends CI_Controller {
 		$tipo_dispositivo = $this->db->get('tipo_dispositivo')->result_array();
 		$marcas = $this->db->get('marcas')->result_array();
 		$data = [
-			'titulo' => 'Agregar Ubicación',
+			'titulo' => 'Agregar Dispositivo',
 			'tipo_dispositivo' => $tipo_dispositivo,
 			'marcas' => $marcas,
 			'organizaciones' => $organizaciones

@@ -25,7 +25,7 @@
                 <div class="container-fluid m-2" style="background-color: #fff; min-height: 500px;">
                     <form id="formEditCliente">
                         <!-- main content -->
-                        <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Editar Cliente #'.$id;?></h4>
+                        <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Editar Dispositivo #'.$id;?></h4>
                         <hr>
                         <div class="row">
                             <div class="col-md-6">

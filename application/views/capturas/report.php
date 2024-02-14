@@ -61,6 +61,7 @@
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <button onclick="cargarPDF();" class="btn btn-danger">PDF</button>
+                            <button id="btnGenerarRegistro" disabled onclick="generarRegistro();" class="btn btn-success">Generar</button>
                         </div>
                     </div>
                     <br>
@@ -124,6 +125,13 @@
             }
 
             $('#iframe-reporte').attr('src', '<?php echo base_url();?>index.php/CapturasController/cargarPDF?org='+organizacion+'&dev='+dispositivo+'&desde='+desde+'&hasta='+hasta);
+            $('#btnGenerarRegistro').prop('disabled', false);
+        }
+
+        function generarRegistro(){
+            if(confirm('Confirme generar registro de este informe')){
+                
+            }
         }
     </script>
 </body>
