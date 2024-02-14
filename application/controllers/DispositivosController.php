@@ -154,16 +154,6 @@ class DispositivosController extends CI_Controller {
 	}
 
 	public function addDispositivo(){
-		/*
-		organizacion: organizacion, nombre: nombre,
-		tipo: tipo, marca: marca,
-		cantidad_canales: cantidad_canales, ubicacion: ubicacion,
-		codificar: codificar, estado: estado,
-		ip: ip, puerto: puerto,
-		usuario: usuario, password: password,
-		datos_extras: datos_extras,
-		canales: canales_arr
-		*/
 		$organizacion = $this->input->post('organizacion', true);
 		$nombre = $this->input->post('nombre', true);
 		$tipo = $this->input->post('tipo', true);
@@ -177,8 +167,37 @@ class DispositivosController extends CI_Controller {
 		$usuario = $this->input->post('usuario', true);
 		$password = $this->input->post('password', true);
 		$datos_extras = $this->input->post('datos_extras', true);
+		
 		$canales = $this->input->post('canales');
-		print_r($_POST);
+		
+		$data_dispositivo = [
+								'organizaciones_id' => $organizacion,
+								'nombre' => $nombre,
+								'tipo_dispositivo_id' => $tipo,
+								'marcas_id' => $marca,
+								'cantidad_canales' => $cantidad_canales,
+								'ubicacion' => $ubicacion,
+								'codificar_dss' => $codificar,
+								'estado' => ($estado == 1) ? 1 : 0,
+								'ip' => $ip,
+								'puerto' => $puerto,
+								'usuario' => $usuario,
+								'password' => $password,
+								'datos_extras' => $datos_extras
+							];
+		$this->db->insert('dispositivos', $data_dispositivo);
+		$last_id = $this->db->insert_id();
+		if($last_id > 0){
+			foreach($canales as $c){
+				$data_canales = 	[
+										'devices_id' => $last_id,
+										'canal' => $c['canal'],
+										'nombre' => $c['nombre']
+									];
+				$this->db->insert('canales', $data_canales);
+			}
+		}
+		echo 'Se ha agregado el dispositivo.';
 	}
 
 }
