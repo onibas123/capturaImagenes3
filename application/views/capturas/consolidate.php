@@ -5,7 +5,7 @@
     $options_string = '';
     if(!empty($obs)){
         foreach($obs as $o){
-            $options_string .= '<option value="'.$o['id'].'">'.$o['observacion'].'</option>';
+            $options_string .= '<option value="'.$o['id'].'">'.$o['id'].' | '.$o['observacion'].'</option>';
         }
     }
 ?>

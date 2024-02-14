@@ -30,7 +30,7 @@ class ObservacionesController extends CI_Controller {
 		$crud->callback_before_insert(array($this,'add_log_create'));
 		$crud->callback_before_update(array($this,'add_log_edit'));
 		$crud->callback_before_delete(array($this,'add_log_delete'));
-
+		$crud->columns(['id', 'observacion']);
 		$output = $crud->render();
 		$data = (array)$output;
 		$data['titulo'] = 'Observaciones Sugeridas';

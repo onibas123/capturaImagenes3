@@ -83,7 +83,7 @@
                                         $obs = $this->db->get()->result_array();
                                         if(!empty($obs)){
                                             foreach($obs as $o){
-                                                echo '<option value="'.$o['id'].'">'.$o['observacion'].'</option>';
+                                                echo '<option value="'.$o['id'].'">'.$o['id'].' | '.$o['observacion'].'</option>';
                                             }
                                         }
                                     ?>
