@@ -108,12 +108,16 @@ class OrganizacionesController extends CI_Controller {
 		$last_id = $this->db->insert_id();
 		if($last_id > 0){
 			$emails_contactos = $this->input->post('emails_contactos');
+			$checks_contactos = $this->input->post('checks_contactos');
+
 			if(count($emails_contactos) > 0){
 				$this->db->where('organizaciones_id', $last_id);
 				$this->db->delete('organizaciones_contactos');
+				$i=0;
 				foreach($emails_contactos as $ec){
-					$arr_temp = ['organizaciones_id' => $last_id, 'contacto' => $ec];
+					$arr_temp = ['organizaciones_id' => $last_id, 'contacto' => $ec, 'estado' => $checks_contactos[$i]];
 					$this->db->insert('organizaciones_contactos', $arr_temp);
+					$i++;
 				}
 			}
 		}
