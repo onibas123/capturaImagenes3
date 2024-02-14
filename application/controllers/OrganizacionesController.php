@@ -128,9 +128,10 @@ class OrganizacionesController extends CI_Controller {
 		$this->db->limit(1);
 		$organizacion = $this->db->get()->result_array();
 		
-		$this->db->select('contacto');
+		$this->db->select('contacto, estado');
 		$this->db->from('organizaciones_contactos');
 		$this->db->where('organizaciones_id', $id);
+		$this->db->order_by('contacto ASC');
 		$contactos = $this->db->get()->result_array();
 		
 		$tipo_organizacion = $this->db->get('tipo_organizacion')->result_array();
@@ -169,12 +170,15 @@ class OrganizacionesController extends CI_Controller {
 		$this->db->where('id', $id);
 		$this->db->update('organizaciones', $data_organizacion);
 		$emails_contactos = $this->input->post('emails_contactos');
+		$checks_contactos = $this->input->post('checks_contactos');
+		$i=0;
 		if(!empty($emails_contactos) && count($emails_contactos) > 0){
 			$this->db->where('organizaciones_id', $id);
 			$this->db->delete('organizaciones_contactos');
 			foreach($emails_contactos as $ec){
-				$arr_temp = ['organizaciones_id' => $id, 'contacto' => $ec];
+				$arr_temp = ['organizaciones_id' => $id, 'contacto' => $ec, 'estado' => $checks_contactos[$i]];
 				$this->db->insert('organizaciones_contactos', $arr_temp);
+				$i++;
 			}
 		}
 

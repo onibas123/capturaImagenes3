@@ -87,8 +87,9 @@
                                 <table class="table table-bordered table-table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Contacto</th>
-                                            <th>Acciones</th>
+                                            <th width="70%">Contacto</th>
+                                            <th width="10%">Activo</th>
+                                            <th width="20%">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-contactos">
@@ -98,6 +99,7 @@
                                             foreach($contactos as $c){
                                                 echo '<tr>';
                                                 echo '<td><input required type="email" class="form-control emailsContacto" value="'.$c['contacto'].'" placeholder="Ingrese email"></td>';
+                                                echo '<td class="text-center"><input type="checkbox" class="checksContacto" '.(($c['estado'] == 1) ? 'checked' : '' ).' style="cursor:pointer;"></td>';
                                                 echo '<td><button type="button" class="btn btn-danger btn-sm" onclick="removerEmailContacto(this);">eliminar</button></td>';
                                                 echo '</tr>';
                                             }
@@ -155,10 +157,13 @@
                 let cantidad_dispositivos = $('#input-cantidad_dispositivos').val();
 
                 let emails_contactos = [];
+                let checks_contactos = [];
                 let emails = $('.emailsContacto');
+                let checks = $('.checksContacto');
                 for(let i=0; i<emails.length; i++){
                     if($(emails[i]).val() != ''){
                         emails_contactos.push($(emails[i]).val());
+                        checks_contactos.push(  $(checks[i]).is(':checked') == true  ? 1 : 0  );
                     }
                 }
                 
@@ -172,7 +177,8 @@
                                 nombre: nombre, direccion: direccion,
                                 telefono: telefono, email: email,
                                 contacto: contacto, cantidad_dispositivos: cantidad_dispositivos,
-                                emails_contactos: emails_contactos
+                                emails_contactos: emails_contactos,
+                                checks_contactos: checks_contactos
                         },
                         dataType: 'text',
                         success: function(response){
@@ -193,6 +199,7 @@
             let tr = '';
             tr += '<tr>';
             tr += '<td><input required type="email" class="form-control emailsContacto" value="" placeholder="Ingrese email"></td>';
+            tr += '<td class="text-center"><input type="checkbox" class="checksContacto" style="cursor: pointer;"></td>';
             tr += '<td><button type="button" class="btn btn-danger btn-sm" onclick="removerEmailContacto(this);">eliminar</button></td>';
             tr += '</tr>';
 
