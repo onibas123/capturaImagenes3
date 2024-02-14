@@ -15,7 +15,7 @@ class Phpmailer_lib
         log_message('debug', 'PHPMailer class is loaded.');
     }
 
-    public function enviar_correo($para, $asunto, $mensaje)
+    public function enviar_correo($smtp_user_sender, $smtp_pass, $smtp_host_sender, $smtp_port_sender, $smtp_crypto, $para, $asunto, $mensaje)
     {
         $CI = &get_instance();
         $CI->load->config('phpmailer_config');
@@ -25,12 +25,12 @@ class Phpmailer_lib
         try {
             $mail->SMTPDebug = 1;
             $mail->isSMTP();
-            $mail->Host       = $CI->config->item('smtp_host');
+            $mail->Host       = $smtp_host_sender;
             $mail->SMTPAuth   = true;
-            $mail->Username   = $CI->config->item('smtp_user');
-            $mail->Password   = $CI->config->item('smtp_pass');
-            $mail->SMTPSecure = $CI->config->item('smtp_crypto');
-            $mail->Port       = $CI->config->item('smtp_port');
+            $mail->Username   = $smtp_user_sender;
+            $mail->Password   = $smtp_pass;
+            $mail->SMTPSecure = $smtp_crypto;
+            $mail->Port       = $smtp_port_sender;
 
             $mail->setFrom($CI->config->item('smtp_user'), 'Tu Nombre');
             $mail->addAddress($para);
