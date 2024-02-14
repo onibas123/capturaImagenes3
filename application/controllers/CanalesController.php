@@ -181,4 +181,41 @@ class CanalesController extends CI_Controller {
         $this->db->delete('canales');
     }
 
+    public function traerNombreCanales2(){
+
+        $marcas_id = $this->input->post('marca', true);
+        $ip = $this->input->post('ip', true);
+        $puerto = $this->input->post('puerto', true);
+        $usuario = $this->input->post('usuario', true);
+        $password = $this->input->post('password', true);
+
+        $data = [];
+        if($marcas_id == 1){
+            //dahua
+            $nombre_canales = $this->obtenerNombreCanalDahua($ip.':'.$puerto, $usuario, $password);
+            $arr_nombres = preg_split("/\r\n|\r|\n/", $nombre_canales);
+            $ch = [];
+            for($i=0; $i<count($arr_nombres); $i++){
+                if(!empty(explode('.Name=',$arr_nombres[$i])[1])){
+                    $ch[] = trim(explode('.Name=',$arr_nombres[$i])[1]);
+                }
+            }
+            $data = [
+                'codigo' => 1,
+                'mensaje' => 'Existen nombres de canales para este dispositivo.',
+                'data' => $ch
+            ];
+        }
+        else if($marcas_id== 2){
+            //hikvision
+            $data = [
+                'codigo' => 0,
+                'mensaje' => 'No esta habilitada esta operación para Hikvision.',
+                'data' => ''
+            ];
+        }
+
+        echo json_encode($data);
+    }
+
 }

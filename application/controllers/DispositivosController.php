@@ -24,11 +24,12 @@ class DispositivosController extends CI_Controller {
 		->display_as('marcas_id','Marca')->display_as('cantidad_canales','Canales')->display_as('codificar_dss', 'DSS');
 		$crud->columns(['organizaciones_id','tipo_dispositivo_id', 'marcas_id', 'nombre', 'cantidad_canales', 'ip', 'puerto', 'usuario', 'password', 'estado', 'codificar_dss']);
 		$crud->field_type('password', 'password');
-		
-		if($this->session->userdata('usuario_guarda') == 0)
-			$crud->unset_add();
-		if($this->session->userdata('usuario_edita') == 0)
-			$crud->unset_edit();
+		$crud->unset_add();
+		$crud->unset_edit();
+			
+		if($this->session->userdata('usuario_edita') == 1)
+			$crud->add_action('action1', base_url().'assets/grocery_crud/themes/flexigrid/css/images/edit.png', 'DispositivosController/edit', '','', array($this,'get_row_id' ));
+			
 		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
 
@@ -38,7 +39,7 @@ class DispositivosController extends CI_Controller {
 		
 		$output = $crud->render();
 		$data = (array)$output;
-		$data['titulo'] = 'Dispositivos';
+		$data['titulo'] = 'Ubicaciones';
 		$this->load->view('dispositivos/index', $data);
 	}
 
@@ -76,4 +77,80 @@ class DispositivosController extends CI_Controller {
 		else
 			return false;
 	}
+
+	public function add(){
+		$organizaciones = $this->db->get('organizaciones')->result_array();
+		$tipo_dispositivo = $this->db->get('tipo_dispositivo')->result_array();
+		$marcas = $this->db->get('marcas')->result_array();
+		$data = [
+			'titulo' => 'Agregar Ubicación',
+			'tipo_dispositivo' => $tipo_dispositivo,
+			'marcas' => $marcas,
+			'organizaciones' => $organizaciones
+		];
+		$this->load->view('dispositivos/add', $data);
+	}
+
+	public function addOrganizacion(){
+		$rut = $this->input->post('rut', true);
+		$tipo_organizacion = $this->input->post('tipo_organizacion', true);
+		$nombre = $this->input->post('nombre', true);
+		$direccion = $this->input->post('direccion', true);
+		$telefono = $this->input->post('telefono', true);
+		$email = $this->input->post('email', true);
+		$contacto = $this->input->post('contacto', true);
+		$cantidad_dispositivos = $this->input->post('cantidad_dispositivos', true);
+
+		$data_organizacion = 	[
+									'nombre' => $nombre,
+									'cantidad_dispositivos' => $cantidad_dispositivos,
+									'rut' => $rut,
+									'creado' => date('Y-m-d H:i:s'),
+									'direccion' => $direccion,
+									'contacto' => $contacto,
+									'telefono' => $telefono,
+									'email' => $email,
+									'tipo_organizacion_id' => $tipo_organizacion
+								];
+
+		$this->db->insert('organizaciones', $data_organizacion);
+		$last_id = $this->db->insert_id();
+		if($last_id > 0){
+			$emails_contactos = $this->input->post('emails_contactos');
+			if(count($emails_contactos) > 0){
+				$this->db->where('organizaciones_id', $last_id);
+				$this->db->delete('organizaciones_contactos');
+				foreach($emails_contactos as $ec){
+					$arr_temp = ['organizaciones_id' => $last_id, 'contacto' => $ec];
+					$this->db->insert('organizaciones_contactos', $arr_temp);
+				}
+			}
+		}
+
+		echo 'Se ha agregado de manera correcta.';
+	}
+
+	public function edit($id){
+		$this->db->select('*');
+		$this->db->from('organizaciones');
+		$this->db->where('id', $id);
+		$this->db->limit(1);
+		$organizacion = $this->db->get()->result_array();
+		
+		$this->db->select('contacto');
+		$this->db->from('organizaciones_contactos');
+		$this->db->where('organizaciones_id', $id);
+		$contactos = $this->db->get()->result_array();
+		
+		$tipo_organizacion = $this->db->get('tipo_organizacion')->result_array();
+		$data = [
+			'id' => $id,
+			'titulo' => 'Editar Dispositivo #'.$id,
+			'tipo_organizacion' => $tipo_organizacion,
+			'organizacion' => $organizacion,
+			'contactos' => $contactos
+		];
+		$this->load->view('dispositivos/edit', $data);
+	}
+
 }
