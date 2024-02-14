@@ -38,6 +38,7 @@ class InformesController extends CI_Controller {
             return $enlace;
         });
 
+		$crud->add_action('Reenviar Correo', base_url().'assets/img/email.png', 'InformesController/reenviarCorreo', '','', array($this,'get_row_id' ));
 		$crud->order_by('fecha','desc');
 
 		$output = $crud->render();
@@ -61,5 +62,9 @@ class InformesController extends CI_Controller {
     	$entity_row = $this->db->get('capturas')->row();
 		$this->addLog('Informes', 'Eliminar', json_encode($entity_row));
 		return true;
+	}
+
+	public function reenviarCorreo($id){
+		echo $id;
 	}
 }
