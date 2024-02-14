@@ -839,7 +839,7 @@ class CapturasController extends CI_Controller {
 							'organizaciones_id' => $organizacion,
 							'fecha' => $fecha,
 							'ruta' => $url,
-							'size' => $size.' MB'
+							'size' => $sizeKB.' KB'
 						];
 		$this->db->insert('informes', $data_informe);
 		echo 'Se ha generado el registro de manera correcta';
