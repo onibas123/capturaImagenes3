@@ -337,8 +337,8 @@ class CapturasController extends CI_Controller {
 		$html = $this->load->view('capturas/consolidado_pdf', $data, true);
 		$this->load->library('M_pdf');
 		$this->m_pdf->pdf->WriteHTML($html);
-		$filename = $org."_".$dev."_".date('YmdHis').".pdf";
-		$this->m_pdf->pdf->Output($filename, \Mpdf\Output\Destination::FILE);
+		$filename = "./assets/reportes/".$org."_".$dev."_".date('YmdHis').".pdf";
+		$this->m_pdf->pdf->Output($filename, "I");
 		echo $filename;
 	}
 
