@@ -31,6 +31,13 @@ class InformesController extends CI_Controller {
 		$crud->callback_before_update(array($this,'add_log_edit'));
 		$crud->callback_before_delete(array($this,'add_log_delete'));
 
+        $crud->display_as('ruta', 'Enlace');
+        $crud->callback_column('ruta', function ($value, $row) {
+            $enlace = '<a href="' . $row->ruta . '" download="reporte_'.date('YmdHis').'">Enlace</a>';
+            
+            return $enlace;
+        });
+
 		$crud->order_by('fecha','desc');
 
 		$output = $crud->render();
