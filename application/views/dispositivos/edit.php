@@ -23,89 +23,153 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid m-2" style="background-color: #fff; min-height: 500px;">
-                    <form id="formEditCliente">
+                    <form id="formEditDispositivo">
                         <!-- main content -->
                         <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Editar Dispositivo #'.$id;?></h4>
                         <hr>
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="">Rut</label>
-                                <input class="form-control" id="input-rut" name="rut" value="<?php echo $organizacion[0]['rut'];?>" placeholder="Eje: 11222333-4" required/>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="">Tipo</label>
-                                <select required name="canal" id="select-tipo_organizacion" name="tipo_organizacion" class="form-control">
+                                <label for="">Organización</label>
+                                <select required class="form-control" id="select-organizacion" name="organizacion">
                                     <option value="">Seleccione</option>
-                                    <?php 
-                                    if(!empty($tipo_organizacion)){
-                                        foreach($tipo_organizacion as $to){
-                                            if($organizacion[0]['tipo_organizacion_id'] == $to['id'])
-                                                echo '<option selected value="'.$to['id'].'">'.$to['tipo'].'</option>';
-                                            else
-                                                echo '<option value="'.$to['id'].'">'.$to['tipo'].'</option>';
+                                    <?php
+                                        if(!empty($organizaciones)){
+                                            foreach($organizaciones as $o){
+                                                if($dispositivo[0]['organizaciones_id'] == $o['id'])
+                                                    echo '<option selected value="'.$o['id'].'">'.$o['nombre'].'</option>';
+                                                else
+                                                    echo '<option value="'.$o['id'].'">'.$o['nombre'].'</option>';
+                                            }
                                         }
-                                    }
                                     ?>
                                 </select>
                             </div>
-                        
-                        </div>
-                        <div class="row mt-2">
                             <div class="col-md-6">
                                 <label for="">Nombre</label>
-                                <input class="form-control" id="input-nombre" name="nombre" value="<?php echo $organizacion[0]['nombre'];?>" required/>
+                                <input class="form-control" id="input-nombre" name="nombre" value="<?php echo $dispositivo[0]['nombre'];?>" required/>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <label for="">Tipo</label>
+                                <select required class="form-control" id="select-tipo_dispositivo" name="tipo_dispositivo">
+                                    <option value="">Seleccione</option>
+                                    <?php
+                                        if(!empty($tipo_dispositivo)){
+                                            foreach($tipo_dispositivo as $td){
+                                                if($dispositivo[0]['tipo_dispositivo_id'] == $td['id'])
+                                                    echo '<option selected value="'.$td['id'].'">'.$td['nombre'].'</option>';
+                                                else
+                                                    echo '<option selected value="'.$td['id'].'">'.$td['nombre'].'</option>';
+                                            }
+                                        }
+                                    ?>
+                                </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="">Dirección</label>
-                                <input class="form-control" id="input-direccion" name="direccion" value="<?php echo $organizacion[0]['direccion'];?>"/>
+                                <label for="">Marcas</label>
+                                <select required class="form-control" id="select-marca" name="marca">
+                                    <option value="">Seleccione</option>
+                                    <?php
+                                        if(!empty($marcas)){
+                                            foreach($marcas as $m){
+                                                if($dispositivo[0]['marcas_id'] == $m['id'])
+                                                    echo '<option selected value="'.$m['id'].'">'.$m['nombre'].'</option>';
+                                                else
+                                                    echo '<option value="'.$m['id'].'">'.$m['nombre'].'</option>';
+                                            }
+                                        }
+                                    ?>
+                                </select>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <label for="">Teléfono</label>
-                                <input class="form-control" id="input-telefono" name="telefono" value="<?php echo $organizacion[0]['telefono'];?>"/>
+                                <label for="">Cantidad Canales</label>
+                                <input class="form-control" id="input-cantidad_canales" name="cantidad_canales" value="<?php echo $dispositivo[0]['cantidad_canales'];?>"/>
                             </div>
                             <div class="col-md-6">
-                                <label for="">Email</label>
-                                <input type="email" class="form-control" id="input-email" name="email" value="<?php echo $organizacion[0]['email'];?>"/>
+                                <label for="">Ubicación</label>
+                                <input class="form-control" id="input-ubicacion" name="ubicacion" value="<?php echo $dispositivo[0]['ubicacion'];?>"/>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <label for="">Codificar</label>
+                                <input class="form-control" id="input-codificar" name="codificar" value="<?php echo $dispositivo[0]['codificar_dss'];?>"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Estado</label>
+                                <select class="form-control" id="select-estado" name="estado">
+                                    <option value="1" <?php echo ($dispositivo[0]['estado'] == 1 ? 'selected' : '');?> >Activo</option>
+                                    <option value="2" <?php echo ($dispositivo[0]['estado'] == 1 ? '' : 'selected');?>>Inactivo</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
-                                <label for="">Nombre Contacto</label>
-                                <input class="form-control" id="input-contacto" name="contacto" value="<?php echo $organizacion[0]['contacto'];?>"/>
+                                <label for="">IP</label>
+                                <input required class="form-control" id="input-ip" name="ip" value="<?php echo $dispositivo[0]['ip'];?>"/>
                             </div>
                             <div class="col-md-6">
-                                <label for="">Cantidad Dispositivos</label>
-                                <input type="number" class="form-control" id="input-cantidad_dispositivos" name="cantidad_dispositivos" value="<?php echo $organizacion[0]['cantidad_dispositivos'];?>"/>
+                                <label for="">Puerto</label>
+                                <input required type="number" min="0" class="form-control" id="input-puerto" name="puerto" value="<?php echo $dispositivo[0]['puerto'];?>"/>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <label for="">Usuario</label>
+                                <input required class="form-control" id="input-usuario" name="usuario" value="<?php echo $dispositivo[0]['usuario'];?>"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">Clave</label>
+                                <input required type="password" class="form-control" id="input-password" name="password" value="<?php echo $dispositivo[0]['password'];?>"/>
+                            </div>
+                            
+                        </div>
+                        <div class="row mt-2">
+                            <!--
+                            <div class="col-md-6">
+                                <label for="">Cantidad Capturas</label>
+                                <input type="number" class="form-control" id="input-cantidad_capturas" name="cantidad_capturas" value=""/>
+                            </div>
+                            -->
+                            <div class="col-md-12">
+                                <label for="">Datos Extras</label>
+                                <textarea class="form-control" rows="4" id="textarea-datos_extra" name="datos_extra"><?php echo $dispositivo[0]['datos_extras'];?></textarea>
                             </div>
                         </div>
                         <hr>
                         <div class="row mt-2">
                             <div class="col-md-12">
-                                <label for="">Ingrese correos contactos adicionales</label><button type="button" class="btn btn-primary ml-1 btn-sm" onclick="nuevaFilaContacto();">+</button>
-                                <table class="table table-bordered table-table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Contacto</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody-contactos">
-                                        <?php
-                                        
-                                        if(!empty($contactos)){
-                                            foreach($contactos as $c){
-                                                echo '<tr>';
-                                                echo '<td><input required type="email" class="form-control emailsContacto" value="'.$c['contacto'].'" placeholder="Ingrese email"></td>';
-                                                echo '<td><button type="button" class="btn btn-danger btn-sm" onclick="removerEmailContacto(this);">eliminar</button></td>';
-                                                echo '</tr>';
-                                            }
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                <button id="btnCheckCanales" type="button" class="btn btn-warning" onclick="checkearCanales();"><i class="fas fa-cloud-download-alt"></i>Traer datos</button>
                             </div>
+                        </div>
+                        <div class="row mt-2">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th width="30%">Número Canal</th>
+                                        <th width="70%">Nombre Canal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-canales">
+                                    <?php
+                                    if(!empty($canales)){
+                                        $i=0;
+                                        foreach($canales as $c){
+                                            echo '<tr>';
+                                            echo '<td>'.$c['canal'].'</td>';
+                                            echo '<td><input canal="'.$c['canal'].'" required class="form-control" name="canales" id="input-canal-'.$c['canal'].'" value="'.$c['nombre'].'"></td>';
+                                            echo '</tr>';
+                                        }
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
                         </div>
                         <br>
                         <div class="row mt-2">
@@ -141,47 +205,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#formEditCliente').submit(function(event) {
+            $('#formEditDispositivo').submit(function(event) {
                 // Evitar la acción predeterminada de envío del formulario
                 event.preventDefault();
                 
-                let rut = $('#input-rut').val();
-                let tipo_organizacion = $('#select-tipo_organizacion').val();
+                let organizacion = $('#select-organizacion').val();
                 let nombre = $('#input-nombre').val();
-                let direccion = $('#input-direccion').val();
-                let telefono = $('#input-telefono').val();
-                let email = $('#input-email').val();
-                let contacto = $('#input-contacto').val();
-                let cantidad_dispositivos = $('#input-cantidad_dispositivos').val();
+                let tipo = $('#select-tipo_dispositivo').val();
+                let marca = $('#select-marca').val();
+                let cantidad_canales = $('#input-cantidad_canales').val();
+                let ubicacion = $('#input-ubicacion').val();
+                let codificar = $('#input-codificar').val();
+                let estado = $('#select-estadol').val();
+                let ip = $('#input-ip').val();
+                let puerto = $('#input-puerto').val();
+                let usuario = $('#input-usuario').val();
+                let password = $('#input-password').val();
+                let datos_extras = $('#textarea-datos_extra').val();
 
-                let emails_contactos = [];
-                let emails = $('.emailsContacto');
-                for(let i=0; i<emails.length; i++){
-                    if($(emails[i]).val() != ''){
-                        emails_contactos.push($(emails[i]).val());
-                    }
+                let canales = $('input[name="canales"]');
+                if(canales.length <= 0){
+                    alert('Deben existir canales asociados al Dispositivo.');
+                    return false;
+                }
+
+                let canales_arr = [];
+                for(let i=0; i<canales.length;i++){
+                    let temp = {'canal': $(canales[i]).attr('canal'), 'nombre': $(canales[i]).val()};
+                    canales_arr.push(temp);
                 }
                 
-                if(confirm('Confirme esta operación')){
-                    $.ajax({
-                        url: '<?php echo base_url();?>index.php/OrganizacionesController/editOrganizacion',
-                        type: 'post',
-                        data: {
-                                id: '<?php echo $id; ?>',
-                                rut: rut, tipo_organizacion: tipo_organizacion,
-                                nombre: nombre, direccion: direccion,
-                                telefono: telefono, email: email,
-                                contacto: contacto, cantidad_dispositivos: cantidad_dispositivos,
-                                emails_contactos: emails_contactos
-                        },
-                        dataType: 'text',
-                        success: function(response){
-                            alert(response);
-                            window.location.href = '<?php echo base_url();?>index.php/OrganizacionesController/index';
-                        }
-                    });
-                }
-               
+                
+                $.ajax({
+                    url: '<?php echo base_url();?>index.php/DispositivosController/editDispositivo',
+                    type: 'post',
+                    data: {
+                            id: '<?php echo $id;?>',
+                            organizacion: organizacion, nombre: nombre,
+                            tipo: tipo, marca: marca,
+                            cantidad_canales: cantidad_canales, ubicacion: ubicacion,
+                            codificar: codificar, estado: estado,
+                            ip: ip, puerto: puerto,
+                            usuario: usuario, password: password,
+                            datos_extras: datos_extras,
+                            canales: canales_arr
+                    },
+                    dataType: 'text',
+                    success: function(response){
+                        alert(response);
+                        window.location.href = '<?php echo base_url();?>index.php/DispositivosController/index';
+                    }
+                });
+                
             });
         });
 
@@ -189,21 +264,91 @@
             location.reload();
         }
 
-        function nuevaFilaContacto(){
-            let tr = '';
-            tr += '<tr>';
-            tr += '<td><input required type="email" class="form-control emailsContacto" value="" placeholder="Ingrese email"></td>';
-            tr += '<td><button type="button" class="btn btn-danger btn-sm" onclick="removerEmailContacto(this);">eliminar</button></td>';
-            tr += '</tr>';
+        function checkearCanales(){
+            let ip = $('#input-ip').val();
+            let puerto = $('#input-puerto').val();
+            let usuario = $('#input-usuario').val();
+            let password = $('#input-password').val();
+            let marca = $('#select-marca').val();
+            let cantidad_canales = $('#input-cantidad_canales').val();
 
-            $('#tbody-contactos').append(tr);
+            if(ip == ''){
+                alert('Debe ingresar la ip.');
+                return false;
+            }
+
+            if(puerto == ''){
+                alert('Debe ingresar el puerto.');
+                return false;
+            }
+
+            if(usuario == ''){
+                alert('Debe ingresar el usuario.');
+                return false;
+            }
+
+            if(password == ''){
+                alert('Debe ingresar la clave.');
+                return false;
+            }
+
+            if(marca == ''){
+                alert('Debe ingresar la marca.');
+                return false;
+            }
+
+            if(cantidad_canales == ''){
+                alert('Debe ingresar la cantidad de canales.');
+                return false;
+            }
+
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CanalesController/traerNombreCanales2',
+                type: 'post',
+                data: {ip: ip, puerto: puerto, usuario: usuario, password: password, marca: marca},
+                dataType: 'json',
+                success: function(response){
+                    if(response['codigo'] == 1){
+                        if(confirm('Existe nombre para los canales. ¿Desea usarlos?')){
+                            for(let j=0; j<response['data'].length; j++){
+                                if($('#input-canal-'+(j+1)).length > 0)
+                                    $('#input-canal-'+(j+1)).val(response['data'][j]);
+                                else{
+                                    //crear tr y input
+                                    let tr = '<tr>'
+                                    tr += '<td>'+(j+1)+'</td>';
+                                    tr += '<td><input canal="'+(j+1)+'" required class="form-control" name="canales" id="input-canal-'+(j+1)+'" value="'+response['data'][j]+'"></td>';
+                                    tr += '</tr>';
+                                    $('#tbody-canales').html($('#tbody-canales').html()+tr);
+                                }
+                            }
+                        }
+                    }
+                    else{
+                        alert(response['mensaje']);
+                    }
+                }
+            });
         }
 
-        function removerEmailContacto(btn){
-            if(confirm('Confirme esta operación')){
-                let fila = $(btn).closest('tr');
-                fila.remove();
-            } 
+        function ingresarCanales(){
+            let cantidad_canales = $('#input-cantidad_canales').val();
+            let tbody = '';
+
+            if(cantidad_canales == ''){
+                alert('Debe ingresar la cantidad de canales.');
+                return false;
+            }
+
+            for(let i=1; i <= cantidad_canales; i++){
+                tbody += '<tr>';
+                tbody += '<td>'+i+'</td>';
+                tbody += '<td><input canal="'+i+'" required class="form-control" name="canales" id="input-canal-'+i+'" value="Canal '+i+'" /></td>';
+                tbody += '</tr>';
+            }
+
+            $('#btnCheckCanales').prop('disabled', false);
+            $('#tbody-canales').html(tbody);
         }
     </script>
 </body>

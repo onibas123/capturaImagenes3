@@ -207,7 +207,7 @@
 
                 let canales = $('input[name="canales"]');
                 if(canales.length <= 0){
-                    alert('Deben existir canales asociados a la Ubicación.');
+                    alert('Deben existir canales asociados al Dispositivo.');
                     return false;
                 }
 

@@ -27,8 +27,8 @@ class DispositivosController extends CI_Controller {
 		$crud->unset_add();
 		$crud->unset_edit();
 			
-		//if($this->session->userdata('usuario_edita') == 1)
-		//	$crud->add_action('action1', base_url().'assets/grocery_crud/themes/flexigrid/css/images/edit.png', 'DispositivosController/edit', '','', array($this,'get_row_id' ));
+		if($this->session->userdata('usuario_edita') == 1)
+			$crud->add_action('action1', base_url().'assets/grocery_crud/themes/flexigrid/css/images/edit.png', 'DispositivosController/edit', '','', array($this,'get_row_id' ));
 			
 		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
@@ -132,23 +132,27 @@ class DispositivosController extends CI_Controller {
 
 	public function edit($id){
 		$this->db->select('*');
-		$this->db->from('organizaciones');
+		$this->db->from('dispositivos');
 		$this->db->where('id', $id);
 		$this->db->limit(1);
-		$organizacion = $this->db->get()->result_array();
+		$dispositivo = $this->db->get()->result_array();
 		
-		$this->db->select('contacto');
-		$this->db->from('organizaciones_contactos');
-		$this->db->where('organizaciones_id', $id);
-		$contactos = $this->db->get()->result_array();
+		$this->db->select('*');
+		$this->db->from('canales');
+		$this->db->where('devices_id', $id);
+		$canales = $this->db->get()->result_array();
 		
-		$tipo_organizacion = $this->db->get('tipo_organizacion')->result_array();
+		$organizaciones = $this->db->get('organizaciones')->result_array();
+		$tipo_dispositivo = $this->db->get('tipo_dispositivo')->result_array();
+		$marcas = $this->db->get('marcas')->result_array();
 		$data = [
 			'id' => $id,
 			'titulo' => 'Editar Dispositivo #'.$id,
-			'tipo_organizacion' => $tipo_organizacion,
-			'organizacion' => $organizacion,
-			'contactos' => $contactos
+			'tipo_dispositivo' => $tipo_dispositivo,
+			'marcas' => $marcas,
+			'organizaciones' => $organizaciones,
+			'dispositivo' => $dispositivo,
+			'canales' => $canales
 		];
 		$this->load->view('dispositivos/edit', $data);
 	}
@@ -200,4 +204,55 @@ class DispositivosController extends CI_Controller {
 		echo 'Se ha agregado el dispositivo.';
 	}
 
+	public function editDispositivo(){
+		$id = $this->input->post('id', true);
+		$organizacion = $this->input->post('organizacion', true);
+		$nombre = $this->input->post('nombre', true);
+		$tipo = $this->input->post('tipo', true);
+		$marca = $this->input->post('marca', true);
+		$cantidad_canales = $this->input->post('cantidad_canales', true);
+		$ubicacion = $this->input->post('ubicacion', true);
+		$codificar = $this->input->post('codificar', true);
+		$estado = $this->input->post('estado', true);
+		$ip = $this->input->post('ip', true);
+		$puerto = $this->input->post('puerto', true);
+		$usuario = $this->input->post('usuario', true);
+		$password = $this->input->post('password', true);
+		$datos_extras = $this->input->post('datos_extras', true);
+		
+		$canales = $this->input->post('canales');
+		
+		$data_dispositivo = [
+								'organizaciones_id' => $organizacion,
+								'nombre' => $nombre,
+								'tipo_dispositivo_id' => $tipo,
+								'marcas_id' => $marca,
+								'cantidad_canales' => $cantidad_canales,
+								'ubicacion' => $ubicacion,
+								'codificar_dss' => $codificar,
+								'estado' => ($estado == 1) ? 1 : 0,
+								'ip' => $ip,
+								'puerto' => $puerto,
+								'usuario' => $usuario,
+								'password' => $password,
+								'datos_extras' => $datos_extras
+							];
+		$this->db->where('id', $id);
+		$this->db->update('dispositivos', $data_dispositivo);
+
+		$this->db->where('devices_id', $id);
+		$this->db->delete('canales');
+		
+		if(!empty($canales)){
+			foreach($canales as $c){
+				$data_canales = 	[
+										'devices_id' => $id,
+										'canal' => $c['canal'],
+										'nombre' => $c['nombre']
+									];
+				$this->db->insert('canales', $data_canales);
+			}
+		}
+		echo 'Se ha editado el dispositivo.';
+	}
 }
