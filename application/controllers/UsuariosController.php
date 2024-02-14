@@ -130,7 +130,7 @@ class UsuariosController extends CI_Controller {
 	}
 
 	public function mi_cuenta(){
-		$usuario_id = 1; //reemplazar por id de sesion
+		$usuario_id = $this->session->userdata('usuario_id'); //reemplazar por id de sesion
 		$usuario = $this->modelo->obtener_usuario_id($usuario_id);
 		$data = 	[
 						'usuario' => $usuario

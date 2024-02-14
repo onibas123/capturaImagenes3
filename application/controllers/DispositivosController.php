@@ -153,4 +153,32 @@ class DispositivosController extends CI_Controller {
 		$this->load->view('dispositivos/edit', $data);
 	}
 
+	public function addDispositivo(){
+		/*
+		organizacion: organizacion, nombre: nombre,
+		tipo: tipo, marca: marca,
+		cantidad_canales: cantidad_canales, ubicacion: ubicacion,
+		codificar: codificar, estado: estado,
+		ip: ip, puerto: puerto,
+		usuario: usuario, password: password,
+		datos_extras: datos_extras,
+		canales: canales_arr
+		*/
+		$organizacion = $this->input->post('organizacion', true);
+		$nombre = $this->input->post('nombre', true);
+		$tipo = $this->input->post('tipo', true);
+		$marca = $this->input->post('marca', true);
+		$cantidad_canales = $this->input->post('cantidad_canales', true);
+		$ubicacion = $this->input->post('ubicacion', true);
+		$codificar = $this->input->post('codificar', true);
+		$estado = $this->input->post('estado', true);
+		$ip = $this->input->post('ip', true);
+		$puerto = $this->input->post('puerto', true);
+		$usuario = $this->input->post('usuario', true);
+		$password = $this->input->post('password', true);
+		$datos_extras = $this->input->post('datos_extras', true);
+		$canales = $this->input->post('canales');
+		print_r($_POST);
+	}
+
 }

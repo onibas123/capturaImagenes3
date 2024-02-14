@@ -204,17 +204,32 @@
                 let usuario = $('#input-usuario').val();
                 let password = $('#input-password').val();
                 let datos_extras = $('#textarea-datos_extra').val();
+
+                let canales = $('input[name="canales"]');
+                if(canales.length <= 0){
+                    alert('Deben existir canales asociados a la Ubicación.');
+                    return false;
+                }
+
+                let canales_arr = [];
+                for(let i=0; i<canales.length;i++){
+                    let temp = {'canal': $(canales[i]).attr('canal'), 'nombre': $(canales[i]).val()};
+                    canales_arr.push(temp);
+                }
                 
-                /*
+                
                 $.ajax({
-                    url: '<?php echo base_url();?>index.php/OrganizacionesController/addOrganizacion',
+                    url: '<?php echo base_url();?>index.php/DispositivosController/addDispositivo',
                     type: 'post',
                     data: {
-                            rut: rut, tipo_organizacion: tipo_organizacion,
-                            nombre: nombre, direccion: direccion,
-                            telefono: telefono, email: email,
-                            contacto: contacto, cantidad_dispositivos: cantidad_dispositivos,
-                            emails_contactos: emails_contactos
+                            organizacion: organizacion, nombre: nombre,
+                            tipo: tipo, marca: marca,
+                            cantidad_canales: cantidad_canales, ubicacion: ubicacion,
+                            codificar: codificar, estado: estado,
+                            ip: ip, puerto: puerto,
+                            usuario: usuario, password: password,
+                            datos_extras: datos_extras,
+                            canales: canales_arr
                     },
                     dataType: 'text',
                     success: function(response){
@@ -222,7 +237,7 @@
                         actualizar();
                     }
                 });
-                */
+                
             });
         });
 
@@ -283,7 +298,7 @@
                                     //crear tr y input
                                     let tr = '<tr>'
                                     tr += '<td>'+(j+1)+'</td>';
-                                    tr += '<td><input class="form-control" name="canales" id="input-canal-'+(j+1)+'" value="'+response['data'][j]+'"></td>';
+                                    tr += '<td><input canal="'+(j+1)+'" required class="form-control" name="canales" id="input-canal-'+(j+1)+'" value="'+response['data'][j]+'"></td>';
                                     tr += '</tr>';
                                     console.log(tr);
                                     $('#tbody-canales').html($('#tbody-canales').html()+tr);
@@ -310,7 +325,7 @@
             for(let i=1; i <= cantidad_canales; i++){
                 tbody += '<tr>';
                 tbody += '<td>'+i+'</td>';
-                tbody += '<td><input class="form-control" name="canales" id="input-canal-'+i+'" value="Canal '+i+'" /></td>';
+                tbody += '<td><input canal="'+i+'" required class="form-control" name="canales" id="input-canal-'+i+'" value="Canal '+i+'" /></td>';
                 tbody += '</tr>';
             }
 
