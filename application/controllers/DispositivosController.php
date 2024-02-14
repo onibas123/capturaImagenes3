@@ -27,8 +27,8 @@ class DispositivosController extends CI_Controller {
 		$crud->unset_add();
 		$crud->unset_edit();
 			
-		if($this->session->userdata('usuario_edita') == 1)
-			$crud->add_action('action1', base_url().'assets/grocery_crud/themes/flexigrid/css/images/edit.png', 'DispositivosController/edit', '','', array($this,'get_row_id' ));
+		//if($this->session->userdata('usuario_edita') == 1)
+		//	$crud->add_action('action1', base_url().'assets/grocery_crud/themes/flexigrid/css/images/edit.png', 'DispositivosController/edit', '','', array($this,'get_row_id' ));
 			
 		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
