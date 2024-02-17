@@ -216,7 +216,7 @@
                 let cantidad_canales = $('#input-cantidad_canales').val();
                 let ubicacion = $('#input-ubicacion').val();
                 let codificar = $('#input-codificar').val();
-                let estado = $('#select-estadol').val();
+                let estado = $('#select-estado').val();
                 let ip = $('#input-ip').val();
                 let puerto = $('#input-puerto').val();
                 let usuario = $('#input-usuario').val();
