@@ -3,6 +3,13 @@
 
 <head>
     <?php $this->load->view('layout/head');?>
+    <style>
+        .casillas{
+            width: 100px !important;
+            height: 100px !important;
+            max-height: auto;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -53,7 +60,7 @@
                             <table id="table-schema" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Canal</th>
+                                        <th>Hora</th>
                                         <th>Lunes</th>
                                         <th>Martes</th>
                                         <th>Miércoles</th>
@@ -61,15 +68,15 @@
                                         <th>Viernes</th>
                                         <th>Sábado</th>
                                         <th>Domingo</th>
-                                        <th width="15%">Hora</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-schema">
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
+                    <!--
                     <div class="row mt-2">
                         <div class="col-md-12">
                             <button type="button" onclick="guardarEsquema();" class="btn btn-success">Enviar</button>
@@ -77,6 +84,7 @@
                         </div>
                     </div>
                     <br>
+                    -->
                 </div>
                 <!-- /.container-fluid -->
 
@@ -98,9 +106,109 @@
         <i class="fas fa-angle-up"></i>
     </a>
     <?php $this->load->view('layout/scripts');?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <!-- modales -->
+    <div class="modal fade" id="modal-schema-add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModalSchema">Datos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Canales</th>
+                            <td>
+                                <select class="form-control select2-selection select2-selection--multiple" name="add_canales[]" id="select-add-canal" multiple="multiple">
+                                    
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Día</th>
+                            <td>
+                                <select class="form-control" name="add-dia" id="select-add-dia">
+                                    <option value="Lun">Lunes</option>
+                                    <option value="Mar">Martes</option>
+                                    <option value="Mie">Miércoles</option>
+                                    <option value="Jue">Jueves</option>
+                                    <option value="Vie">Viernes</option>
+                                    <option value="Sab">Sábado</option>
+                                    <option value="Dom">Domingo</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Hora</th>
+                            <td><input type="time" value="<?php echo date('H').':00';?>" id="input-add-hora" name="add-hora" /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="addSchema();">Agregar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-schema-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tituloModalSchema">Datos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Número Canal</th>
+                            <td id="td-edit-numero_canal"></td>
+                        </tr>
+                        <tr>
+                            <th>Nombre Canal</th>
+                            <td id="td-edit-nombre_canal"></td>
+                        </tr>
+                        <tr>
+                            <th>Día</th>
+                            <td>
+                                <select class="form-control" name="dia" id="select-dia">
+                                    <option value="Lun">Lunes</option>
+                                    <option value="Mar">Martes</option>
+                                    <option value="Mie">Miércoles</option>
+                                    <option value="Jue">Jueves</option>
+                                    <option value="Vie">Viernes</option>
+                                    <option value="Sab">Sábado</option>
+                                    <option value="Dom">Domingo</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Hora</th>
+                            <td><input type="time" value="" id="input-hora" name="hota" /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="editarSchema();">Editar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarSchema();">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
+        var dia_schema_add = '';
+        var id_schema_edit = 0;
+        var dia_schema_edit = '';
         $(document).ready(function() {
-            
+            inicializarTabla();
             $('#select-organizacion').change(function(){
                 let options_dispositivos = '<option value="">Seleccione</select>';
                 $.ajax({
@@ -120,92 +228,76 @@
             });
 
             $('#select-dispositivo').change(function(){
-                let tbody = '';
-                $.ajax({
-                    url: '<?php echo base_url();?>index.php/CapturasController/obtenerCantidadCanalesDispotivo2',
-                    type: 'post',
-                    data: {dispositivo: $(this).val()},
-                    dataType: 'json',
-                    success: function(response){
-
-                        if(response.length > 0){
-                            for(let i=0; i< response.length; i++){
-                                tbody  += '<tr canal="'+response[i]['canal']+'" id="tr-'+response[i]['canal']+'" class="tr-canales">';
-                                
-                                tbody  += '<td>'+response[i]['canal']+' '+response[i]['nombre']+'</td>';
-                                
-                                tbody  += '<td class="text-center" ><input name="input-check-lun_'+response[i]['canal']+'" id="input-check-lun_'+response[i]['canal']+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-mar_'+response[i]['canal']+'" id="input-check-mar_'+response[i]['canal']+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-mie_'+response[i]['canal']+'" id="input-check-mie_'+response[i]['canal']+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-jue_'+response[i]['canal']+'" id="input-check-jue_'+response[i]['canal']+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-vie_'+response[i]['canal']+'" id="input-check-vie_'+response[i]['canal']+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-sab_'+response[i]['canal']+'" id="input-check-sab_'+response[i]['canal']+'" type="checkbox"></td>';
-                                tbody  += '<td class="text-center" ><input name="input-check-dom_'+response[i]['canal']+'" id="input-check-dom_'+response[i]['canal']+'" type="checkbox"></td>';
-                                
-                                tbody  += '<td class="td-horas" id="td-horas-'+response[i]['canal']+'">';
-                                
-                                tbody  += '<div class="row">';
-
-                                tbody  += '<div class="col-md-8">';
-                                tbody  += '<input canal="'+response[i]['canal']+'" hora="1" class="horas" ocupado="0" id="div-hora-'+response[i]['canal']+'_1" class="form-contron" type="time" value="06:00"><br>';
-                                tbody  += '</div>';
-
-                                tbody  += '<div class="col-md-4">';
-                                tbody  += '<button onclick="agregarHora('+response[i]['canal']+');" class="btn btn-primary btn-sm round">+</button>';
-                                tbody  += '</div>';
-
-                                tbody  += '</div>';
-                                
-                                tbody  += '</td>';
-                            }
-                        }
-
-                        $('#tbody-schema').html(tbody);
-                        
-                        $.ajax({
-                            url: '<?php echo base_url();?>index.php/CapturasController/obtenerSchema',
-                            data:{dispositivo: $('#select-dispositivo').val()},
-                            type: 'post',
-                            dataType:'json',
-                            success: function(response2){
-                                if(response2.length > 0){
-                                    $('.td-horas').html('');
-                                    for(let i=0; i<response2.length;i++){
-                                        
-                                        //$('#td-horas-'+response2[i]['canal']).html('');
-
-                                        if(response2[i]['Lun'] == '1'){
-                                            $('#input-check-lun_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        if(response2[i]['Mar'] == '1'){
-                                            $('#input-check-mar_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        if(response2[i]['Mie'] == '1'){
-                                            $('#input-check-mie_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        if(response2[i]['Jue'] == '1'){
-                                            $('#input-check-jue_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        if(response2[i]['Vie'] == '1'){
-                                            $('#input-check-vie_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        if(response2[i]['Sab'] == '1'){
-                                            $('#input-check-sab_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        if(response2[i]['Dom'] == '1'){
-                                            $('#input-check-dom_'+response2[i]['canal']).prop('checked', true);
-                                        }
-                                        
-                                        let nueva_hora_id = agregarHora2(response2[i]['canal']);
-                                        $('#'+nueva_hora_id).val(response2[i]['hora']);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
+                actualizarTabla();
             });
         });
+    
+        function actualizarTabla(){
+            inicializarTabla();
+            $.ajax({
+                    url: '<?php echo base_url();?>index.php/CapturasController/obtenerSchema',
+                    data:{dispositivo: $('#select-dispositivo').val()},
+                    type: 'post',
+                    dataType:'json',
+                    success: function(response2){
+                       
+                        if(response2.length > 0){
+                            
+                            for(let i=0; i<response2.length;i++){
+
+                                if(response2[i]['Lun'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 1);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Lun_'+hora).append(button);
+                                }
+
+                                if(response2[i]['Mar'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 2);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Mar_'+hora).append(button);
+                                }
+
+                                if(response2[i]['Mie'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 3);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Mie_'+hora).append(button);
+                                }
+
+                                if(response2[i]['Jue'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 4);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Jue_'+hora).append(button);
+                                }
+
+                                if(response2[i]['Vie'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 5);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Vie_'+hora).append(button);
+                                }
+
+                                if(response2[i]['Sab'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 6);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Sab_'+hora).append(button);
+                                }
+
+                                if(response2[i]['Dom'] == 1){
+                                    let hora_minutos = response2[i]['hora'];
+                                    let hora = parseInt(hora_minutos.substring(0, 2));
+                                    let button = '<button onclick="abrirModalSchema(2, '+response2[i]['id']+', 7);" title="'+hora_minutos+'" class="btn btn-info w-100 mb-1">'+response2[i]['canal']+'</button>';
+                                    $('#Dom_'+hora).append(button);
+                                }
+                            }
+                        }
+                    }
+                });
+        }
 
         function removerHora(canal, hora){
             $('#row_'+canal+'_'+hora).remove();
@@ -303,6 +395,169 @@
                 else
                     alert('Debe existir al menos un Canal con su esquema de horarios');
             }
+        }
+        //Cambio en esquema 17-02-2024
+        function inicializarTabla(){
+            let tbody = '';
+            for(let i=0; i<=23; i++){
+                tbody += '<tr>';
+                tbody += '<td style="width: 50px;">'+((i < 10) ? '0'+i+':00' : i+':00')+'</td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Lun" id="Lun_'+i+'"><button onclick="abrirModalSchema(1,null, 1);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Mar" id="Mar_'+i+'"><button onclick="abrirModalSchema(1,null, 2);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Mie" id="Mie_'+i+'"><button onclick="abrirModalSchema(1,null, 3);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Jue" id="Jue_'+i+'"><button onclick="abrirModalSchema(1,null, 4);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Vie" id="Vie_'+i+'"><button onclick="abrirModalSchema(1,null, 5);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Sab" id="Sab_'+i+'"><button onclick="abrirModalSchema(1,null, 6);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '<td class="casillas text-center" hora="'+i+'" dia="Dom" id="Dom_'+i+'"><button onclick="abrirModalSchema(1,null, 7);" title="Agregar" class="btn btn-primary btn-sm mb-2">+</button></td>';
+                tbody += '</tr>';
+            }
+            $('#tbody-schema').html(tbody);
+        }
+
+        function abrirModalSchema(operacion, id = null, dia = null){
+            if(operacion == 1){
+                if($('#select-dispositivo').val() == ''){
+                    alert('Debe seleccionar un dispositivo.');
+                    return false;
+                }
+
+                dia_schema_add = '';
+                if(dia != null){
+                    switch(dia) {
+                        case 1:
+                            dia_schema_add = 'Lun';
+                            break;
+                        case 2:
+                            dia_schema_add = 'Mar';
+                            break;
+                        case 3:
+                            dia_schema_add = 'Mie';
+                            break;
+                        case 4:
+                            dia_schema_add = 'Jue';
+                            break;
+                        case 5:
+                            dia_schema_add = 'Vie';
+                            break;
+                        case 6:
+                            dia_schema_add = 'Sab';
+                            break;
+                        case 7:
+                            dia_schema_add = 'Dom';
+                            break;
+                        default:
+                    }
+                }
+
+                $.ajax({
+                    url: '<?php echo base_url();?>index.php/CapturasController/obtenerCantidadCanalesDispotivo3',
+                    type: 'post',
+                    data: {dispositivo: $('#select-dispositivo').val()},
+                    dataType: 'text',
+                    success: function(response){
+                        $('#select-add-canal').html(response);
+                        $("#select-add-canal").select2({placeholder: "Seleccione..."});
+                        $('span.select2').addClass('w-100');
+                    }
+                });
+
+                $('#modal-schema-add').modal('show');
+            }   
+            else{
+                id_schema_edit = id;
+                if(dia != null){
+                    switch(dia) {
+                        case 1:
+                            dia_schema_edit = 'Lun';
+                            break;
+                        case 2:
+                            dia_schema_edit = 'Mar';
+                            break;
+                        case 3:
+                            dia_schema_edit = 'Mie';
+                            break;
+                        case 4:
+                            dia_schema_edit = 'Jue';
+                            break;
+                        case 5:
+                            dia_schema_edit = 'Vie';
+                            break;
+                        case 6:
+                            dia_schema_edit = 'Sab';
+                            break;
+                        case 7:
+                            dia_schema_edit = 'Dom';
+                            break;
+                        default:
+                    }
+                }
+                $.ajax({
+                    url: '<?php echo base_url();?>index.php/CapturasController/obtenerDataSchema',
+                    data: {id: id_schema_edit},
+                    dataType: 'json',
+                    type: 'post',
+                    success: function(data){
+                        $('#td-edit-numero_canal').html(data[0]['canal']);
+                        $('#td-edit-nombre_canal').html(data[0]['nombre_canal']);
+                        $('#select-dia').val(dia_schema_edit);
+                        $('#input-hora').val(data[0]['hora']);
+                    }
+                });
+                $('#modal-schema-edit').modal('show');
+            }         
+        }
+
+        function editarSchema(){
+            let dispositivo = $('#select-dispositivo').val();
+            let canal =  $('#td-edit-numero_canal').html();
+            let dia = $('#select-dia').val();
+            let hora = $('#input-hora').val();
+
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CapturasController/editarDataSchema',
+                data: {id: id_schema_edit, dispositivo: dispositivo, canal: canal, dia_actual: dia_schema_edit, dia: dia, hora: hora},
+                type: 'post',
+                success: function(response){
+                    $('#modal-schema-edit').modal('hide');
+                    actualizarTabla();
+                }
+            });
+        }
+
+        function eliminarSchema(){
+            if(confirm('Confirme esta operación')){
+                let dispositivo = $('#select-dispositivo').val();
+                let canal =  $('#td-edit-numero_canal').html();
+                let dia = $('#select-dia').val();
+                let hora = $('#input-hora').val();
+
+                $.ajax({
+                    url: '<?php echo base_url();?>index.php/CapturasController/eliminarDataSchema',
+                    data: {id: id_schema_edit, dispositivo: dispositivo, canal: canal, dia_actual: dia_schema_edit, dia: dia, hora: hora},
+                    type: 'post',
+                    success: function(response){
+                        $('#modal-schema-edit').modal('hide');
+                        actualizarTabla();
+                    }
+                });
+            }
+        }
+
+        function addSchema(){
+            let dispositivo = $('#select-dispositivo').val();
+            let canal =  $('#select-add-canal').val();
+            let dia = $('#select-add-dia').val();
+            let hora = $('#input-add-hora').val();
+
+            $.ajax({
+                url: '<?php echo base_url();?>index.php/CapturasController/addDataSchema',
+                data: {dispositivo: dispositivo, canal: canal, dia: dia, hora: hora},
+                type: 'post',
+                success: function(response){
+                    $('#modal-schema-add').modal('hide');
+                    actualizarTabla();
+                }
+            });
         }
     </script>
 </body>

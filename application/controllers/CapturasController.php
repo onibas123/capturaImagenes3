@@ -81,6 +81,15 @@ class CapturasController extends CI_Controller {
 		$this->load->view('capturas/schema', $data);
 	}
 
+	public function schema_bkp(){
+		$organizaciones = $this->db->get('organizaciones')->result_array();
+		$data = [
+			'titulo' => 'Esquema de Horarios',
+			'organizaciones' => $organizaciones
+		];
+		$this->load->view('capturas/schema_bkp', $data);
+	}
+
 	public function consolidate(){
 		$organizaciones = $this->db->get('organizaciones')->result_array();
 		$data = [
@@ -122,7 +131,28 @@ class CapturasController extends CI_Controller {
         $option = '<option value="" selected>Seleccione</option>';
         if(!empty($canales)){
             for($i=0; $i< count($canales); $i++){
-				$option .= '<option value="'.$canales[$i]['canal'].'">'.$canales[$i]['nombre'].'</option>';
+				$option .= '<option value="'.$canales[$i]['canal'].'">'.$canales[$i]['canal'].' | '.$canales[$i]['nombre'].'</option>';
+            }
+        }
+		echo $option;
+	}
+
+	public function obtenerCantidadCanalesDispotivo3(){
+		$dispositivo = $this->input->post('dispositivo');
+		$this->db->select('cantidad_canales');
+		$this->db->from('dispositivos');
+		$this->db->where('id', $dispositivo);
+		$this->db->limit(1);
+		$canales = $this->db->get()->result_array();
+		//echo !empty($canales[0]['cantidad_canales']) ? $canales[0]['cantidad_canales'] : 0;
+		$this->db->select('*');
+        $this->db->from('canales');
+        $this->db->where('devices_id', $dispositivo);
+        $this->db->order_by('canal ASC');
+        $canales = $this->db->get()->result_array();
+        if(!empty($canales)){
+            for($i=0; $i< count($canales); $i++){
+				$option .= '<option value="'.$canales[$i]['canal'].'">'.$canales[$i]['canal'].' | '.$canales[$i]['nombre'].'</option>';
             }
         }
 		echo $option;
@@ -843,5 +873,84 @@ class CapturasController extends CI_Controller {
 						];
 		$this->db->insert('informes', $data_informe);
 		echo 'Se ha generado el registro de manera correcta';
+	}
+
+	public function obtenerDataSchema(){
+		$id = $this->input->post('id', true);
+		$this->db->select(
+							'esquemas.id, esquemas.dispositivos_id, esquemas.Lun,esquemas.Mar,
+							esquemas.Mie, esquemas.Jue, esquemas.Vie, esquemas.Sab, esquemas.Dom, 
+							esquemas.hora, esquemas.canal');
+		$this->db->from('esquemas');
+		//$this->db->join('dispositivos', 'esquemas.dispositivos_id = dispositivos.id');
+		//$this->db->join('canales', 'dispositivos.id = canales.devices_id');
+		//$this->db->where('canales.canal', 'esquemas.canal');
+		$this->db->where('esquemas.id', $id);
+		$esquema = $this->db->get()->result_array();
+		if(!empty($esquema[0]['dispositivos_id'])){
+			$this->db->select('nombre');
+			$this->db->from('canales');
+			$this->db->where('devices_id', $esquema[0]['dispositivos_id']);
+			$this->db->where('canal', $esquema[0]['canal']);
+			$this->db->limit(1);
+			$nombre_canal = $this->db->get()->result_array();
+			$nombre_canal = $nombre_canal[0]['nombre'];
+			$esquema[0]['nombre_canal'] = $nombre_canal;
+		}
+
+		echo json_encode($esquema);
+	}
+
+	public function editarDataSchema(){
+		$id = $this->input->post('id', true);
+		$dispositivo = $this->input->post('dispositivo', true);
+		$canal = $this->input->post('canal', true);
+		$dia = $this->input->post('dia', true);
+		$dia_actual = $this->input->post('dia_actual', true);
+		$hora = $this->input->post('hora', true);
+
+		$this->db->select('*');
+		$this->db->from('esquemas');
+		$this->db->where('dispositivos_id', $dispositivo);
+		$this->db->where('canal', $canal);
+		$this->db->where('hora', $hora);
+		$this->db->limit(1);
+		$esquema = $this->db->get()->result_array();
+		if(!empty($esquema[0]['id'])){
+			//existe coincidencia de esquema para un dispositivo con una canal y hora
+			//solo queda editar ese registro y pintar en 1 el dia
+			$data = [$dia => 1, $dia_actual => 0];
+			$this->db->where('id',$esquema[0]['id']);
+			$this->db->update('esquemas', $data);
+		}
+		else{
+			//no existe coincidencia... por lo tanto se genera un nuevo registro asociado al dospositivo, canal con el dia pertinente
+			$data = ['dispositivos_id' => $dispositivo, 'hora' => $hora, $dia => 1, $dia_actual => 0,'canal' => $canal];
+			$this->db->insert('esquemas', $data);
+		}
+	}
+
+	public function eliminarDataSchema(){
+		$id = $this->input->post('id', true);
+		$dispositivo = $this->input->post('dispositivo', true);
+		$canal = $this->input->post('canal', true);
+		$dia = $this->input->post('dia', true);
+		$dia_actual = $this->input->post('dia_actual', true);
+		$hora = $this->input->post('hora', true);
+
+		$this->db->select('*');
+		$this->db->from('esquemas');
+		$this->db->where('dispositivos_id', $dispositivo);
+		$this->db->where('canal', $canal);
+		$this->db->where('hora', $hora);
+		$this->db->limit(1);
+		$esquema = $this->db->get()->result_array();
+		if(!empty($esquema[0]['id'])){
+			//existe coincidencia de esquema para un dispositivo con una canal y hora
+			//solo queda editar ese registro y pintar en 1 el dia
+			$data = [$dia_actual => 0];
+			$this->db->where('id',$esquema[0]['id']);
+			$this->db->update('esquemas', $data);
+		}
 	}
 }
