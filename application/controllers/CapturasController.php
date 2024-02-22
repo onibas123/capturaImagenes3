@@ -953,4 +953,51 @@ class CapturasController extends CI_Controller {
 			$this->db->update('esquemas', $data);
 		}
 	}
+
+	public function addDataSchema(){
+		$dispositivo = $this->input->post('dispositivo', true); //integer
+		$canales = $this->input->post('canal', true); //[]
+		$dias = $this->input->post('dia', true); //[]
+		$hora = $this->input->post('hora', true); //00:00
+
+		foreach($canales as $canal){
+			$this->db->select('*');
+			$this->db->from('esquemas');
+			$this->db->where('dispositivos_id', $dispositivo);
+			$this->db->where('canal', $canal);
+			$this->db->where('hora', $hora);
+			$this->db->limit(1);
+			$esquema = $this->db->get()->result_array();
+			if(!empty($esquema[0]['id'])){
+				//existe coincidencia de esquema para un dispositivo con una canal y hora
+				//solo queda editar ese registro y pintar en 1 el dia
+				foreach($dias as $dia){
+					$data = [$dia => 1];
+					$this->db->where('id',$esquema[0]['id']);
+					$this->db->update('esquemas', $data);
+				}
+			}
+			else{
+				//no existe coincidencia... 
+				//por lo tanto se genera un nuevo registro asociado al dospositivo, canal con el dia pertinente
+				$dias_arr	= [
+								'Lun' => 0,
+								'Mar' => 0,
+								'Mie' => 0,
+								'Jue' => 0,
+								'Vie' => 0,
+								'Sab' => 0,
+								'Dom' => 0
+							];
+				foreach($dias as $dia){
+					$dias_arr[$dia] = 1;
+				}
+				$data = ['dispositivos_id' => $dispositivo, 'hora' => $hora,'canal' => $canal];
+				foreach($dias_arr as $key => $value){
+					$data[$key] = $value;
+				}
+				$this->db->insert('esquemas', $data);
+			}
+		}
+	}
 }

@@ -9,6 +9,11 @@
             height: 100px !important;
             max-height: auto;
         }
+        .spanSelect2{
+            min-width: 300px !important;
+            max-width: 800px !important;
+            width: 100% !important;
+        }
     </style>
 </head>
 
@@ -131,7 +136,7 @@
                         <tr>
                             <th>Día</th>
                             <td>
-                                <select class="form-control" name="add-dia" id="select-add-dia">
+                                <select class="form-control select2-selection select2-selection--multiple" name="add-dia[]" id="select-add-dia" multiple="multiple">
                                     <option value="Lun">Lunes</option>
                                     <option value="Mar">Martes</option>
                                     <option value="Mie">Miércoles</option>
@@ -208,6 +213,7 @@
         var id_schema_edit = 0;
         var dia_schema_edit = '';
         $(document).ready(function() {
+            $("#select-add-dia").select2();
             inicializarTabla();
             $('#select-organizacion').change(function(){
                 let options_dispositivos = '<option value="">Seleccione</select>';
@@ -457,7 +463,7 @@
                     success: function(response){
                         $('#select-add-canal').html(response);
                         $("#select-add-canal").select2({placeholder: "Seleccione..."});
-                        $('span.select2').addClass('w-100');
+                        $('span.select2').addClass('spanSelect2');
                     }
                 });
 
