@@ -120,10 +120,16 @@
             let dispositivo = $('#select-dispositivo').val();
             let desde = $('#input-fecha_desde').val();
             let hasta = $('#input-fecha_hasta').val();
+            if(organizacion == ''){
+                alert('Debe seleccionar una Organización.');
+                return false;
+            }
+            /*
             if(dispositivo == ''){
                 alert('Debe seleccionar un Dispositivo.');
                 return false;
             }
+            */
             $('#btnCargarPDF').prop('disabled', true);
             $.ajax({
                 url: '<?php echo base_url();?>index.php/CapturasController/cargarPDF',
