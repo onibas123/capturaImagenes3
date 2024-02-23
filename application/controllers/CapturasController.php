@@ -222,27 +222,49 @@ class CapturasController extends CI_Controller {
 		$dispositivo = $this->input->post('dispositivo', true);
 		$canal = $this->input->post('canal', true);
 		$date_time = date('Y-m-d H:i:s');
-		$ruta_imagen = $this->input->post('ruta_imagen', true);
+		//$ruta_imagen = $this->input->post('ruta_imagen', true);
 		$observacion = $this->input->post('observacion', true);
 		$usuario_id = !empty($this->session->userdata('usuario_id')) ? $this->session->userdata('usuario_id') : ''; //cambiar por usuario de sesion o sistema
 		$consolidado = $this->input->post('consolidado', true);
 
-		$data_captura = 	[
-								'organizaciones_id' => $organizacion,
-								'dispositivos_id' => $dispositivo,
-								'canal' => $canal,
-								'fecha_hora' => $date_time,
-								'ruta_imagen' => $ruta_imagen,
-								'observacion' => $observacion,
-								'usuario_id' => $usuario_id,
-								'consolidado' => $consolidado
-							];
-		if($this->db->insert('capturas', $data_captura)){
-			$this->addLog('Capturas', 'Crear', json_encode($data_captura));
-			echo 1;
+		$uploadsDirectory = './assets/imagenes_capturadas/'; // Ajusta la ruta de tu directorio de destino
+
+		if (!empty($_FILES)) {
+			// Obtener información sobre el archivo
+			//$infoArchivo = pathinfo($_FILES["file"]["file_name"]);
+			// Obtener la extensión del archivo
+			$ext = $_FILES['file']['type'];
+			
+			$extension = '';
+
+			if($ext == 'image/png')
+				$extension = 'png';
+			else if($ext == 'image/jpg')
+				$extension = 'jpg';
+			else if($ext == 'image/jpeg')
+				$extension = 'jpeg';
+
+			$nombreArchivo = 'captura_'.$organizacion.'_'.$dispositivo.'_'.$canal.'_'.date('YmdHis').'.'.$extension;
+			//$nombreArchivo = 'captura_'.$organizacion.'_'.$dispositivo.'_'.$canal.'_'.date('YmdHis').'.png';
+			$rutaDestino = $uploadsDirectory . $nombreArchivo;
+
+			move_uploaded_file($_FILES['file']['tmp_name'], $rutaDestino);
+
+			$data_captura = 	[
+							'organizaciones_id' => $organizacion,
+							'dispositivos_id' => $dispositivo,
+							'canal' => $canal,
+							'fecha_hora' => $date_time,
+							'ruta_imagen' => $nombreArchivo,
+							'observacion' => $observacion,
+							'usuario_id' => $usuario_id,
+							'consolidado' => $consolidado
+						];
+			if($this->db->insert('capturas', $data_captura)){
+				$this->addLog('Capturas', 'Crear', json_encode($data_captura));
+			}
+			sleep(1);
 		}
-		else
-			echo 0;
 	}
 
 	public function obtenerCapturasConsolidar(){

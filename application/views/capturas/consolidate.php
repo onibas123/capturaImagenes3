@@ -235,6 +235,8 @@
 
         function utilizarSugerencia(x){
             let sugerencia = $("#select-sugerencia-"+x+" option:selected").text();
+            sugerencia = sugerencia.split('|');
+            sugerencia = sugerencia[1];
             $('#'+x).append(' '+sugerencia);
         }
 

@@ -175,6 +175,8 @@
 
         function utilizarSugerencia(){
             let sugerencia = $("#select-sugerencia option:selected").text();
+            sugerencia = sugerencia.split('|');
+            sugerencia = sugerencia[1];
             $('#area-observacion').append(' '+sugerencia);
         }
 

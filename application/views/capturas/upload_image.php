@@ -3,6 +3,8 @@
 
 <head>
     <?php $this->load->view('layout/head');?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
 </head>
 
 <body id="page-top">
@@ -26,41 +28,8 @@
                     <!-- main content -->
                     <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Subir imágenes';?></h4>
                     <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">Organización</label>
-                            <select class="form-control" id="select-organizacion">
-                                <option value="">Seleccione</option>
-                                <?php 
-                                    if(!empty($organizaciones)){
-                                        foreach($organizaciones as $o){
-                                            echo '<option value="'.$o['id'].'">'.$o['nombre'].'</option>';
-                                        }
-                                    }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Dispositivo</label>
-                            <select class="form-control" id="select-dispositivo">
-                                <option value="">Seleccione</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6">
-                            <label for="">Canal</label>
-                            <select name="canal" id="select-canal" class="form-control">
-                                <option value="">Seleccione</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">Consolidado</label>
-                            <br>
-                            <input id="input-consolidado" type="checkbox" class="form-control" name="consolidado" style="cursor: pointer; width: 35px; height: 35px;">
-                        </div>
-                    </div>
-                    <div class="row mt-2">
+                    
+                        <!--
                         <div class="col-md-12">
                             <label for="">Imagen</label>
                             <form id="formularioImagen" enctype="multipart/form-data">
@@ -72,44 +41,92 @@
                                 <img style="cursor: pointer;" onclick="abrirGrande(this.src);" width="300" height="300" src="https://aquiporti.ec/dreamlab/wp-content/uploads/2020/02/default-300x300.jpg" id="img-captura" class="img-responsive pull-center"/>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-8">
-                            <label for="">Sugerencias</label>
-                            <select class="form-control" id="select-sugerencia">
-                                    <?php
-                                        $this->db->select('*');
-                                        $this->db->from('observaciones_sugeridas');
-                                        $obs = $this->db->get()->result_array();
-                                        if(!empty($obs)){
-                                            foreach($obs as $o){
-                                                echo '<option value="'.$o['id'].'">'.$o['id'].' | '.$o['observacion'].'</option>';
+                        -->
+                        
+                        
+                            <!-- Puedes agregar opciones y mensajes adicionales aquí -->
+                            <!-- aqui quede, la idea es pasas mediante js en el ambite de dropzone los datos a 
+                            inputs hidden...-->
+                            
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="">Organización</label>
+                                    <select class="form-control" id="select-organizacion">
+                                        <option value="">Seleccione</option>
+                                        <?php 
+                                            if(!empty($organizaciones)){
+                                                foreach($organizaciones as $o){
+                                                    echo '<option value="'.$o['id'].'">'.$o['nombre'].'</option>';
+                                                }
                                             }
-                                        }
-                                    ?>
-                            </select>
-                        </div>
-                        <div class="col-md-2 mt-3">
-                            <button onclick="utilizarSugerencia();" class="btn btn-primary w-100">Utilizar</button>
-                        </div>
-                        <div class="col-md-2 mt-3">
-                            <button onclick="borrar();" class="btn btn-danger w-100">Borrar</button>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <label for="">Observación</label>
-                            <textarea id="area-observacion" class="form-control" rows="4" placeholder="Ingrese observación..."></textarea>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <button type="button" onclick="guardarCaptura();" class="btn btn-success">Enviar</button>
-                            <button class= "btn btn-xs btn-danger" onclick="actualizar();">Cancelar</button>
-                        </div>
-                    </div>
-                    <br>
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Dispositivo</label>
+                                    <select class="form-control" id="select-dispositivo">
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="">Canal</label>
+                                    <select id="select-canal" class="form-control">
+                                        <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="">Consolidado</label>
+                                    <br>
+                                    <input id="input-consolidado" type="checkbox" class="form-control" style="cursor: pointer; width: 35px; height: 35px;">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-8">
+                                    <label for="">Sugerencias</label>
+                                    <select class="form-control" id="select-sugerencia">
+                                            <?php
+                                                $this->db->select('*');
+                                                $this->db->from('observaciones_sugeridas');
+                                                $obs = $this->db->get()->result_array();
+                                                if(!empty($obs)){
+                                                    foreach($obs as $o){
+                                                        echo '<option value="'.$o['id'].'">'.$o['id'].' | '.$o['observacion'].'</option>';
+                                                    }
+                                                }
+                                            ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mt-3">
+                                    <button type="button" onclick="utilizarSugerencia();" class="btn btn-primary w-100">Utilizar</button>
+                                </div>
+                                <div class="col-md-2 mt-3">
+                                    <button type="button" onclick="borrar();" class="btn btn-danger w-100">Borrar</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="">Observación</label>
+                                    <textarea id="area-observacion" class="form-control" rows="4" placeholder="Ingrese observación..."></textarea>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <button id="btnCargar" type="button" class="btn btn-success">Comenzar Carga</button>
+                                    <button type="button" class= "btn btn-xs btn-danger" onclick="actualizar();">Cancelar</button>
+                                </div>
+                            </div>
+                            <div class="row mt-2 d-none" id="rowCargar">
+                                <form method="post" action="<?php echo base_url();?>index.php/CapturasController/addCaptura" class="dropzone w-100 ml-1 mr-1" id="myDropzone">
+                                    <input type="hidden" name="organizacion" id="input-hidden-organizacion">
+                                    <input type="hidden" name="dispositivo" id="input-hidden-dispositivo">
+                                    <input type="hidden" name="canal" id="input-hidden-canal">
+                                    <input type="hidden" name="observacion" id="input-hidden-observacion">
+                                    <input type="hidden" name="consolidado" id="input-hidden-consolidado">
+                                </form>
+                            </div>
+                        
                 </div>
                 <!-- /.container-fluid -->
 
@@ -137,6 +154,7 @@
         var img_captura = $('#img-captura');
         var nombre_imagen = '';
         $(document).ready(function() {
+            $('.dz-button').html('Mover archivos aquí para subir.');
             $("#select-sugerencia").select2({placeholder: "Seleccione..."});
             $('#select-organizacion').change(function(){
                 let options_dispositivos = '<option value="">Seleccione</select>';
@@ -175,10 +193,67 @@
                 });
             });
 
+            // Configurar opciones de Dropzone
+            Dropzone.options.myDropzone = {
+                autoProcessQueue: false, // Deshabilitar la carga automática para procesar manualmente
+                parallelUploads: 15, // Número de subidas simultáneas permitidas
+                maxFilesize: 2, // Tamaño máximo del archivo en MB
+                acceptedFiles: 'image/*', // Solo permitir imágenes
+                addRemoveLinks: true, // Mostrar enlaces para eliminar archivos
+
+                init: function() {
+                    var myDropzone = this;
+
+                    // Configurar evento de clic en un botón para iniciar la carga manualmente
+                    $('#btnSubir').on('click', function() {
+                        myDropzone.processQueue(); // Iniciar carga
+                    });
+
+                    // Configurar evento para cuando se completa la carga de archivos
+                    this.on('complete', function(file) {
+                        myDropzone.removeFile(file); // Eliminar el archivo del área de carga
+                    });
+                }
+            };
+
+            $('#btnCargar').click(function(){
+                let org = $('#select-organizacion').val();
+                let dev = $('#select-dispositivo').val();
+                let canal = $('#select-canal').val();
+
+                if(org == ''){
+                    alert('Debe seleccionar una Organización.');
+                    return false;
+                }
+
+                if(dev == ''){
+                    alert('Debe seleccionar un Dispositivo.');
+                    return false;
+                }
+
+                if(canal == ''){
+                    alert('Debe seleccionar un canal.');
+                    return false;
+                }
+
+                let consolidado = 0;
+                if ($('#input-consolidado').is(':checked'))
+                    consolidado = 1;
+                let observacion = $('#area-observacion').val();
+
+                $('#input-hidden-organizacion').val(org);
+                $('#input-hidden-dispositivo').val(dev);
+                $('#input-hidden-canal').val(canal);
+                $('#input-hidden-consolidado').val(consolidado);
+                $('#input-hidden-observacion').val(observacion);
+                $('#rowCargar').removeClass('d-none');
+            });
         });
 
         function utilizarSugerencia(){
             let sugerencia = $("#select-sugerencia option:selected").text();
+            sugerencia = sugerencia.split('|');
+            sugerencia = sugerencia[1];
             $('#area-observacion').append(' '+sugerencia);
         }
 
@@ -220,6 +295,9 @@
             let canal = $('#select-canal').val();
             let observacion = $('#area-observacion').val();
             let consolidado = ($('#input-consolidado').is(':checked') == true) ? 1 : 0;
+
+            alert(1);
+
             if(canal == ''){
                 alert('Debe selecciona un canal');
                 return false;
@@ -230,18 +308,14 @@
                 type: 'post',
                 dataType: 'text',
                 data: {organizacion: organizacion, dispositivo: dispositivo, canal: canal, observacion: observacion, 
-                        consolidado: consolidado, ruta_imagen: nombre_imagen},
+                        consolidado: consolidado},
                 success: function(response){
-                    if(response == '1'){
-                        if(confirm('Se ha guardado de manera correcta la captura. ¿Desea volver a realizar otra Captura?')){
-                            location.reload();
-                        }
-                        else{
-                            window.location.href = '<?php echo base_url();?>index.php/CapturasController';
-                        }
+                    if(confirm('Se ha guardado de manera correcta la captura. ¿Desea volver a realizar otra Captura?')){
+                        location.reload();
                     }
-                    else
-                        alert('Ha ocurrido un problema con la Captura. Por favor comunicarse con el Administrador del Sistema.');
+                    else{
+                        window.location.href = '<?php echo base_url();?>index.php/CapturasController';
+                    }
                 }
             });
         }
