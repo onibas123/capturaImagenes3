@@ -320,27 +320,36 @@ class CapturasController extends CI_Controller {
 		$desde = $this->input->get('desde', true);
 		$hasta = $this->input->get('hasta', true);
 
-		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.ubicacion as ubicacion, CONCAT(capturas.canal," ",canales.nombre) as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora,
+		$this->db->select('capturas.ruta_imagen as imagen, dispositivos.id as dispositivo_id, dispositivos.ubicacion as ubicacion, CONCAT(capturas.canal," ",canales.nombre) as canal, capturas.observacion as observacion, DATE_FORMAT(capturas.fecha_hora, "%d-%m-%Y %H:%i") as fecha_hora,
 							dispositivos.ip as ip, dispositivos.usuario as usuario, dispositivos.password as password, dispositivos.marcas_id as marcas_id');
 		$this->db->from('capturas');
 		$this->db->join('dispositivos', 'dispositivos.id = capturas.dispositivos_id');
 		$this->db->join('canales', 'capturas.canal = canales.canal', 'left');
 		$this->db->where('DATE(capturas.fecha_hora) >=', $desde);
 		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
-		$this->db->where('dispositivos.id', $dev);
+		if(!empty($dev))
+			$this->db->where('dispositivos.id', $dev);
 		$this->db->where('capturas.consolidado', 1);
-		$this->db->group_by('capturas.id');
-		$this->db->order_by('capturas.canal ASC, capturas.fecha_hora ASC');
+		if(!empty($dev)){
+			$this->db->group_by('capturas.id');
+			$this->db->order_by('capturas.canal ASC, capturas.fecha_hora ASC');
+		}
+		else{
+			$this->db->group_by('capturas.id');
+			$this->db->order_by('dispositivos.id ASC, capturas.canal ASC, capturas.fecha_hora ASC');
+		}
+		
 		
 		$capturas_consolidadas = $this->db->get()->result_array();
 
 		$fecha_desde = '-';
 		$fecha_hasta = '-';
-
+		
 		if(count($capturas_consolidadas) > 0){
 			$fecha_desde = $capturas_consolidadas[0]['fecha_hora'];
 			$fecha_hasta = $capturas_consolidadas[count($capturas_consolidadas) - 1]['fecha_hora'];
 		}
+		
 		
 		$date = date('d-m-Y');
 		$time = date('H:i:s');
