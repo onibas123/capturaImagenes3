@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="">Dispositivo</label>
-                            <select class="form-control" id="select-dispositivo">
+                            <select class="form-control select2-selection select2-selection--multiple" id="select-dispositivo"  name="add_dispositivos[]" multiple="multiple">
                                 <option value="">Seleccione</option>
                             </select>
                         </div>
@@ -89,9 +89,12 @@
         <i class="fas fa-angle-up"></i>
     </a>
     <?php $this->load->view('layout/scripts');?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         var nombre_archivo = '';
         $(document).ready(function() {
+            $("#select-dispositivo").select2();
             $('#select-organizacion').change(function(){
                 let options_dispositivos = '<option value="">Seleccione</select>';
                 $.ajax({

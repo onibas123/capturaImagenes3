@@ -327,8 +327,12 @@ class CapturasController extends CI_Controller {
 		$this->db->join('canales', 'capturas.canal = canales.canal', 'left');
 		$this->db->where('DATE(capturas.fecha_hora) >=', $desde);
 		$this->db->where('DATE(capturas.fecha_hora) <=', $hasta);
-		if(!empty($dev))
-			$this->db->where('dispositivos.id', $dev);
+		if(!empty($dev)){
+			foreach($dev as $d){
+				$this->db->where('dispositivos.id', $d);
+			}
+			
+		}
 		$this->db->where('capturas.consolidado', 1);
 		if(!empty($dev)){
 			$this->db->group_by('capturas.id');
