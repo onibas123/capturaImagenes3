@@ -73,7 +73,7 @@ class InformesController extends CI_Controller {
 		$res = $this->db->get()->result_array();
 
 		$fecha = date('d-m-Y H:i', strtotime($res[0]['fecha']));
-		$ruta = $res[0]['ruta'];
+		$ruta = str_replace(base_url().'/','./assets/reportes/', $res[0]['ruta']);
 		$organizacion = $res[0]['organizaciones_id'];
 		
 		$this->db->select('nombre, email');

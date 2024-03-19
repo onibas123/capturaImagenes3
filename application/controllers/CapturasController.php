@@ -916,7 +916,7 @@ class CapturasController extends CI_Controller {
 			if(!empty($res)){
 				$asunto = 'Informe '.( !empty($res[0]['nombre']) ?  $res[0]['nombre'] : 'N/A' ).' '.date('d/m/Y');
 				$destino = ( !empty($res[0]['email']) ?  $res[0]['email'] : 'jcares@pccurico.cl' );
-				$adjunto = $url;
+				$adjunto = $nombreArchivo;
 
 				$this->db->select('contacto');
 				$this->db->from('organizaciones_contactos');
