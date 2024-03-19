@@ -923,6 +923,7 @@ class CapturasController extends CI_Controller {
 				$this->db->where('estado', 1);
 				$this->db->where('organizaciones_id', $organizacion);
 				$copia = $this->db->get()->result_array();
+				$mensaje = 'Estimado, se adjunta informe con detalle de observaciones de la zona con fecha de creación '.date('d-m-Y H:i');
 
 				$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
 			}

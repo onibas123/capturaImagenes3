@@ -66,12 +66,13 @@ class InformesController extends CI_Controller {
 
 	public function reenviarCorreo($id){
 		$informe_id = $id;
-		$this->db->select('organizaciones_id, ruta');
+		$this->db->select('organizaciones_id, ruta, fecha');
 		$this->db->from('informes');
 		$this->db->where('id', $informe_id);
 		$this->db->limit(1);
 		$res = $this->db->get()->result_array();
 
+		$fecha = date('d-m-Y H:i', strtotime($res[0]['fecha']));
 		$ruta = $res[0]['ruta'];
 		$organizacion = $res[0]['organizaciones_id'];
 		
@@ -90,7 +91,7 @@ class InformesController extends CI_Controller {
 			$this->db->where('estado', 1);
 			$this->db->where('organizaciones_id', $organizacion);
 			$copia = $this->db->get()->result_array();
-
+			$mensaje = 'Estimado, se adjunta reenvia informe con detalle de observaciones de la zona con fecha de creación '.$fecha;
 			$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
 		}
 
