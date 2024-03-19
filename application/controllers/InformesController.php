@@ -101,6 +101,8 @@ class InformesController extends CI_Controller {
 
 	//----------------------------------------------------------------------
 	public function enviar_correo($destino, $asunto, $mensaje, $copia = null, $adjunto = null) {
+		ini_set('memory_limit', -1);
+		
 		$this->db->select('valor');
         $this->db->from('configuraciones');
         $this->db->where('parametro', 'smtp_user_sender');

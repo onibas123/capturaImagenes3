@@ -887,6 +887,8 @@ class CapturasController extends CI_Controller {
 	}
 
 	public function guardarInforme(){
+		ini_set('memory_limit', -1);
+		
 		$organizacion = $this->input->post('organizacion', true);
 		$fecha = date('Y-m-d H:i:s');
 		$url = $this->input->post('url', true);
