@@ -97,4 +97,51 @@ class InformesController extends CI_Controller {
 		echo 'Informe reenviado<br>';
 		echo '<a href="'.base_url().'index.php/InformesController/index">Volver</a>';
 	}
+
+	//----------------------------------------------------------------------
+	public function enviar_correo($destino, $asunto, $mensaje, $copia = null, $adjunto = null) {
+		$this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_user_sender');
+        $this->db->limit(1);
+        $smtp_user_sender = $this->db->get()->result_array();
+        $smtp_user_sender = $smtp_user_sender[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_pass');
+        $this->db->limit(1);
+        $smtp_pass = $this->db->get()->result_array();
+        $smtp_pass = $smtp_pass[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_host_sender');
+        $this->db->limit(1);
+        $smtp_host_sender = $this->db->get()->result_array();
+        $smtp_host_sender = $smtp_host_sender[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_port_sender');
+        $this->db->limit(1);
+        $smtp_port_sender = $this->db->get()->result_array();
+        $smtp_port_sender = $smtp_port_sender[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_crypto');
+        $this->db->limit(1);
+        $smtp_crypto = $this->db->get()->result_array();
+        $smtp_crypto = $smtp_crypto[0]['valor'];
+
+        $this->load->library('phpmailer_lib');
+
+        if ($this->phpmailer_lib->enviar_correo($smtp_user_sender, $smtp_pass, $smtp_host_sender, $smtp_port_sender, $smtp_crypto, $destino, $asunto, $mensaje, $adjunto, $copia)) {
+            echo 'El correo se envió correctamente.';
+        } else {
+            echo 'Error al enviar el correo.';
+        }
+    }
+
 }
