@@ -65,6 +65,35 @@ class InformesController extends CI_Controller {
 	}
 
 	public function reenviarCorreo($id){
-		echo $id;
+		$informe_id = $id;
+		$this->db->select('organizaciones_id, ruta');
+		$this->db->from('informes');
+		$this->db->where('id', $informe_id);
+		$this->db->limit(1);
+		$res = $this->db->get()->result_array();
+
+		$organizacion = $res[0]['organizaciones_id'];
+		
+		$this->db->select('nombre, email');
+		$this->db->from('organizaciones');
+		$this->db->where('id', $organizacion);
+		$this->db->limit(1);
+		$res = $this->db->get()->result_array();
+		if(!empty($res)){
+			$asunto = 'Informe '.( !empty($res[0]['nombre']) ?  $res[0]['nombre'] : 'N/A' ).' '.date('d/m/Y');
+			$destino = ( !empty($res[0]['email']) ?  $res[0]['email'] : 'jcares@pccurico.cl' );
+			$adjunto = $nombreArchivo;
+
+			$this->db->select('contacto');
+			$this->db->from('organizaciones_contactos');
+			$this->db->where('estado', 1);
+			$this->db->where('organizaciones_id', $organizacion);
+			$copia = $this->db->get()->result_array();
+
+			$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
+		}
+
+		echo 'Informe reenviado<br>';
+		echo '<a href="'.base_url().'index.php/InformesController/index">Volver</a>';
 	}
 }
