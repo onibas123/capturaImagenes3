@@ -32,7 +32,7 @@ class Phpmailer_lib
             $mail->SMTPSecure = $smtp_crypto;
             $mail->Port       = $smtp_port_sender;
 
-            $mail->setFrom($CI->config->item('smtp_user'), '');
+            $mail->setFrom($CI->config->item('smtp_user'), 'Estima@');
             $mail->addAddress($para);
 
             if(!empty($file))
@@ -40,7 +40,7 @@ class Phpmailer_lib
             
             if(!empty($copia)){
                 foreach($copia as $c)
-                    $mail->addCC($c, '');
+                    $mail->addCC($c, 'Estima@');
             }
             
 
