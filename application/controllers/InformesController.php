@@ -72,6 +72,7 @@ class InformesController extends CI_Controller {
 		$this->db->limit(1);
 		$res = $this->db->get()->result_array();
 
+		$ruta = $res[0]['ruta'];
 		$organizacion = $res[0]['organizaciones_id'];
 		
 		$this->db->select('nombre, email');
@@ -82,7 +83,7 @@ class InformesController extends CI_Controller {
 		if(!empty($res)){
 			$asunto = 'Informe '.( !empty($res[0]['nombre']) ?  $res[0]['nombre'] : 'N/A' ).' '.date('d/m/Y');
 			$destino = ( !empty($res[0]['email']) ?  $res[0]['email'] : 'jcares@pccurico.cl' );
-			$adjunto = $nombreArchivo;
+			$adjunto = $ruta;
 
 			$this->db->select('contacto');
 			$this->db->from('organizaciones_contactos');
