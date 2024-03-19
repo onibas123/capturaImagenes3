@@ -141,7 +141,8 @@
                 dataType: 'text',
                 success: function(response){
                     nombre_archivo = response;
-                    $('#iframe-reporte').attr('src', '<?php echo base_url();?>assets/reportes/'+response);
+                    //$('#iframe-reporte').attr('src', '<?php echo base_url();?>assets/reportes/'+response);
+                    $('#iframe-reporte').attr('src', './assets/reportes/'+response);
                     $('#btnGenerarRegistro').prop('disabled', false);
                     $('#btnCargarPDF').prop('disabled', false);
                 }

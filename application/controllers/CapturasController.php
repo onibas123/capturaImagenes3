@@ -906,7 +906,27 @@ class CapturasController extends CI_Controller {
 							'ruta' => $url,
 							'size' => $sizeKB.' KB'
 						];
-		$this->db->insert('informes', $data_informe);
+		if($this->db->insert('informes', $data_informe)){
+
+			$this->db->select('nombre, email');
+			$this->db->from('organizaciones');
+			$this->db->where('id', $organizacion);
+			$this->db->limit(1);
+			$res = $this->db->get()->result_array();
+			if(!empty($res)){
+				$asunto = 'Informe '.( !empty($res[0]['nombre']) ?  $res[0]['nombre'] : 'N/A' ).' '.date('d/m/Y');
+				$destino = ( !empty($res[0]['email']) ?  $res[0]['email'] : 'jcares@pccurico.cl' );
+				$adjunto = $url;
+
+				$this->db->select('contacto');
+				$this->db->from('organizaciones_contactos');
+				$this->db->where('estado', 1);
+				$this->db->where('organizaciones_id', $organizacion);
+				$copia = $this->db->get()->result_array();
+
+				$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
+			}
+		}
 		echo 'Se ha generado el registro de manera correcta';
 	}
 
@@ -1034,5 +1054,83 @@ class CapturasController extends CI_Controller {
 				$this->db->insert('esquemas', $data);
 			}
 		}
+	}
+	//----------------------------------------------------------------------
+	public function enviar_correo($destino, $asunto, $mensaje, $copia = null, $adjunto = null) {
+		$this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_user_sender');
+        $this->db->limit(1);
+        $smtp_user_sender = $this->db->get()->result_array();
+        $smtp_user_sender = $smtp_user_sender[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_pass');
+        $this->db->limit(1);
+        $smtp_pass = $this->db->get()->result_array();
+        $smtp_pass = $smtp_pass[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_host_sender');
+        $this->db->limit(1);
+        $smtp_host_sender = $this->db->get()->result_array();
+        $smtp_host_sender = $smtp_host_sender[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_port_sender');
+        $this->db->limit(1);
+        $smtp_port_sender = $this->db->get()->result_array();
+        $smtp_port_sender = $smtp_port_sender[0]['valor'];
+
+        $this->db->select('valor');
+        $this->db->from('configuraciones');
+        $this->db->where('parametro', 'smtp_crypto');
+        $this->db->limit(1);
+        $smtp_crypto = $this->db->get()->result_array();
+        $smtp_crypto = $smtp_crypto[0]['valor'];
+
+        $this->load->library('phpmailer_lib');
+
+        if ($this->phpmailer_lib->enviar_correo($smtp_user_sender, $smtp_pass, $smtp_host_sender, $smtp_port_sender, $smtp_crypto, $destino, $asunto, $mensaje, $adjunto, $copia)) {
+            echo 'El correo se envió correctamente.';
+        } else {
+            echo 'Error al enviar el correo.';
+        }
+    }
+
+	public function reenviarInformeCorreo(){
+		$informe_id = $this->input->post('informe_id', true);
+		$this->db->select('organizaciones_id, ruta');
+		$this->db->from('informes');
+		$this->db->where('id', $informe_id);
+		$this->db->limit(1);
+		$res = $this->db->get()->result_array();
+
+		$organizacion = $res[0]['organizaciones_id'];
+		
+		$this->db->select('nombre, email');
+		$this->db->from('organizaciones');
+		$this->db->where('id', $organizacion);
+		$this->db->limit(1);
+		$res = $this->db->get()->result_array();
+		if(!empty($res)){
+			$asunto = 'Informe '.( !empty($res[0]['nombre']) ?  $res[0]['nombre'] : 'N/A' ).' '.date('d/m/Y');
+			$destino = ( !empty($res[0]['email']) ?  $res[0]['email'] : 'jcares@pccurico.cl' );
+			$adjunto = $nombreArchivo;
+
+			$this->db->select('contacto');
+			$this->db->from('organizaciones_contactos');
+			$this->db->where('estado', 1);
+			$this->db->where('organizaciones_id', $organizacion);
+			$copia = $this->db->get()->result_array();
+
+			$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
+		}
+
+		echo 'Informe reenviado<br>';
+		echo '<a href="'.base_url().'index.php/InformesController/index">Volver</a>';
 	}
 }

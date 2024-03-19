@@ -15,7 +15,7 @@ class Phpmailer_lib
         log_message('debug', 'PHPMailer class is loaded.');
     }
 
-    public function enviar_correo($smtp_user_sender, $smtp_pass, $smtp_host_sender, $smtp_port_sender, $smtp_crypto, $para, $asunto, $mensaje)
+    public function enviar_correo($smtp_user_sender, $smtp_pass, $smtp_host_sender, $smtp_port_sender, $smtp_crypto, $para, $asunto, $mensaje, $file = null, $copia = null)
     {
         $CI = &get_instance();
         $CI->load->config('phpmailer_config');
@@ -34,6 +34,14 @@ class Phpmailer_lib
 
             $mail->setFrom($CI->config->item('smtp_user'), 'Tu Nombre');
             $mail->addAddress($para);
+
+            if(!empty($file))
+                $mail->addAttachment($file);
+            if(!empty($copia)){
+                foreach($copia as $c)
+                    $mail->addCC($c, '');
+            }
+                
 
             $mail->isHTML(true);
             $mail->Subject = $asunto;
