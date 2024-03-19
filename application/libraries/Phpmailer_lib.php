@@ -32,7 +32,7 @@ class Phpmailer_lib
             $mail->SMTPSecure = $smtp_crypto;
             $mail->Port       = $smtp_port_sender;
 
-            $mail->setFrom($CI->config->item('smtp_user'), 'Tu Nombre');
+            $mail->setFrom($CI->config->item('smtp_user'), '');
             $mail->addAddress($para);
 
             if(!empty($file))
