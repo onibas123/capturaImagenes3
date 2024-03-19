@@ -92,7 +92,13 @@ class InformesController extends CI_Controller {
 			$this->db->where('organizaciones_id', $organizacion);
 			$copia = $this->db->get()->result_array();
 			$mensaje = 'Estimado, se adjunta reenvia informe con detalle de observaciones de la zona con fecha de creación '.$fecha;
-			$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
+
+			$arr_copia = [];
+
+			foreach($copia as $c)
+				$arr_copia[] = $c['contacto'];
+
+			$this->enviar_correo($destino, $asunto, $mensaje, $arr_copia, $adjunto);
 		}
 
 		echo 'Informe reenviado<br>';
@@ -102,7 +108,7 @@ class InformesController extends CI_Controller {
 	//----------------------------------------------------------------------
 	public function enviar_correo($destino, $asunto, $mensaje, $copia = null, $adjunto = null) {
 		ini_set('memory_limit', -1);
-		
+
 		$this->db->select('valor');
         $this->db->from('configuraciones');
         $this->db->where('parametro', 'smtp_user_sender');

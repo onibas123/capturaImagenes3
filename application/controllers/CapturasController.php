@@ -888,7 +888,7 @@ class CapturasController extends CI_Controller {
 
 	public function guardarInforme(){
 		ini_set('memory_limit', -1);
-		
+
 		$organizacion = $this->input->post('organizacion', true);
 		$fecha = date('Y-m-d H:i:s');
 		$url = $this->input->post('url', true);
@@ -927,7 +927,12 @@ class CapturasController extends CI_Controller {
 				$copia = $this->db->get()->result_array();
 				$mensaje = 'Estimado, se adjunta informe con detalle de observaciones de la zona con fecha de creación '.date('d-m-Y H:i');
 
-				$this->enviar_correo($destino, $asunto, $mensaje, $copia, $adjunto);
+				$arr_copia = [];
+
+				foreach($copia as $c)
+					$arr_copia[] = $c['contacto'];
+
+				$this->enviar_correo($destino, $asunto, $mensaje, $arr_copia, $adjunto);
 			}
 		}
 		echo 'Se ha generado el registro de manera correcta';
