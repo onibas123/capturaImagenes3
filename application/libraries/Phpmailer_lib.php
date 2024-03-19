@@ -23,7 +23,7 @@ class Phpmailer_lib
         $mail = new PHPMailer(true);
 
         try {
-            $mail->SMTPDebug = 0;
+            $mail->SMTPDebug = 1;
             $mail->isSMTP();
             $mail->Host       = $smtp_host_sender;
             $mail->SMTPAuth   = true;
