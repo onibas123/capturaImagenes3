@@ -37,11 +37,12 @@ class Phpmailer_lib
 
             if(!empty($file))
                 $mail->addAttachment($file);
+            /*
             if(!empty($copia)){
                 foreach($copia as $c)
                     $mail->addCC($c, '');
             }
-                
+            */
 
             $mail->isHTML(true);
             $mail->Subject = $asunto;
