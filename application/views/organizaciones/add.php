@@ -27,6 +27,8 @@
                         <!-- main content -->
                         <h4><?php if(!empty($titulo)) echo $titulo;else echo 'Agregar Cliente';?></h4>
                         <hr>
+                        <a type="button" href="<?php echo base_url();?>index.php/DispositivosController/add" class="btn btn-primary">Agregar Dispositivo</a>
+                        <hr>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="">Rut</label>

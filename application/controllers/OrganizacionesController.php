@@ -25,6 +25,8 @@ class OrganizacionesController extends CI_Controller {
 		if($this->session->userdata('usuario_elimina') == 0)
 			$crud->unset_delete();
 
+		$crud->columns(['nombre', 'rut', 'direccion', 'tipo_organizacion_id']);
+
 		$crud->callback_before_insert(array($this,'add_log_create'));
 		$crud->callback_before_update(array($this,'add_log_edit'));
 		$crud->callback_before_delete(array($this,'add_log_delete'));
