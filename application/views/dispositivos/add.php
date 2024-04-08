@@ -144,8 +144,9 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th width="30%">Número Canal</th>
-                                        <th width="70%">Nombre Canal</th>
+                                        <th width="20%">Número Canal</th>
+                                        <th width="65%">Nombre Canal</th>
+                                        <th width="15%">Número Canal</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-canales">
@@ -296,9 +297,10 @@
                                     $('#input-canal-'+(j+1)).val(response['data'][j]);
                                 else{
                                     //crear tr y input
-                                    let tr = '<tr>'
+                                    let tr = '<tr id="tr-'+(j+1)+'">'
                                     tr += '<td>'+(j+1)+'</td>';
                                     tr += '<td><input canal="'+(j+1)+'" required class="form-control" name="canales" id="input-canal-'+(j+1)+'" value="'+response['data'][j]+'"></td>';
+                                    tr += '<td><button type="button" onclick="removerCanal('+(j+1)+');" class="btn btn-danger">Eliminar</button></td>';
                                     tr += '</tr>';
                                     console.log(tr);
                                     $('#tbody-canales').html($('#tbody-canales').html()+tr);
@@ -323,14 +325,21 @@
             }
 
             for(let i=1; i <= cantidad_canales; i++){
-                tbody += '<tr>';
+                tbody += '<tr id="tr-'+i+'">';
                 tbody += '<td>'+i+'</td>';
                 tbody += '<td><input canal="'+i+'" required class="form-control" name="canales" id="input-canal-'+i+'" value="Canal '+i+'" /></td>';
+                tbody += '<td><button type="button" onclick="removerCanal('+i+');" class="btn btn-danger">Eliminar</button></td>';
                 tbody += '</tr>';
             }
 
             $('#btnCheckCanales').prop('disabled', false);
             $('#tbody-canales').html(tbody);
+        }
+
+        function removerCanal(canal){
+            if(confirm('Confirme esta operación')){
+                $('#tr-'+canal).remove();
+            }
         }
     </script>
 </body>
