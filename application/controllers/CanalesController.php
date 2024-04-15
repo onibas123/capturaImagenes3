@@ -219,6 +219,7 @@ class CanalesController extends CI_Controller {
     }
 
     public function cargarCamarasGenerico(){
+        /*
         for($i=11; $i <= 74; $i++){
 
            for($j=1; $j < 5; $j++){
@@ -230,6 +231,7 @@ class CanalesController extends CI_Controller {
             $this->db->insert('canales', $data);
            }
         }
+        */
     }
 
 }
