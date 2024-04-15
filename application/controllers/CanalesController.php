@@ -218,4 +218,18 @@ class CanalesController extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function cargarCamarasGenerico(){
+        for($i=11; $i <= 74; $i++){
+
+           for($j=1; $j < 5; $j++){
+            $data = [
+                        'devices_id' => $i,
+                        'canal' => $j,
+                        'nombre' => 'Canal '.$j
+                    ]; 
+            $this->db->insert('canales', $data);
+           }
+        }
+    }
+
 }
