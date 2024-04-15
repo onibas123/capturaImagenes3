@@ -112,7 +112,7 @@ class OrganizacionesController extends CI_Controller {
 			$emails_contactos = $this->input->post('emails_contactos');
 			$checks_contactos = $this->input->post('checks_contactos');
 
-			if(count($emails_contactos) > 0){
+			if(!empty($emails_contactos) && count($emails_contactos) > 0){
 				$this->db->where('organizaciones_id', $last_id);
 				$this->db->delete('organizaciones_contactos');
 				$i=0;
