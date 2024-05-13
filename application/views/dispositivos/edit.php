@@ -144,7 +144,10 @@
                         </div>
                         <hr>
                         <div class="row mt-2">
-                            <div class="col-md-12">
+                            <div class="col-md-1">
+                                <button id="btnAddCanal" type="button" class="btn btn-primary" onclick="addCanal(100);"><i class="fas fa-plus"></i>Canal</button>
+                            </div>
+                            <div class="col-md-2">
                                 <button id="btnCheckCanales" type="button" class="btn btn-warning" onclick="checkearCanales();"><i class="fas fa-cloud-download-alt"></i>Traer datos</button>
                             </div>
                         </div>
@@ -165,7 +168,10 @@
                                             echo '<tr id="tr-'.$c['canal'].'">';
                                             echo '<td>'.$c['canal'].'</td>';
                                             echo '<td><input canal="'.$c['canal'].'" required class="form-control" name="canales" id="input-canal-'.$c['canal'].'" value="'.$c['nombre'].'"></td>';
-                                            echo '<td><button type="button" onclick="removerCanal('.$c['canal'].');" class="btn btn-danger">Eliminar</button></td>';
+                                            if($c['canal'] != 100)
+                                                echo '<td><button type="button" onclick="removerCanal('.$c['canal'].');" class="btn btn-danger">Eliminar</button></td>';
+                                            else
+                                                echo '<td></td>';
                                             echo '</tr>';
                                         }
                                     }
@@ -320,7 +326,10 @@
                                     let tr = '<tr id="tr-'+(j+1)+'">'
                                     tr += '<td>'+(j+1)+'</td>';
                                     tr += '<td><input canal="'+(j+1)+'" required class="form-control" name="canales" id="input-canal-'+(j+1)+'" value="'+response['data'][j]+'"></td>';
-                                    tr += '<td><button type="button" onclick="removerCanal('+(j+1)+');" class="btn btn-danger">Eliminar</button></td>';
+                                    if((j+1) != 100)
+                                        tr += '<td><button type="button" onclick="removerCanal('+(j+1)+');" class="btn btn-danger">Eliminar</button></td>';
+                                    else
+                                        tr += '<td></td>';
                                     tr += '</tr>';
                                     $('#tbody-canales').html($('#tbody-canales').html()+tr);
                                 }
@@ -347,7 +356,10 @@
                 tbody += '<tr id="tr-'+i+'">';
                 tbody += '<td>'+i+'</td>';
                 tbody += '<td><input canal="'+i+'" required class="form-control" name="canales" id="input-canal-'+i+'" value="Canal '+i+'" /></td>';
-                tbody += '<td><button type="button" onclick="removerCanal('+i+');" class="btn btn-danger">Eliminar</button></td>';
+                if(i != '100')
+                    tbody += '<td><button type="button" onclick="removerCanal('+i+');" class="btn btn-danger">Eliminar</button></td>';
+                else
+                    tbody += '<td></td>';
                 tbody += '</tr>';
             }
 
@@ -358,6 +370,23 @@
         function removerCanal(canal){
             if(confirm('Confirme esta operación')){
                 $('#tr-'+canal).remove();
+            }
+        }
+
+        function addCanal(canal){
+            if(confirm('Confirme la creación del canal 100, que será de uso exclusivo para vincular evidencia en reportes')){
+                if($('#tr-'+canal).length == 0){
+                    let tbody = '';
+                    tbody += '<tr id="tr-'+canal+'">';
+                    tbody += '<td>'+canal+'</td>';
+                    tbody += '<td><input canal="'+canal+'" required class="form-control" name="canales" id="input-canal-'+canal+'" value="Canal '+canal+'" /></td>';
+                    tbody += '<td></td>';
+                    tbody += '</tr>';
+
+                    $('#tbody-canales').html($('#tbody-canales').html() + tbody);
+                }
+                else
+                    alert('Ya existe creado el canal 100.');
             }
         }
     </script>
